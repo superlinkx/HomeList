@@ -6,7 +6,6 @@
 	"dockerComposeFile": "docker-compose.yml",
 	"service": "dev",
 	"workspaceFolder": "/workspaces/${localWorkspaceFolderBasename}",
-
 	"features": {
 		"ghcr.io/devcontainers/features/docker-in-docker:2": {
 			"version": "latest",
@@ -25,13 +24,10 @@
 			"version": "latest"
 		}
 	},
-
 	// Use 'forwardPorts' to make a list of ports inside the container available locally.
 	// "forwardPorts": [],
-
 	// Use 'postCreateCommand' to run commands after the container is created.
-	"postCreateCommand": "go install github.com/golangci/golangci-lint/cmd/golangci-lint@v1.52.2",
-
+	"postCreateCommand": "bash -c './postCreateCommand.sh'",
 	// Configure tool-specific properties.
 	"customizations": {
 		"vscode": {
@@ -46,11 +42,11 @@
 				"esbenp.prettier-vscode",
 				"humao.rest-client",
 				"Thinker.sort-json",
-				"redhat.vscode-yaml"
+				"redhat.vscode-yaml",
+				"kokakiwi.vscode-just"
 			]
 		}
 	}
-
 	// Uncomment to connect as root instead. More info: https://aka.ms/dev-containers-non-root.
 	// "remoteUser": "root"
 }
