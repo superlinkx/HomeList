@@ -20,6 +20,9 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
+_default:
+	@just --list --unsorted
+
 # Run application
 run *ARGS='':
   @air -c .air.toml -- {{ARGS}}
