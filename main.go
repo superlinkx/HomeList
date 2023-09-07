@@ -28,11 +28,11 @@ import (
 
 	_ "github.com/glebarez/go-sqlite"
 	migrate "github.com/rubenv/sql-migrate"
+	"github.com/superlinkx/HomeList/api"
 	"github.com/superlinkx/HomeList/app"
 	"github.com/superlinkx/HomeList/environment"
 	"github.com/superlinkx/HomeList/server"
 	"github.com/superlinkx/HomeList/services"
-	"github.com/superlinkx/HomeList/ui"
 )
 
 func main() {
@@ -53,7 +53,7 @@ func main() {
 
 		s := services.Init(db)
 		application := app.NewApplication(s)
-		ui := ui.NewUI(application)
-		server.StartServer(server.Config{HostURL: config.HostURL}, ui)
+		api := api.NewAPI(application)
+		server.StartServer(server.Config{HostURL: config.HostURL}, api)
 	}
 }
