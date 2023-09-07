@@ -28,5 +28,7 @@ func StartServer(config Config, api api.API) {
 func v1ApiRouter(api api.API) http.Handler {
 	r := chi.NewRouter()
 	r.Get("/lists", api.FetchAllLists)
+	r.Get("/list/{listID}", api.FetchList)
+	r.Post("/list", api.CreateList)
 	return r
 }

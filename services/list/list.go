@@ -36,3 +36,19 @@ func (s Service) AllLists(ctx context.Context, limit int64) ([]List, error) {
 		return lists, nil
 	}
 }
+
+func (s Service) GetList(ctx context.Context, id int64) (List, error) {
+	if result, err := s.queries.GetList(ctx, id); err != nil {
+		return List{}, fmt.Errorf("unable to get list: %w", err)
+	} else {
+		return List{ID: result.ID, Name: result.Name}, nil
+	}
+}
+
+func (s Service) CreateList(ctx context.Context, name string) (List, error) {
+	if result, err := s.queries.CreateList(ctx, name); err != nil {
+		return List{}, fmt.Errorf("unable to create list: %w", err)
+	} else {
+		return List{ID: result.ID, Name: result.Name}, nil
+	}
+}

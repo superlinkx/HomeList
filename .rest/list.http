@@ -1,0 +1,14 @@
+GET http://localhost:80/api/v1/lists
+
+###
+
+GET http://localhost:80/api/v1/list/1
+
+###
+
+POST http://localhost:80/api/v1/list
+content-type: application/json
+
+{
+    "name": "oldlist"
+}
