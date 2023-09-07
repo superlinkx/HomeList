@@ -30,5 +30,7 @@ func v1ApiRouter(api api.API) http.Handler {
 	r.Get("/lists", api.FetchAllLists)
 	r.Get("/list/{listID}", api.FetchList)
 	r.Post("/list", api.CreateList)
+	r.Put("/list/{listID}", api.RenameList)
+	r.Delete("/list/{listID}", api.DeleteList)
 	return r
 }

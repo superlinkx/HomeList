@@ -52,3 +52,19 @@ func (s Service) CreateList(ctx context.Context, name string) (List, error) {
 		return List{ID: result.ID, Name: result.Name}, nil
 	}
 }
+
+func (s Service) UpdateList(ctx context.Context, id int64, name string) (List, error) {
+	if result, err := s.queries.RenameList(ctx, sqlite.RenameListParams{ID: id, Name: name}); err != nil {
+		return List{}, fmt.Errorf("unable to update list: %w", err)
+	} else {
+		return List{ID: result.ID, Name: result.Name}, nil
+	}
+}
+
+func (s Service) DeleteList(ctx context.Context, id int64) error {
+	if err := s.queries.DeleteList(ctx, id); err != nil {
+		return fmt.Errorf("unable to delete list: %w", err)
+	} else {
+		return nil
+	}
+}

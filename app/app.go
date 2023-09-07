@@ -53,3 +53,19 @@ func (a Application) CreateList(ctx context.Context, name string) (List, error) 
 		return List{ID: result.ID, Name: result.Name}, nil
 	}
 }
+
+func (a Application) UpdateList(ctx context.Context, id int64, name string) (List, error) {
+	if result, err := a.services.List.UpdateList(ctx, id, name); err != nil {
+		return List{}, fmt.Errorf("application failed to update list: %w", err)
+	} else {
+		return List{ID: result.ID, Name: result.Name}, nil
+	}
+}
+
+func (a Application) DeleteList(ctx context.Context, id int64) error {
+	if err := a.services.List.DeleteList(ctx, id); err != nil {
+		return fmt.Errorf("application failed to delete list: %w", err)
+	} else {
+		return nil
+	}
+}
