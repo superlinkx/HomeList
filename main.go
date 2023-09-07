@@ -24,25 +24,21 @@ package main
 
 import (
 	"database/sql"
-	"flag"
 	"log"
 
 	_ "github.com/glebarez/go-sqlite"
 	migrate "github.com/rubenv/sql-migrate"
 	"github.com/superlinkx/HomeList/app"
+	"github.com/superlinkx/HomeList/environment"
 	"github.com/superlinkx/HomeList/server"
 	"github.com/superlinkx/HomeList/services"
 	"github.com/superlinkx/HomeList/ui"
 )
 
-type flags struct {
-	hostURL string
-}
-
 func main() {
-	config := readFlags()
-
-	if db, err := sql.Open("sqlite", ":memory:?_pragma=foreign_keys(1)"); err != nil {
+	if config, err := environment.LoadConfig(); err != nil {
+		log.Fatalf("Failed to load config: %v", err)
+	} else if db, err := sql.Open("sqlite", ":memory:?_pragma=foreign_keys(1)"); err != nil {
 		log.Fatalf("Failed to open connection to database: %s", err)
 	} else {
 		defer db.Close()
@@ -58,14 +54,6 @@ func main() {
 		s := services.Init(db)
 		application := app.NewApplication(s)
 		ui := ui.NewUI(application)
-		server.StartServer(server.Config{HostURL: config.hostURL}, ui)
-	}
-}
-
-func readFlags() flags {
-	hosturl := flag.String("hosturl", "0.0.0.0:2552", "Server host url")
-	flag.Parse()
-	return flags{
-		hostURL: *hosturl,
+		server.StartServer(server.Config{HostURL: config.HostURL}, ui)
 	}
 }

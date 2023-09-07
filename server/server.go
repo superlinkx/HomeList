@@ -14,6 +14,10 @@ type Config struct {
 }
 
 func StartServer(config Config, ui ui.UI) {
+	if config.HostURL == "" {
+		config.HostURL = ":80"
+	}
+
 	r := chi.NewRouter()
 	r.Use(middleware.Logger)
 	r.Get("/ui/lists", ui.FetchAllLists)
