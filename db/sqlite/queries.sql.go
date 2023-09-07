@@ -73,20 +73,20 @@ func (q *Queries) GetList(ctx context.Context, id int64) (List, error) {
 	return i, err
 }
 
-const updateList = `-- name: UpdateList :one
+const renameList = `-- name: RenameList :one
 UPDATE lists
 SET name = ?
 WHERE id = ?
 RETURNING id, name
 `
 
-type UpdateListParams struct {
+type RenameListParams struct {
 	Name string
 	ID   int64
 }
 
-func (q *Queries) UpdateList(ctx context.Context, arg UpdateListParams) (List, error) {
-	row := q.db.QueryRowContext(ctx, updateList, arg.Name, arg.ID)
+func (q *Queries) RenameList(ctx context.Context, arg RenameListParams) (List, error) {
+	row := q.db.QueryRowContext(ctx, renameList, arg.Name, arg.ID)
 	var i List
 	err := row.Scan(&i.ID, &i.Name)
 	return i, err

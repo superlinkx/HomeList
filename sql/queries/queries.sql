@@ -12,7 +12,7 @@ INSERT INTO lists
 (name) VALUES (?)
 RETURNING *;
 
--- name: UpdateList :one
+-- name: RenameList :one
 UPDATE lists
 SET name = ?
 WHERE id = ?
