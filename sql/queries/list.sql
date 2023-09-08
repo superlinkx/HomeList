@@ -8,8 +8,8 @@ ORDER BY id ASC
 LIMIT ?;
 
 -- name: CreateList :one
-INSERT INTO lists
-(name) VALUES (?)
+INSERT INTO lists (name)
+VALUES (?)
 RETURNING *;
 
 -- name: RenameList :one
@@ -21,3 +21,4 @@ RETURNING *;
 -- name: DeleteList :exec
 DELETE FROM lists
 WHERE id = ?;
+

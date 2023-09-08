@@ -4,9 +4,7 @@
 
 package sqlite
 
-import (
-	"database/sql"
-)
+import ()
 
 type List struct {
 	ID   int64
@@ -16,5 +14,7 @@ type List struct {
 type ListItem struct {
 	ID      int64
 	ListID  int64
-	Content sql.NullString
+	Content string
+	Checked bool
+	Sort    int64
 }
