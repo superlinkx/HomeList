@@ -49,10 +49,16 @@ func StartServer(config Config, api api.API) {
 
 func v1ApiRouter(api api.API) http.Handler {
 	r := chi.NewRouter()
+
 	r.Get("/lists", api.FetchAllLists)
 	r.Get("/list/{listID}", api.FetchList)
+	r.Get("/list/{listID}/items", api.FetchAllItemsFromList)
+
 	r.Post("/list", api.CreateList)
+
 	r.Put("/list/{listID}", api.RenameList)
+
 	r.Delete("/list/{listID}", api.DeleteList)
+
 	return r
 }

@@ -43,15 +43,10 @@ func NewService(queries *sqlite.Queries) Service {
 }
 
 func (s Service) AllLists(ctx context.Context, limit int64) ([]List, error) {
-	var (
-		lists = make([]List, 0, limit)
-	)
-
 	if results, err := s.queries.AllLists(ctx, limit); err != nil {
-		return lists, fmt.Errorf("unable to get all lists: %w", err)
-	} else if results == nil {
-		return lists, nil
+		return []List{}, fmt.Errorf("unable to get all lists: %w", err)
 	} else {
+		var lists = make([]List, 0, len(results))
 		for _, result := range results {
 			lists = append(lists, List{ID: result.ID, Name: result.Name})
 		}

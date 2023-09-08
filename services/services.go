@@ -27,15 +27,18 @@ import (
 
 	"github.com/superlinkx/HomeList/db/sqlite"
 	"github.com/superlinkx/HomeList/services/list"
+	"github.com/superlinkx/HomeList/services/listitem"
 )
 
 type Services struct {
-	List list.Service
+	List     list.Service
+	ListItem listitem.Service
 }
 
 func Init(db *sql.DB) Services {
 	queries := sqlite.New(db)
 	return Services{
-		List: list.NewService(queries),
+		List:     list.NewService(queries),
+		ListItem: listitem.NewService(queries),
 	}
 }
