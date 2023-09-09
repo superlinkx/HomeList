@@ -25,6 +25,12 @@ SET sort = ?
 WHERE id = ?
 RETURNING *;
 
+-- name: UpdateListItemChecked :one
+UPDATE list_items
+SET checked =?
+WHERE id =?
+RETURNING *;
+
 -- name: DeleteListItem :exec
 DELETE FROM list_items
 WHERE id = ?;

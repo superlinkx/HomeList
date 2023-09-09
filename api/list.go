@@ -36,7 +36,7 @@ func (s API) FetchList(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, err.Error(), http.StatusBadRequest)
 	} else if list, err := s.application.GetList(r.Context(), int64(id)); err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
-	} else if result, err := listView(list); err != nil {
+	} else if result, err := json.Marshal(ViewList(list)); err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 	} else {
 		w.Header().Set("Content-Type", "application/json")
@@ -51,7 +51,7 @@ func (s API) CreateList(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, err.Error(), http.StatusBadRequest)
 	} else if list, err := s.application.CreateList(r.Context(), request.Name); err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
-	} else if result, err := listView(list); err != nil {
+	} else if result, err := json.Marshal(ViewList(list)); err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 	} else {
 		w.Header().Set("Content-Type", "application/json")
@@ -71,7 +71,7 @@ func (s API) RenameList(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, err.Error(), http.StatusBadRequest)
 	} else if list, err := s.application.UpdateList(r.Context(), int64(id), request.Name); err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
-	} else if result, err := listView(list); err != nil {
+	} else if result, err := json.Marshal(ViewList(list)); err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 	} else {
 		w.Header().Set("Content-Type", "application/json")
@@ -91,14 +91,10 @@ func (s API) DeleteList(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-func listView(list app.List) ([]byte, error) {
-	return json.Marshal(ViewList{ID: list.ID, Name: list.Name})
-}
-
 func listsView(lists []app.List) ([]byte, error) {
 	var viewLists = make([]ViewList, 0, len(lists))
 	for _, list := range lists {
-		viewLists = append(viewLists, ViewList{ID: list.ID, Name: list.Name})
+		viewLists = append(viewLists, ViewList(list))
 	}
 	return json.Marshal(viewLists)
 }

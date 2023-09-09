@@ -48,7 +48,7 @@ func (s Service) AllLists(ctx context.Context, limit int64) ([]List, error) {
 	} else {
 		var lists = make([]List, 0, len(results))
 		for _, result := range results {
-			lists = append(lists, List{ID: result.ID, Name: result.Name})
+			lists = append(lists, List(result))
 		}
 		return lists, nil
 	}
@@ -58,7 +58,7 @@ func (s Service) GetList(ctx context.Context, id int64) (List, error) {
 	if result, err := s.queries.GetList(ctx, id); err != nil {
 		return List{}, fmt.Errorf("unable to get list: %w", err)
 	} else {
-		return List{ID: result.ID, Name: result.Name}, nil
+		return List(result), nil
 	}
 }
 
@@ -66,7 +66,7 @@ func (s Service) CreateList(ctx context.Context, name string) (List, error) {
 	if result, err := s.queries.CreateList(ctx, name); err != nil {
 		return List{}, fmt.Errorf("unable to create list: %w", err)
 	} else {
-		return List{ID: result.ID, Name: result.Name}, nil
+		return List(result), nil
 	}
 }
 
@@ -74,7 +74,7 @@ func (s Service) UpdateList(ctx context.Context, id int64, name string) (List, e
 	if result, err := s.queries.RenameList(ctx, sqlite.RenameListParams{ID: id, Name: name}); err != nil {
 		return List{}, fmt.Errorf("unable to update list: %w", err)
 	} else {
-		return List{ID: result.ID, Name: result.Name}, nil
+		return List(result), nil
 	}
 }
 

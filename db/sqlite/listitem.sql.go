@@ -103,6 +103,31 @@ func (q *Queries) GetListItem(ctx context.Context, id int64) (ListItem, error) {
 	return i, err
 }
 
+const updateListItemChecked = `-- name: UpdateListItemChecked :one
+UPDATE list_items
+SET checked =?
+WHERE id =?
+RETURNING id, list_id, content, checked, sort
+`
+
+type UpdateListItemCheckedParams struct {
+	Checked bool
+	ID      int64
+}
+
+func (q *Queries) UpdateListItemChecked(ctx context.Context, arg UpdateListItemCheckedParams) (ListItem, error) {
+	row := q.db.QueryRowContext(ctx, updateListItemChecked, arg.Checked, arg.ID)
+	var i ListItem
+	err := row.Scan(
+		&i.ID,
+		&i.ListID,
+		&i.Content,
+		&i.Checked,
+		&i.Sort,
+	)
+	return i, err
+}
+
 const updateListItemSort = `-- name: UpdateListItemSort :one
 UPDATE list_items
 SET sort = ?
