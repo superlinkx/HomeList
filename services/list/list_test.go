@@ -31,15 +31,12 @@ func setupService() (list.Service, closer, error) {
 
 func TestAllLists(t *testing.T) {
 	srv, closer, err := setupService()
-	if err != nil {
-		t.Fatalf("failed to setup service: %s", err)
-	}
+	require.Nilf(t, err, "failed to setup service: %s", err)
 	defer closer.Close()
+
 	t.Run("HappyPath", func(t *testing.T) {
 		result, err := srv.AllLists(context.Background(), 10)
-		if err != nil {
-			t.Fatalf("failed to fetch all lists: %s", err)
-		}
+		require.Nilf(t, err, "failed to fetch all lists: %s", err)
 		require.GreaterOrEqual(t, len(result), 1)
 	})
 }
@@ -52,9 +49,7 @@ func TestGetList(t *testing.T) {
 	defer closer.Close()
 	t.Run("HappyPath", func(t *testing.T) {
 		result, err := srv.GetList(context.Background(), 1)
-		if err != nil {
-			t.Fatalf("failed to get list: %s", err)
-		}
+		require.Nilf(t, err, "failed to fetch list: %s", err)
 		require.Equal(t, result.Name, "Main List")
 		require.Equal(t, result.ID, int64(1))
 	})
@@ -62,15 +57,12 @@ func TestGetList(t *testing.T) {
 
 func TestUpdateList(t *testing.T) {
 	srv, closer, err := setupService()
-	if err != nil {
-		t.Fatalf("failed to setup service: %s", err)
-	}
+	require.Nilf(t, err, "failed to setup service: %s", err)
 	defer closer.Close()
+
 	t.Run("HappyPath", func(t *testing.T) {
 		result, err := srv.UpdateList(context.Background(), 1, "updated-list-name")
-		if err != nil {
-			t.Fatalf("failed to update service: %s", err)
-		}
+		require.Nilf(t, err, "failed to update list: %s", err)
 		require.Equal(t, result.Name, "updated-list-name")
 	})
 }
@@ -79,11 +71,14 @@ func TestDeleteList(t *testing.T) {
 	srv, closer, err := setupService()
 	require.Nilf(t, err, "failed to setup service: %s", err)
 	defer closer.Close()
+
 	t.Run("HappyPath", func(t *testing.T) {
 		listResult, err := srv.GetList(context.Background(), 1)
 		require.Nilf(t, err, "failed to get list")
+
 		deleteErr := srv.DeleteList(context.Background(), 1)
 		require.Nilf(t, deleteErr, "failed to delete list")
+
 		allListsResult, err := srv.AllLists(context.Background(), 10)
 		require.Nilf(t, err, "failed to get ALL lists: %s", err)
 		require.NotContains(t, allListsResult, listResult)
