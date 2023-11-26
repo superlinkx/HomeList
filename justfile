@@ -23,6 +23,8 @@
 _default:
 	@just --list --unsorted
 
+export HL_HOST_URL := env_var_or_default("HL_HOST_URL", ":2552")
+
 init:
   go install github.com/sqlc-dev/sqlc/cmd/sqlc@v1.20.0
   go install github.com/rubenv/sql-migrate/...@v1.5.2
