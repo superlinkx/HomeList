@@ -20,7 +20,7 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-package api
+package handlers
 
 import (
 	"encoding/json"
@@ -40,7 +40,7 @@ type ViewList struct {
 	Name string `json:"name"`
 }
 
-func (s API) FetchAllLists(w http.ResponseWriter, r *http.Request) {
+func (s Handlers) FetchAllLists(w http.ResponseWriter, r *http.Request) {
 	if lists, err := s.application.AllLists(r.Context(), 10); err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 	} else if result, err := listsView(lists); err != nil {
@@ -51,7 +51,7 @@ func (s API) FetchAllLists(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-func (s API) FetchList(w http.ResponseWriter, r *http.Request) {
+func (s Handlers) FetchList(w http.ResponseWriter, r *http.Request) {
 	var listID = chi.URLParam(r, "listID")
 
 	if id, err := strconv.Atoi(listID); err != nil {
@@ -66,7 +66,7 @@ func (s API) FetchList(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-func (s API) CreateList(w http.ResponseWriter, r *http.Request) {
+func (s Handlers) CreateList(w http.ResponseWriter, r *http.Request) {
 	var request ListRequest
 
 	if err := json.NewDecoder(r.Body).Decode(&request); err != nil {
@@ -81,7 +81,7 @@ func (s API) CreateList(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-func (s API) RenameList(w http.ResponseWriter, r *http.Request) {
+func (s Handlers) RenameList(w http.ResponseWriter, r *http.Request) {
 	var (
 		request ListRequest
 		listID  = chi.URLParam(r, "listID")
@@ -101,7 +101,7 @@ func (s API) RenameList(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-func (s API) DeleteList(w http.ResponseWriter, r *http.Request) {
+func (s Handlers) DeleteList(w http.ResponseWriter, r *http.Request) {
 	var listID = chi.URLParam(r, "listID")
 
 	if id, err := strconv.Atoi(listID); err != nil {

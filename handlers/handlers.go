@@ -20,18 +20,18 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-package api
+package handlers
 
 import (
 	"github.com/superlinkx/HomeList/app"
 )
 
-type API struct {
+type Handlers struct {
 	application app.Application
 }
 
-func NewAPI(application app.Application) API {
-	return API{
+func NewHandlers(application app.Application) Handlers {
+	return Handlers{
 		application: application,
 	}
 }

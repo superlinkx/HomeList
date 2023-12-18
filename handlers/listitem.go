@@ -20,7 +20,7 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-package api
+package handlers
 
 import (
 	"encoding/json"
@@ -56,7 +56,7 @@ type UpdateListItemCheckedParams struct {
 	Checked bool `json:"checked"`
 }
 
-func (s API) FetchListItem(w http.ResponseWriter, r *http.Request) {
+func (s Handlers) FetchListItem(w http.ResponseWriter, r *http.Request) {
 	var itemID = chi.URLParam(r, "id")
 
 	if listID, err := strconv.Atoi(itemID); err != nil {
@@ -71,7 +71,7 @@ func (s API) FetchListItem(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-func (s API) FetchAllItemsFromList(w http.ResponseWriter, r *http.Request) {
+func (s Handlers) FetchAllItemsFromList(w http.ResponseWriter, r *http.Request) {
 	var listIDParam = chi.URLParam(r, "listID")
 
 	if listID, err := strconv.Atoi(listIDParam); err != nil {
@@ -86,7 +86,7 @@ func (s API) FetchAllItemsFromList(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-func (s API) CreateListItem(w http.ResponseWriter, r *http.Request) {
+func (s Handlers) CreateListItem(w http.ResponseWriter, r *http.Request) {
 	var (
 		listItem    CreateListItemParams
 		listIDParam = chi.URLParam(r, "listID")
@@ -106,7 +106,7 @@ func (s API) CreateListItem(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-func (s API) UpdateListItemContent(w http.ResponseWriter, r *http.Request) {
+func (s Handlers) UpdateListItemContent(w http.ResponseWriter, r *http.Request) {
 	var (
 		listItem    UpdateListItemContentParams
 		itemIDParam = chi.URLParam(r, "id")
@@ -126,7 +126,7 @@ func (s API) UpdateListItemContent(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-func (s API) UpdateListItemSort(w http.ResponseWriter, r *http.Request) {
+func (s Handlers) UpdateListItemSort(w http.ResponseWriter, r *http.Request) {
 	var (
 		listItem    UpdateListItemSortParams
 		itemIDParam = chi.URLParam(r, "id")
@@ -146,7 +146,7 @@ func (s API) UpdateListItemSort(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-func (s API) UpdateListItemChecked(w http.ResponseWriter, r *http.Request) {
+func (s Handlers) UpdateListItemChecked(w http.ResponseWriter, r *http.Request) {
 	var (
 		listItem    UpdateListItemCheckedParams
 		itemIDParam = chi.URLParam(r, "id")
@@ -166,7 +166,7 @@ func (s API) UpdateListItemChecked(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-func (s API) DeleteListItem(w http.ResponseWriter, r *http.Request) {
+func (s Handlers) DeleteListItem(w http.ResponseWriter, r *http.Request) {
 	var itemIDParam = chi.URLParam(r, "id")
 
 	if itemID, err := strconv.Atoi(itemIDParam); err != nil {

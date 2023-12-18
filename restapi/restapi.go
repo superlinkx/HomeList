@@ -20,7 +20,7 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-package server
+package restapi
 
 import (
 	"log"
@@ -28,14 +28,14 @@ import (
 
 	"github.com/go-chi/chi/v5"
 	"github.com/go-chi/chi/v5/middleware"
-	"github.com/superlinkx/HomeList/api"
+	"github.com/superlinkx/HomeList/handlers"
 )
 
 type Config struct {
 	HostURL string
 }
 
-func StartServer(config Config, api api.API) {
+func NewServer(config Config, api handlers.Handlers) *http.Server {
 	if config.HostURL == "" {
 		config.HostURL = ":80"
 	}
@@ -44,10 +44,14 @@ func StartServer(config Config, api api.API) {
 	r.Use(middleware.Logger)
 	r.Mount("/api/v1", v1ApiRouter(api))
 	log.Printf("Server is running on %s", config.HostURL)
-	http.ListenAndServe(config.HostURL, r)
+
+	return &http.Server{
+		Addr:    config.HostURL,
+		Handler: r,
+	}
 }
 
-func v1ApiRouter(api api.API) http.Handler {
+func v1ApiRouter(api handlers.Handlers) http.Handler {
 	r := chi.NewRouter()
 
 	r.Get("/lists", api.FetchAllLists)
