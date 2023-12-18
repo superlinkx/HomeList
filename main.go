@@ -51,8 +51,8 @@ func main() {
 			log.Fatalf("Failed to migrate database: %s", err)
 		}
 
-		s := services.Init(db)
-		application := app.NewApplication(s)
+		services := services.Init(db)
+		application := app.NewApplication(services)
 		api := api.NewAPI(application)
 		server.StartServer(server.Config{HostURL: config.HostURL}, api)
 	}

@@ -181,8 +181,7 @@ func (s API) DeleteListItem(w http.ResponseWriter, r *http.Request) {
 func listItemsView(listitems []app.ListItem) ([]byte, error) {
 	var view = make([]ListItem, 0, len(listitems))
 	for _, listitem := range listitems {
-		item := ListItem(listitem)
-		view = append(view, item)
+		view = append(view, ListItem(listitem))
 	}
 	return json.Marshal(view)
 }

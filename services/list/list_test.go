@@ -2,85 +2,148 @@ package list_test
 
 import (
 	"context"
-	"fmt"
+	"errors"
 	"testing"
 
-	"github.com/stretchr/testify/require"
+	"github.com/stretchr/testify/assert"
 	"github.com/superlinkx/HomeList/db/sqlite"
-	"github.com/superlinkx/HomeList/harnesses/integration"
 	"github.com/superlinkx/HomeList/services/list"
+	"github.com/superlinkx/HomeList/services/list/mocks"
 )
 
-type closer interface {
-	Close() error
-}
-
-func setupService() (list.Service, closer, error) {
-	if db, err := integration.ConnectDatabase(); err != nil {
-		return list.Service{}, db, fmt.Errorf("failed to generate db connection: %s", err)
-	} else if err := db.Ping(); err != nil {
-		return list.Service{}, db, fmt.Errorf("failed to ping database: %s", err)
-	} else if err := integration.ResetDatabase(db); err != nil {
-		return list.Service{}, db, fmt.Errorf("failed to reset database: %s", err)
-	} else {
-		queries := sqlite.New(db)
-		srv := list.NewService(queries)
-		return srv, db, nil
+var (
+	errUnhappyPath = errors.New("unhappy path")
+	happySqlList   = sqlite.List{
+		ID:   1,
+		Name: "test",
 	}
-}
+	happyServiceList = list.List{
+		ID:   1,
+		Name: "test",
+	}
+)
 
-func TestAllLists(t *testing.T) {
-	srv, closer, err := setupService()
-	require.Nilf(t, err, "failed to setup service: %s", err)
-	defer closer.Close()
+func TestGetList(t *testing.T) {
+	var (
+		mockQueries = mocks.NewQueries(t)
+		srv         = list.NewService(mockQueries)
+	)
 
-	t.Run("HappyPath", func(t *testing.T) {
-		result, err := srv.AllLists(context.Background(), 10)
-		require.Nilf(t, err, "failed to fetch all lists: %s", err)
-		require.GreaterOrEqual(t, len(result), 1)
+	t.Run("happy path", func(t *testing.T) {
+		mockQueries.EXPECT().GetList(context.Background(), int64(1)).
+			Return(happySqlList, nil).Times(1)
+
+		l, err := srv.GetList(context.Background(), 1)
+		assert.Nil(t, err)
+		assert.Equal(t, happyServiceList, l)
+	})
+
+	t.Run("unhappy path", func(t *testing.T) {
+		mockQueries.EXPECT().GetList(context.Background(), int64(1)).
+			Return(sqlite.List{}, errUnhappyPath).Times(1)
+
+		_, err := srv.GetList(context.Background(), 1)
+		assert.ErrorIs(t, err, errUnhappyPath)
 	})
 }
 
-func TestGetList(t *testing.T) {
-	srv, closer, err := setupService()
-	if err != nil {
-		t.Fatalf("failed to setup service: %s", err)
-	}
-	defer closer.Close()
-	t.Run("HappyPath", func(t *testing.T) {
-		result, err := srv.GetList(context.Background(), 1)
-		require.Nilf(t, err, "failed to fetch list: %s", err)
-		require.Equal(t, result.Name, "Main List")
-		require.Equal(t, result.ID, int64(1))
+func TestAllLists(t *testing.T) {
+	var (
+		mockQueries = mocks.NewQueries(t)
+		srv         = list.NewService(mockQueries)
+	)
+
+	t.Run("happy path", func(t *testing.T) {
+		mockQueries.EXPECT().AllLists(context.Background(), int64(1)).
+			Return([]sqlite.List{happySqlList}, nil).Times(1)
+
+		l, err := srv.AllLists(context.Background(), 1)
+		assert.Nil(t, err)
+		assert.Equal(t, []list.List{
+			happyServiceList,
+		}, l)
+	})
+
+	t.Run("unhappy path", func(t *testing.T) {
+		mockQueries.EXPECT().AllLists(context.Background(), int64(1)).
+			Return(nil, errUnhappyPath).Times(1)
+
+		_, err := srv.AllLists(context.Background(), 1)
+		assert.ErrorIs(t, err, errUnhappyPath)
+	})
+}
+
+func TestCreateList(t *testing.T) {
+	var (
+		mockQueries = mocks.NewQueries(t)
+		srv         = list.NewService(mockQueries)
+	)
+
+	t.Run("happy path", func(t *testing.T) {
+		mockQueries.EXPECT().CreateList(context.Background(), "test").
+			Return(happySqlList, nil).Times(1)
+
+		l, err := srv.CreateList(context.Background(), "test")
+		assert.Nil(t, err)
+		assert.Equal(t, happyServiceList, l)
+	})
+
+	t.Run("unhappy path", func(t *testing.T) {
+		mockQueries.EXPECT().CreateList(context.Background(), "test").
+			Return(sqlite.List{}, errUnhappyPath).Times(1)
+
+		_, err := srv.CreateList(context.Background(), "test")
+		assert.ErrorIs(t, err, errUnhappyPath)
 	})
 }
 
 func TestUpdateList(t *testing.T) {
-	srv, closer, err := setupService()
-	require.Nilf(t, err, "failed to setup service: %s", err)
-	defer closer.Close()
+	var (
+		mockQueries      = mocks.NewQueries(t)
+		srv              = list.NewService(mockQueries)
+		renameListParams = sqlite.RenameListParams{
+			ID:   1,
+			Name: "test",
+		}
+	)
 
-	t.Run("HappyPath", func(t *testing.T) {
-		result, err := srv.UpdateList(context.Background(), 1, "updated-list-name")
-		require.Nilf(t, err, "failed to update list: %s", err)
-		require.Equal(t, result.Name, "updated-list-name")
+	t.Run("happy path", func(t *testing.T) {
+		mockQueries.EXPECT().RenameList(context.Background(), renameListParams).
+			Return(happySqlList, nil).Times(1)
+
+		l, err := srv.UpdateList(context.Background(), 1, "test")
+		assert.Nil(t, err)
+		assert.Equal(t, happyServiceList, l)
+	})
+
+	t.Run("unhappy path", func(t *testing.T) {
+		mockQueries.EXPECT().RenameList(context.Background(), renameListParams).
+			Return(sqlite.List{}, errUnhappyPath).Times(1)
+
+		_, err := srv.UpdateList(context.Background(), 1, "test")
+		assert.ErrorIs(t, err, errUnhappyPath)
 	})
 }
 
 func TestDeleteList(t *testing.T) {
-	srv, closer, err := setupService()
-	require.Nilf(t, err, "failed to setup service: %s", err)
-	defer closer.Close()
+	var (
+		mockQueries = mocks.NewQueries(t)
+		srv         = list.NewService(mockQueries)
+	)
 
-	t.Run("HappyPath", func(t *testing.T) {
-		listResult, err := srv.GetList(context.Background(), 1)
-		require.Nilf(t, err, "failed to get list")
+	t.Run("happy path", func(t *testing.T) {
+		mockQueries.EXPECT().DeleteList(context.Background(), int64(1)).
+			Return(nil).Times(1)
 
-		deleteErr := srv.DeleteList(context.Background(), 1)
-		require.Nilf(t, deleteErr, "failed to delete list")
+		err := srv.DeleteList(context.Background(), 1)
+		assert.Nil(t, err)
+	})
 
-		allListsResult, err := srv.AllLists(context.Background(), 10)
-		require.Nilf(t, err, "failed to get ALL lists: %s", err)
-		require.NotContains(t, allListsResult, listResult)
+	t.Run("unhappy path", func(t *testing.T) {
+		mockQueries.EXPECT().DeleteList(context.Background(), int64(1)).
+			Return(errUnhappyPath).Times(1)
+
+		err := srv.DeleteList(context.Background(), 1)
+		assert.ErrorIs(t, err, errUnhappyPath)
 	})
 }

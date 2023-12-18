@@ -2,131 +2,219 @@ package listitem_test
 
 import (
 	"context"
-	"fmt"
+	"errors"
 	"testing"
 
-	"github.com/stretchr/testify/require"
+	"github.com/stretchr/testify/assert"
 	"github.com/superlinkx/HomeList/db/sqlite"
-	"github.com/superlinkx/HomeList/harnesses/integration"
 	"github.com/superlinkx/HomeList/services/listitem"
+	"github.com/superlinkx/HomeList/services/listitem/mocks"
 )
 
-type closer interface {
-	Close() error
-}
-
-func setupService() (listitem.Service, closer, error) {
-	if db, err := integration.ConnectDatabase(); err != nil {
-		return listitem.Service{}, db, fmt.Errorf("failed to generate db connection: %s", err)
-	} else if err := db.Ping(); err != nil {
-		return listitem.Service{}, db, fmt.Errorf("failed to ping database: %s", err)
-	} else if err := integration.ResetDatabase(db); err != nil {
-		return listitem.Service{}, db, fmt.Errorf("failed to reset database: %s", err)
-	} else {
-		queries := sqlite.New(db)
-		srv := listitem.NewService(queries)
-		return srv, db, nil
+var (
+	errUnhappyPath   = errors.New("unhappy path")
+	happySqlListItem = sqlite.ListItem{
+		ID:      1,
+		ListID:  1,
+		Content: "test",
+		Sort:    1,
+		Checked: false,
 	}
-}
+	happyServiceListItem = listitem.ListItem{
+		ID:      1,
+		ListID:  1,
+		Content: "test",
+		Sort:    1,
+		Checked: false,
+	}
+)
 
 func TestFetchListItem(t *testing.T) {
-	srv, closer, err := setupService()
-	require.Nilf(t, err, "failed to setup service: %s", err)
-	defer closer.Close()
+	var (
+		mockQueries = mocks.NewQueries(t)
+		srv         = listitem.NewService(mockQueries)
+	)
 
-	t.Run("HappyPath", func(t *testing.T) {
+	t.Run("happy path", func(t *testing.T) {
+		mockQueries.EXPECT().GetListItem(context.Background(), int64(1)).
+			Return(happySqlListItem, nil).Times(1)
+
 		li, err := srv.FetchListItem(context.Background(), 1)
-		require.Nilf(t, err, "failed to fetch list item: %s", err)
+		assert.Nil(t, err)
+		assert.Equal(t, happyServiceListItem, li)
+	})
 
-		require.Equal(t, int64(1), li.ID)
-		require.Equal(t, int64(1), li.ListID)
-		require.Equal(t, int64(1024), li.Sort)
-		require.Equal(t, "Hello world!", li.Content)
-		require.Equal(t, false, li.Checked)
+	t.Run("unhappy path", func(t *testing.T) {
+		mockQueries.EXPECT().GetListItem(context.Background(), int64(1)).
+			Return(sqlite.ListItem{}, errUnhappyPath).Times(1)
+
+		_, err := srv.FetchListItem(context.Background(), 1)
+		assert.ErrorIs(t, err, errUnhappyPath)
 	})
 }
 
 func TestFetchAllItemsFromList(t *testing.T) {
-	srv, closer, err := setupService()
-	require.Nilf(t, err, "failed to setup service: %s", err)
-	defer closer.Close()
+	var (
+		mockQueries            = mocks.NewQueries(t)
+		srv                    = listitem.NewService(mockQueries)
+		allItemsFromListParams = sqlite.AllItemsFromListParams{
+			ListID: 1,
+			Limit:  1,
+		}
+	)
 
-	t.Run("HappyPath", func(t *testing.T) {
-		result, err := srv.FetchAllItemsFromList(context.Background(), 1, 10)
-		require.Nilf(t, err, "failed to fetch list items: %s", err)
-		require.GreaterOrEqual(t, len(result), 1)
+	t.Run("happy path", func(t *testing.T) {
+		mockQueries.EXPECT().AllItemsFromList(context.Background(), allItemsFromListParams).
+			Return([]sqlite.ListItem{happySqlListItem}, nil).Times(1)
 
-		li := result[0]
-		require.Equal(t, int64(1), li.ID)
-		require.Equal(t, int64(1), li.ListID)
-		require.Equal(t, int64(1024), li.Sort)
-		require.Equal(t, "Hello world!", li.Content)
-		require.Equal(t, false, li.Checked)
+		lis, err := srv.FetchAllItemsFromList(context.Background(), 1, 1)
+		assert.Nil(t, err)
+		assert.Equal(t, []listitem.ListItem{
+			happyServiceListItem,
+		}, lis)
 	})
 
-	t.Run("NonExistentList", func(t *testing.T) {
-		result, err := srv.FetchAllItemsFromList(context.Background(), 0, 10)
-		require.Nilf(t, err, "failed to fetch all items: %s", err)
-		require.Len(t, result, 0)
+	t.Run("unhappy path", func(t *testing.T) {
+		mockQueries.EXPECT().AllItemsFromList(context.Background(), allItemsFromListParams).
+			Return(nil, errUnhappyPath).Times(1)
+
+		_, err := srv.FetchAllItemsFromList(context.Background(), 1, 1)
+		assert.ErrorIs(t, err, errUnhappyPath)
 	})
 }
 
 func TestAddItemToList(t *testing.T) {
-	srv, closer, err := setupService()
-	require.Nilf(t, err, "failed to setup service: %s", err)
-	defer closer.Close()
+	var (
+		mockQueries          = mocks.NewQueries(t)
+		srv                  = listitem.NewService(mockQueries)
+		createListItemParams = sqlite.CreateListItemParams{
+			ListID:  1,
+			Content: "test",
+			Sort:    1,
+		}
+	)
 
-	t.Run("HappyPath", func(t *testing.T) {
-		result, err := srv.AddItemToList(context.Background(), 1, "test-content", 1)
-		require.Nilf(t, err, "failed to add item to list: %s", err)
-		require.Equal(t, result.Content, "test-content")
-		require.Equal(t, result.Sort, int64(1))
-		require.Equal(t, result.ListID, int64(1))
+	t.Run("happy path", func(t *testing.T) {
+		mockQueries.EXPECT().CreateListItem(context.Background(), createListItemParams).
+			Return(happySqlListItem, nil).Times(1)
 
-		listResult, err := srv.FetchAllItemsFromList(context.Background(), 1, 10)
-		require.Nilf(t, err, "failed to fetch list items: %s", err)
-		require.GreaterOrEqual(t, len(listResult), 2)
-		require.Contains(t, listResult, result)
+		li, err := srv.AddItemToList(context.Background(), 1, "test", 1)
+		assert.Nil(t, err)
+		assert.Equal(t, happyServiceListItem, li)
+	})
+
+	t.Run("unhappy path", func(t *testing.T) {
+		mockQueries.EXPECT().CreateListItem(context.Background(), createListItemParams).
+			Return(sqlite.ListItem{}, errUnhappyPath).Times(1)
+
+		_, err := srv.AddItemToList(context.Background(), 1, "test", 1)
+		assert.ErrorIs(t, err, errUnhappyPath)
 	})
 }
 
-func TestUpdateListItem(t *testing.T) {
-	srv, closer, err := setupService()
-	require.Nilf(t, err, "failed to setup service")
-	defer closer.Close()
+func TestUpdateListItemContent(t *testing.T) {
+	var (
+		mockQueries              = mocks.NewQueries(t)
+		srv                      = listitem.NewService(mockQueries)
+		updateListItemTextParams = sqlite.UpdateListItemTextParams{
+			ID:      1,
+			Content: "test",
+		}
+	)
 
-	t.Run("ContentHappyPath", func(t *testing.T) {
-		result, err := srv.UpdateListItemContent(context.Background(), 1, "updated-content")
-		require.Nilf(t, err, "failed to update list item content: %s", err)
-		require.Equal(t, result.Content, "updated-content")
+	t.Run("happy path", func(t *testing.T) {
+		mockQueries.EXPECT().UpdateListItemText(context.Background(), updateListItemTextParams).
+			Return(happySqlListItem, nil).Times(1)
+
+		li, err := srv.UpdateListItemContent(context.Background(), 1, "test")
+		assert.Nil(t, err)
+		assert.Equal(t, happyServiceListItem, li)
 	})
 
-	t.Run("SortHappyPath", func(t *testing.T) {
-		result, err := srv.UpdateListItemSort(context.Background(), 1, 2)
-		require.Nilf(t, err, "failed to update list item sort: %s", err)
-		require.Equal(t, result.Sort, int64(2))
-	})
+	t.Run("unhappy path", func(t *testing.T) {
+		mockQueries.EXPECT().UpdateListItemText(context.Background(), updateListItemTextParams).
+			Return(sqlite.ListItem{}, errUnhappyPath).Times(1)
 
-	t.Run("Checked HappyPath,", func(t *testing.T) {
-		result, err := srv.UpdateListItemChecked(context.Background(), 1, true)
-		require.Nilf(t, err, "failed to update list item checked: %s", err)
-		require.Equal(t, result.Checked, true)
+		_, err := srv.UpdateListItemContent(context.Background(), 1, "test")
+		assert.ErrorIs(t, err, errUnhappyPath)
 	})
 }
+
+func TestUpdateListItemSort(t *testing.T) {
+	var (
+		mockQueries              = mocks.NewQueries(t)
+		srv                      = listitem.NewService(mockQueries)
+		updateListItemSortParams = sqlite.UpdateListItemSortParams{
+			ID:   1,
+			Sort: 1,
+		}
+	)
+
+	t.Run("happy path", func(t *testing.T) {
+		mockQueries.EXPECT().UpdateListItemSort(context.Background(), updateListItemSortParams).
+			Return(happySqlListItem, nil).Times(1)
+
+		li, err := srv.UpdateListItemSort(context.Background(), 1, 1)
+		assert.Nil(t, err)
+		assert.Equal(t, happyServiceListItem, li)
+	})
+
+	t.Run("unhappy path", func(t *testing.T) {
+		mockQueries.EXPECT().UpdateListItemSort(context.Background(), updateListItemSortParams).
+			Return(sqlite.ListItem{}, errUnhappyPath).Times(1)
+
+		_, err := srv.UpdateListItemSort(context.Background(), 1, 1)
+		assert.ErrorIs(t, err, errUnhappyPath)
+	})
+}
+
+func TestUpdateListItemChecked(t *testing.T) {
+	var (
+		mockQueries                 = mocks.NewQueries(t)
+		srv                         = listitem.NewService(mockQueries)
+		updateListItemCheckedParams = sqlite.UpdateListItemCheckedParams{
+			ID:      1,
+			Checked: false,
+		}
+	)
+
+	t.Run("happy path", func(t *testing.T) {
+		mockQueries.EXPECT().UpdateListItemChecked(context.Background(), updateListItemCheckedParams).
+			Return(happySqlListItem, nil).Times(1)
+
+		li, err := srv.UpdateListItemChecked(context.Background(), 1, false)
+		assert.Nil(t, err)
+		assert.Equal(t, happyServiceListItem, li)
+	})
+
+	t.Run("unhappy path", func(t *testing.T) {
+		mockQueries.EXPECT().UpdateListItemChecked(context.Background(), updateListItemCheckedParams).
+			Return(sqlite.ListItem{}, errUnhappyPath).Times(1)
+
+		_, err := srv.UpdateListItemChecked(context.Background(), 1, false)
+		assert.ErrorIs(t, err, errUnhappyPath)
+	})
+}
+
 func TestDeleteListItem(t *testing.T) {
-	srv, closer, err := setupService()
-	require.Nilf(t, err, "failed to setup service: %s", err)
-	defer closer.Close()
+	var (
+		mockQueries = mocks.NewQueries(t)
+		srv         = listitem.NewService(mockQueries)
+	)
 
-	t.Run("HappyPath", func(t *testing.T) {
-		itemResult, err := srv.FetchListItem(context.Background(), 1)
-		require.Nilf(t, err, "failed to fetch list item: %s", err)
+	t.Run("happy path", func(t *testing.T) {
+		mockQueries.EXPECT().DeleteListItem(context.Background(), int64(1)).
+			Return(nil).Times(1)
 
-		err = srv.DeleteListItem(context.Background(), itemResult.ID)
-		require.Nilf(t, err, "failed to delete list item: %s", err)
+		err := srv.DeleteListItem(context.Background(), 1)
+		assert.Nil(t, err)
+	})
 
-		listResult, err := srv.FetchAllItemsFromList(context.Background(), 1, 10)
-		require.Nilf(t, err, "failed to fetch list items: %s", err)
-		require.NotContains(t, listResult, itemResult)
+	t.Run("unhappy path", func(t *testing.T) {
+		mockQueries.EXPECT().DeleteListItem(context.Background(), int64(1)).
+			Return(errUnhappyPath).Times(1)
+
+		err := srv.DeleteListItem(context.Background(), 1)
+		assert.ErrorIs(t, err, errUnhappyPath)
 	})
 }

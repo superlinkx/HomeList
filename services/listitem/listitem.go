@@ -29,8 +29,19 @@ import (
 	"github.com/superlinkx/HomeList/db/sqlite"
 )
 
+//go:generate mockery --name queries --exported --with-expecter
+type queries interface {
+	GetListItem(ctx context.Context, id int64) (sqlite.ListItem, error)
+	AllItemsFromList(ctx context.Context, params sqlite.AllItemsFromListParams) ([]sqlite.ListItem, error)
+	CreateListItem(ctx context.Context, params sqlite.CreateListItemParams) (sqlite.ListItem, error)
+	UpdateListItemText(ctx context.Context, params sqlite.UpdateListItemTextParams) (sqlite.ListItem, error)
+	UpdateListItemSort(ctx context.Context, params sqlite.UpdateListItemSortParams) (sqlite.ListItem, error)
+	UpdateListItemChecked(ctx context.Context, params sqlite.UpdateListItemCheckedParams) (sqlite.ListItem, error)
+	DeleteListItem(ctx context.Context, id int64) error
+}
+
 type Service struct {
-	queries *sqlite.Queries
+	queries queries
 }
 
 type ListItem struct {
@@ -41,8 +52,8 @@ type ListItem struct {
 	Sort    int64
 }
 
-func NewService(queries *sqlite.Queries) Service {
-	return Service{queries: queries}
+func NewService(q queries) Service {
+	return Service{queries: q}
 }
 
 func (s Service) FetchListItem(ctx context.Context, id int64) (ListItem, error) {
