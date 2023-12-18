@@ -29,7 +29,6 @@ import (
 	"github.com/superlinkx/HomeList/db/sqlite"
 )
 
-//go:generate mockery --name queries --exported --with-expecter
 type queries interface {
 	AllLists(ctx context.Context, limit int64) ([]sqlite.List, error)
 	GetList(ctx context.Context, id int64) (sqlite.List, error)

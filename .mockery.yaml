@@ -1,0 +1,12 @@
+with-expecter: True
+dir: "{{.InterfaceDir}}/mocks"
+mockname: "Mock{{.InterfaceName | camelcase}}"
+outpkg: "mocks"
+filename: "{{.InterfaceName}}.go"
+exported: True
+all: True
+include-auto-generated: False
+packages:
+  github.com/superlinkx/HomeList:
+    config:
+      recursive: True

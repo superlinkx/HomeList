@@ -1,3 +1,25 @@
+// MIT License
+//
+// Copyright (c) 2023 Alyx Holms
+//
+// Permission is hereby granted, free of charge, to any person obtaining a copy
+// of this software and associated documentation files (the "Software"), to deal
+// in the Software without restriction, including without limitation the rights
+// to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+// copies of the Software, and to permit persons to whom the Software is
+// furnished to do so, subject to the following conditions:
+//
+// The above copyright notice and this permission notice shall be included in all
+// copies or substantial portions of the Software.
+//
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+// AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+// LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+// SOFTWARE.
+
 package list_test
 
 import (
@@ -25,7 +47,7 @@ var (
 
 func TestGetList(t *testing.T) {
 	var (
-		mockQueries = mocks.NewQueries(t)
+		mockQueries = mocks.NewMockQueries(t)
 		srv         = list.NewService(mockQueries)
 	)
 
@@ -49,7 +71,7 @@ func TestGetList(t *testing.T) {
 
 func TestAllLists(t *testing.T) {
 	var (
-		mockQueries = mocks.NewQueries(t)
+		mockQueries = mocks.NewMockQueries(t)
 		srv         = list.NewService(mockQueries)
 	)
 
@@ -75,7 +97,7 @@ func TestAllLists(t *testing.T) {
 
 func TestCreateList(t *testing.T) {
 	var (
-		mockQueries = mocks.NewQueries(t)
+		mockQueries = mocks.NewMockQueries(t)
 		srv         = list.NewService(mockQueries)
 	)
 
@@ -99,7 +121,7 @@ func TestCreateList(t *testing.T) {
 
 func TestUpdateList(t *testing.T) {
 	var (
-		mockQueries      = mocks.NewQueries(t)
+		mockQueries      = mocks.NewMockQueries(t)
 		srv              = list.NewService(mockQueries)
 		renameListParams = sqlite.RenameListParams{
 			ID:   1,
@@ -127,7 +149,7 @@ func TestUpdateList(t *testing.T) {
 
 func TestDeleteList(t *testing.T) {
 	var (
-		mockQueries = mocks.NewQueries(t)
+		mockQueries = mocks.NewMockQueries(t)
 		srv         = list.NewService(mockQueries)
 	)
 

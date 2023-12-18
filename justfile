@@ -46,6 +46,8 @@ debug *ARGS='':
 tidy:
   @go mod tidy
 
-# SQL code generation
-sqlgen:
+# Codegen
+codegen:
   @sqlc generate
+  @go generate ./...
+  @go-runner license
