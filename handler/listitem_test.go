@@ -58,8 +58,8 @@ var (
 
 func TestHandlers_FetchListItem(t *testing.T) {
 	var (
-		mockApper = mocks.NewMockApper(t)
-		hdls      = handler.NewHandlersWithApplication(mockApper)
+		mockApplication = mocks.NewMockApplication(t)
+		hdls            = handler.NewHandlersWithApplication(mockApplication)
 	)
 
 	t.Run("happy path", func(t *testing.T) {
@@ -73,7 +73,7 @@ func TestHandlers_FetchListItem(t *testing.T) {
 		rctx.URLParams.Add("id", "1")
 		req = req.WithContext(ctx)
 
-		mockApper.EXPECT().FetchListItem(ctx, int64(1)).
+		mockApplication.EXPECT().FetchListItem(ctx, int64(1)).
 			Return(appListItem, nil).Times(1)
 
 		hdls.FetchListItem(res, req)
@@ -110,7 +110,7 @@ func TestHandlers_FetchListItem(t *testing.T) {
 		rctx.URLParams.Add("id", "1")
 		req = req.WithContext(ctx)
 
-		mockApper.EXPECT().FetchListItem(ctx, int64(1)).
+		mockApplication.EXPECT().FetchListItem(ctx, int64(1)).
 			Return(app.ListItem{}, errAppFailure).Times(1)
 
 		hdls.FetchListItem(res, req)
@@ -121,8 +121,8 @@ func TestHandlers_FetchListItem(t *testing.T) {
 
 func TestHandlers_FetchAllItemsFromList(t *testing.T) {
 	var (
-		mockApper = mocks.NewMockApper(t)
-		hdls      = handler.NewHandlersWithApplication(mockApper)
+		mockApplication = mocks.NewMockApplication(t)
+		hdls            = handler.NewHandlersWithApplication(mockApplication)
 	)
 
 	t.Run("happy path", func(t *testing.T) {
@@ -136,7 +136,7 @@ func TestHandlers_FetchAllItemsFromList(t *testing.T) {
 		rctx.URLParams.Add("listID", "1")
 		req = req.WithContext(ctx)
 
-		mockApper.EXPECT().FetchAllItemsFromList(ctx, int64(1), int64(10)).
+		mockApplication.EXPECT().FetchAllItemsFromList(ctx, int64(1), int64(10)).
 			Return(appListItemSlice, nil).Times(1)
 
 		hdls.FetchAllItemsFromList(res, req)

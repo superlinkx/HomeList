@@ -34,19 +34,19 @@ type Handlers struct {
 }
 
 type ListHandlers struct {
-	lister lister
+	list list
 }
 
 type ListItemHandlers struct {
-	listItemer listItemer
+	listItem listItem
 }
 
-type apper interface {
-	lister
-	listItemer
+type application interface {
+	list
+	listItem
 }
 
-type lister interface {
+type list interface {
 	AllLists(context.Context, int64) ([]app.List, error)
 	GetList(context.Context, int64) (app.List, error)
 	CreateList(context.Context, string) (app.List, error)
@@ -54,7 +54,7 @@ type lister interface {
 	DeleteList(context.Context, int64) error
 }
 
-type listItemer interface {
+type listItem interface {
 	FetchAllItemsFromList(context.Context, int64, int64) ([]app.ListItem, error)
 	FetchListItem(context.Context, int64) (app.ListItem, error)
 	AddItemToList(context.Context, int64, string, int64) (app.ListItem, error)
@@ -64,24 +64,24 @@ type listItemer interface {
 	DeleteListItem(context.Context, int64) error
 }
 
-func NewHandlersWithApplication(a apper) Handlers {
+func NewHandlersWithApplication(a application) Handlers {
 	return Handlers{
 		ListHandlers: ListHandlers{
-			lister: a,
+			list: a,
 		},
 		ListItemHandlers: ListItemHandlers{
-			listItemer: a,
+			listItem: a,
 		},
 	}
 }
 
-func NewHandlersWithComponents(l lister, li listItemer) Handlers {
+func NewHandlersWithComponents(l list, li listItem) Handlers {
 	return Handlers{
 		ListHandlers: ListHandlers{
-			lister: l,
+			list: l,
 		},
 		ListItemHandlers: ListItemHandlers{
-			listItemer: li,
+			listItem: li,
 		},
 	}
 }

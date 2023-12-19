@@ -40,8 +40,8 @@ type List struct {
 	Name string `json:"name"`
 }
 
-func (s Handlers) FetchAllLists(w http.ResponseWriter, r *http.Request) {
-	if lists, err := s.lister.AllLists(r.Context(), 10); err != nil {
+func (s ListHandlers) FetchAllLists(w http.ResponseWriter, r *http.Request) {
+	if lists, err := s.list.AllLists(r.Context(), 10); err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 	} else if result, err := listsView(lists); err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
@@ -51,12 +51,12 @@ func (s Handlers) FetchAllLists(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-func (s Handlers) FetchList(w http.ResponseWriter, r *http.Request) {
+func (s ListHandlers) FetchList(w http.ResponseWriter, r *http.Request) {
 	var listID = chi.URLParam(r, "listID")
 
 	if id, err := strconv.Atoi(listID); err != nil {
 		http.Error(w, err.Error(), http.StatusBadRequest)
-	} else if list, err := s.lister.GetList(r.Context(), int64(id)); err != nil {
+	} else if list, err := s.list.GetList(r.Context(), int64(id)); err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 	} else if result, err := json.Marshal(List(list)); err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
@@ -66,12 +66,12 @@ func (s Handlers) FetchList(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-func (s Handlers) CreateList(w http.ResponseWriter, r *http.Request) {
+func (s ListHandlers) CreateList(w http.ResponseWriter, r *http.Request) {
 	var request ListRequest
 
 	if err := json.NewDecoder(r.Body).Decode(&request); err != nil {
 		http.Error(w, err.Error(), http.StatusBadRequest)
-	} else if list, err := s.lister.CreateList(r.Context(), request.Name); err != nil {
+	} else if list, err := s.list.CreateList(r.Context(), request.Name); err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 	} else if result, err := json.Marshal(List(list)); err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
@@ -82,7 +82,7 @@ func (s Handlers) CreateList(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-func (s Handlers) RenameList(w http.ResponseWriter, r *http.Request) {
+func (s ListHandlers) RenameList(w http.ResponseWriter, r *http.Request) {
 	var (
 		request ListRequest
 		listID  = chi.URLParam(r, "listID")
@@ -92,7 +92,7 @@ func (s Handlers) RenameList(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, err.Error(), http.StatusBadRequest)
 	} else if err := json.NewDecoder(r.Body).Decode(&request); err != nil {
 		http.Error(w, err.Error(), http.StatusBadRequest)
-	} else if list, err := s.lister.UpdateList(r.Context(), int64(id), request.Name); err != nil {
+	} else if list, err := s.list.UpdateList(r.Context(), int64(id), request.Name); err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 	} else if result, err := json.Marshal(List(list)); err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
@@ -102,12 +102,12 @@ func (s Handlers) RenameList(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-func (s Handlers) DeleteList(w http.ResponseWriter, r *http.Request) {
+func (s ListHandlers) DeleteList(w http.ResponseWriter, r *http.Request) {
 	var listID = chi.URLParam(r, "listID")
 
 	if id, err := strconv.Atoi(listID); err != nil {
 		http.Error(w, err.Error(), http.StatusBadRequest)
-	} else if err := s.lister.DeleteList(r.Context(), int64(id)); err != nil {
+	} else if err := s.list.DeleteList(r.Context(), int64(id)); err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 	} else {
 		w.WriteHeader(http.StatusNoContent)

@@ -61,7 +61,7 @@ func (s Handlers) FetchListItem(w http.ResponseWriter, r *http.Request) {
 
 	if listID, err := strconv.Atoi(itemID); err != nil {
 		http.Error(w, err.Error(), http.StatusBadRequest)
-	} else if listitem, err := s.listItemer.FetchListItem(r.Context(), int64(listID)); err != nil {
+	} else if listitem, err := s.listItem.FetchListItem(r.Context(), int64(listID)); err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 	} else if result, err := json.Marshal(ListItem(listitem)); err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
@@ -76,7 +76,7 @@ func (s Handlers) FetchAllItemsFromList(w http.ResponseWriter, r *http.Request) 
 
 	if listID, err := strconv.Atoi(listIDParam); err != nil {
 		http.Error(w, err.Error(), http.StatusBadRequest)
-	} else if listitems, err := s.listItemer.FetchAllItemsFromList(r.Context(), int64(listID), 10); err != nil {
+	} else if listitems, err := s.listItem.FetchAllItemsFromList(r.Context(), int64(listID), 10); err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 	} else if result, err := listItemsView(listitems); err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
@@ -96,7 +96,7 @@ func (s Handlers) CreateListItem(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, err.Error(), http.StatusBadRequest)
 	} else if err := json.NewDecoder(r.Body).Decode(&listItem); err != nil {
 		http.Error(w, err.Error(), http.StatusBadRequest)
-	} else if listItem, err := s.listItemer.AddItemToList(r.Context(), int64(listID), listItem.Content, listItem.Sort); err != nil {
+	} else if listItem, err := s.listItem.AddItemToList(r.Context(), int64(listID), listItem.Content, listItem.Sort); err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 	} else if result, err := json.Marshal(ListItem(listItem)); err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
@@ -116,7 +116,7 @@ func (s Handlers) UpdateListItemContent(w http.ResponseWriter, r *http.Request) 
 		http.Error(w, err.Error(), http.StatusBadRequest)
 	} else if err := json.NewDecoder(r.Body).Decode(&listItem); err != nil {
 		http.Error(w, err.Error(), http.StatusBadRequest)
-	} else if listItem, err := s.listItemer.UpdateListItemContent(r.Context(), int64(itemID), listItem.Content); err != nil {
+	} else if listItem, err := s.listItem.UpdateListItemContent(r.Context(), int64(itemID), listItem.Content); err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 	} else if result, err := json.Marshal(ListItem(listItem)); err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
@@ -136,7 +136,7 @@ func (s Handlers) UpdateListItemSort(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, err.Error(), http.StatusBadRequest)
 	} else if err := json.NewDecoder(r.Body).Decode(&listItem); err != nil {
 		http.Error(w, err.Error(), http.StatusBadRequest)
-	} else if listItem, err := s.listItemer.UpdateListItemSort(r.Context(), int64(itemID), listItem.Sort); err != nil {
+	} else if listItem, err := s.listItem.UpdateListItemSort(r.Context(), int64(itemID), listItem.Sort); err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 	} else if result, err := json.Marshal(ListItem(listItem)); err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
@@ -156,7 +156,7 @@ func (s Handlers) UpdateListItemChecked(w http.ResponseWriter, r *http.Request) 
 		http.Error(w, err.Error(), http.StatusBadRequest)
 	} else if err := json.NewDecoder(r.Body).Decode(&listItem); err != nil {
 		http.Error(w, err.Error(), http.StatusBadRequest)
-	} else if listItem, err := s.listItemer.UpdateListItemChecked(r.Context(), int64(itemID), listItem.Checked); err != nil {
+	} else if listItem, err := s.listItem.UpdateListItemChecked(r.Context(), int64(itemID), listItem.Checked); err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 	} else if result, err := json.Marshal(ListItem(listItem)); err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
@@ -171,7 +171,7 @@ func (s Handlers) DeleteListItem(w http.ResponseWriter, r *http.Request) {
 
 	if itemID, err := strconv.Atoi(itemIDParam); err != nil {
 		http.Error(w, err.Error(), http.StatusBadRequest)
-	} else if err := s.listItemer.DeleteListItem(r.Context(), int64(itemID)); err != nil {
+	} else if err := s.listItem.DeleteListItem(r.Context(), int64(itemID)); err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 	} else {
 		w.WriteHeader(http.StatusNoContent)
