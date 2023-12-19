@@ -20,25 +20,10 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-package services
+package handler_test
 
-import (
-	"database/sql"
+import "errors"
 
-	"github.com/superlinkx/HomeList/db/sqlite"
-	"github.com/superlinkx/HomeList/services/list"
-	"github.com/superlinkx/HomeList/services/listitem"
+var (
+	errAppFailure = errors.New("application failed")
 )
-
-type Services struct {
-	List     list.Service
-	ListItem listitem.Service
-}
-
-func Init(db *sql.DB) Services {
-	queries := sqlite.New(db)
-	return Services{
-		List:     list.NewService(queries),
-		ListItem: listitem.NewService(queries),
-	}
-}

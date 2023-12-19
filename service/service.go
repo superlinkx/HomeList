@@ -20,18 +20,25 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-package handlers
+package service
 
 import (
-	"github.com/superlinkx/HomeList/app"
+	"database/sql"
+
+	"github.com/superlinkx/HomeList/db/sqlite"
+	"github.com/superlinkx/HomeList/service/list"
+	"github.com/superlinkx/HomeList/service/listitem"
 )
 
-type Handlers struct {
-	application app.Application
+type Services struct {
+	List     list.Service
+	ListItem listitem.Service
 }
 
-func NewHandlers(application app.Application) Handlers {
-	return Handlers{
-		application: application,
+func Init(db *sql.DB) Services {
+	queries := sqlite.New(db)
+	return Services{
+		List:     list.NewService(queries),
+		ListItem: listitem.NewService(queries),
 	}
 }

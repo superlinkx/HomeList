@@ -29,8 +29,8 @@ import (
 
 	"github.com/stretchr/testify/assert"
 	"github.com/superlinkx/HomeList/db/sqlite"
-	"github.com/superlinkx/HomeList/services/list"
-	"github.com/superlinkx/HomeList/services/list/mocks"
+	"github.com/superlinkx/HomeList/service/list"
+	"github.com/superlinkx/HomeList/service/list/mocks"
 )
 
 var (

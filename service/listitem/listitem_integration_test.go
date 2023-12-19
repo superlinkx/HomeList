@@ -30,7 +30,7 @@ import (
 	"github.com/stretchr/testify/require"
 	"github.com/superlinkx/HomeList/db/sqlite"
 	"github.com/superlinkx/HomeList/harnesses/integration"
-	"github.com/superlinkx/HomeList/services/listitem"
+	"github.com/superlinkx/HomeList/service/listitem"
 )
 
 type closer interface {

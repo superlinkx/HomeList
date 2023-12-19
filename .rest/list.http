@@ -1,14 +1,14 @@
 ### Get all lists
 
-GET http://localhost:80/api/v1/lists
+GET http://localhost:2552/api/v1/lists
 
 ### Get first list
 
-GET http://localhost:80/api/v1/list/1
+GET http://localhost:2552/api/v1/list/1
 
 ### Create new list
 
-POST http://localhost:80/api/v1/list
+POST http://localhost:2552/api/v1/list
 content-type: application/json
 
 {
@@ -17,7 +17,7 @@ content-type: application/json
 
 ### Update first list
 
-PUT http://localhost:80/api/v1/list/1
+PUT http://localhost:2552/api/v1/list/1
 content-type: application/json
 
 {
@@ -26,15 +26,15 @@ content-type: application/json
 
 ### Get all items for first list
 
-GET http://localhost:80/api/v1/list/1/items
+GET http://localhost:2552/api/v1/list/1/items
 
 ### Get item by id
 
-GET http://localhost:80/api/v1/listitem/1
+GET http://localhost:2552/api/v1/listitem/1
 
 ### Create new item on first list
 
-POST http://localhost:80/api/v1/list/1/item
+POST http://localhost:2552/api/v1/list/1/item
 content-type: application/json
 
 {
@@ -44,7 +44,7 @@ content-type: application/json
 
 ### Update text on first item on first list
 
-PUT http://localhost:80/api/v1/listitem/1/content
+PUT http://localhost:2552/api/v1/listitem/1/content
 Content-Type: application/json
 
 {
@@ -53,7 +53,7 @@ Content-Type: application/json
 
 ### Update checked state to true for first item on first list
 
-PUT http://localhost:80/api/v1/listitem/1/checked
+PUT http://localhost:2552/api/v1/listitem/1/checked
 Content-Type: application/json
 
 {
@@ -62,7 +62,7 @@ Content-Type: application/json
 
 ### Update sort order for first item on first list
 
-PUT http://localhost:80/api/v1/listitem/1/sort
+PUT http://localhost:2552/api/v1/listitem/1/sort
 Content-Type: application/json
 
 {
@@ -71,11 +71,11 @@ Content-Type: application/json
 
 ### Delete second item on first list
 
-DELETE http://localhost:80/api/v1/listitem/2
+DELETE http://localhost:2552/api/v1/listitem/2
 
 ### Create first item on second list
 
-POST http://localhost:80/api/v1/list/2/item
+POST http://localhost:2552/api/v1/list/2/item
 content-type: application/json
 
 {
@@ -85,8 +85,8 @@ content-type: application/json
 
 ### Get all items on second list
 
-GET http://localhost:80/api/v1/list/2/items
+GET http://localhost:2552/api/v1/list/2/items
 
 ### Delete second list
 
-DELETE http://localhost:80/api/v1/list/2
+DELETE http://localhost:2552/api/v1/list/2

@@ -20,7 +20,7 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-package handlers
+package handler
 
 import (
 	"encoding/json"
@@ -35,13 +35,13 @@ type ListRequest struct {
 	Name string `json:"name"`
 }
 
-type ViewList struct {
+type List struct {
 	ID   int64  `json:"id"`
 	Name string `json:"name"`
 }
 
 func (s Handlers) FetchAllLists(w http.ResponseWriter, r *http.Request) {
-	if lists, err := s.application.AllLists(r.Context(), 10); err != nil {
+	if lists, err := s.lister.AllLists(r.Context(), 10); err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 	} else if result, err := listsView(lists); err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
@@ -56,9 +56,9 @@ func (s Handlers) FetchList(w http.ResponseWriter, r *http.Request) {
 
 	if id, err := strconv.Atoi(listID); err != nil {
 		http.Error(w, err.Error(), http.StatusBadRequest)
-	} else if list, err := s.application.GetList(r.Context(), int64(id)); err != nil {
+	} else if list, err := s.lister.GetList(r.Context(), int64(id)); err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
-	} else if result, err := json.Marshal(ViewList(list)); err != nil {
+	} else if result, err := json.Marshal(List(list)); err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 	} else {
 		w.Header().Set("Content-Type", "application/json")
@@ -71,11 +71,12 @@ func (s Handlers) CreateList(w http.ResponseWriter, r *http.Request) {
 
 	if err := json.NewDecoder(r.Body).Decode(&request); err != nil {
 		http.Error(w, err.Error(), http.StatusBadRequest)
-	} else if list, err := s.application.CreateList(r.Context(), request.Name); err != nil {
+	} else if list, err := s.lister.CreateList(r.Context(), request.Name); err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
-	} else if result, err := json.Marshal(ViewList(list)); err != nil {
+	} else if result, err := json.Marshal(List(list)); err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 	} else {
+		w.WriteHeader(http.StatusCreated)
 		w.Header().Set("Content-Type", "application/json")
 		w.Write(result)
 	}
@@ -91,9 +92,9 @@ func (s Handlers) RenameList(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, err.Error(), http.StatusBadRequest)
 	} else if err := json.NewDecoder(r.Body).Decode(&request); err != nil {
 		http.Error(w, err.Error(), http.StatusBadRequest)
-	} else if list, err := s.application.UpdateList(r.Context(), int64(id), request.Name); err != nil {
+	} else if list, err := s.lister.UpdateList(r.Context(), int64(id), request.Name); err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
-	} else if result, err := json.Marshal(ViewList(list)); err != nil {
+	} else if result, err := json.Marshal(List(list)); err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 	} else {
 		w.Header().Set("Content-Type", "application/json")
@@ -106,7 +107,7 @@ func (s Handlers) DeleteList(w http.ResponseWriter, r *http.Request) {
 
 	if id, err := strconv.Atoi(listID); err != nil {
 		http.Error(w, err.Error(), http.StatusBadRequest)
-	} else if err := s.application.DeleteList(r.Context(), int64(id)); err != nil {
+	} else if err := s.lister.DeleteList(r.Context(), int64(id)); err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 	} else {
 		w.WriteHeader(http.StatusNoContent)
@@ -114,9 +115,9 @@ func (s Handlers) DeleteList(w http.ResponseWriter, r *http.Request) {
 }
 
 func listsView(lists []app.List) ([]byte, error) {
-	var viewLists = make([]ViewList, 0, len(lists))
+	var viewLists = make([]List, 0, len(lists))
 	for _, list := range lists {
-		viewLists = append(viewLists, ViewList(list))
+		viewLists = append(viewLists, List(list))
 	}
 	return json.Marshal(viewLists)
 }

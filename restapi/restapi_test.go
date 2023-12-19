@@ -20,18 +20,31 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-package app
+package restapi_test
 
 import (
-	"github.com/superlinkx/HomeList/service"
+	"testing"
+
+	"github.com/stretchr/testify/assert"
+	"github.com/superlinkx/HomeList/handler"
+	"github.com/superlinkx/HomeList/restapi"
 )
 
-type Application struct {
-	services service.Services
-}
+func TestNewServer(t *testing.T) {
+	var (
+		fullConfig = restapi.Config{
+			HostURL: "localhost:8080",
+		}
+		emptyConfig = restapi.Config{}
+	)
 
-func NewApplication(services service.Services) *Application {
-	return &Application{
-		services: services,
-	}
+	t.Run("full config", func(t *testing.T) {
+		s := restapi.NewServer(fullConfig, handler.Handlers{})
+		assert.Equal(t, "localhost:8080", s.Addr)
+	})
+
+	t.Run("empty config", func(t *testing.T) {
+		s := restapi.NewServer(emptyConfig, handler.Handlers{})
+		assert.Equal(t, ":80", s.Addr)
+	})
 }

@@ -39,9 +39,9 @@ import (
 	migrate "github.com/rubenv/sql-migrate"
 	"github.com/superlinkx/HomeList/app"
 	"github.com/superlinkx/HomeList/environment"
-	"github.com/superlinkx/HomeList/handlers"
+	"github.com/superlinkx/HomeList/handler"
 	"github.com/superlinkx/HomeList/restapi"
-	"github.com/superlinkx/HomeList/services"
+	"github.com/superlinkx/HomeList/service"
 )
 
 func main() {
@@ -74,9 +74,9 @@ func startApp(db *sql.DB, config environment.Config) {
 	done := make(chan os.Signal, 1)
 	signal.Notify(done, os.Interrupt, syscall.SIGINT, syscall.SIGTERM)
 
-	services := services.Init(db)
+	services := service.Init(db)
 	application := app.NewApplication(services)
-	handlers := handlers.NewHandlers(application)
+	handlers := handler.NewHandlersWithApplication(application)
 	srv := restapi.NewServer(restapi.Config{HostURL: config.HostURL}, handlers)
 
 	go func() {
@@ -85,6 +85,8 @@ func startApp(db *sql.DB, config environment.Config) {
 			log.Fatalf("Server failure: %s\n", err)
 		}
 	}()
+
+	log.Printf("Server is running on %s", srv.Addr)
 
 	<-done
 	log.Println("Application stopping...")

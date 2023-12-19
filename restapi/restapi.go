@@ -23,27 +23,25 @@
 package restapi
 
 import (
-	"log"
 	"net/http"
 
 	"github.com/go-chi/chi/v5"
 	"github.com/go-chi/chi/v5/middleware"
-	"github.com/superlinkx/HomeList/handlers"
+	"github.com/superlinkx/HomeList/handler"
 )
 
 type Config struct {
 	HostURL string
 }
 
-func NewServer(config Config, api handlers.Handlers) *http.Server {
+func NewServer(config Config, hdls handler.Handlers) *http.Server {
 	if config.HostURL == "" {
 		config.HostURL = ":80"
 	}
 
 	r := chi.NewRouter()
 	r.Use(middleware.Logger)
-	r.Mount("/api/v1", v1ApiRouter(api))
-	log.Printf("Server is running on %s", config.HostURL)
+	r.Mount("/api/v1", v1ApiRouter(hdls))
 
 	return &http.Server{
 		Addr:    config.HostURL,
@@ -51,24 +49,24 @@ func NewServer(config Config, api handlers.Handlers) *http.Server {
 	}
 }
 
-func v1ApiRouter(api handlers.Handlers) http.Handler {
+func v1ApiRouter(hdls handler.Handlers) http.Handler {
 	r := chi.NewRouter()
 
-	r.Get("/lists", api.FetchAllLists)
-	r.Get("/list/{listID}", api.FetchList)
-	r.Get("/list/{listID}/items", api.FetchAllItemsFromList)
-	r.Get("/listitem/{id}", api.FetchListItem)
+	r.Get("/lists", hdls.FetchAllLists)
+	r.Get("/list/{listID}", hdls.FetchList)
+	r.Get("/list/{listID}/items", hdls.FetchAllItemsFromList)
+	r.Get("/listitem/{id}", hdls.FetchListItem)
 
-	r.Post("/list", api.CreateList)
-	r.Post("/list/{listID}/item", api.CreateListItem)
+	r.Post("/list", hdls.CreateList)
+	r.Post("/list/{listID}/item", hdls.CreateListItem)
 
-	r.Put("/list/{listID}", api.RenameList)
-	r.Put("/listitem/{id}/content", api.UpdateListItemContent)
-	r.Put("/listitem/{id}/sort", api.UpdateListItemSort)
-	r.Put("/listitem/{id}/checked", api.UpdateListItemChecked)
+	r.Put("/list/{listID}", hdls.RenameList)
+	r.Put("/listitem/{id}/content", hdls.UpdateListItemContent)
+	r.Put("/listitem/{id}/sort", hdls.UpdateListItemSort)
+	r.Put("/listitem/{id}/checked", hdls.UpdateListItemChecked)
 
-	r.Delete("/list/{listID}", api.DeleteList)
-	r.Delete("/listitem/{id}", api.DeleteListItem)
+	r.Delete("/list/{listID}", hdls.DeleteList)
+	r.Delete("/listitem/{id}", hdls.DeleteListItem)
 
 	return r
 }
