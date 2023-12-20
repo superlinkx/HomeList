@@ -30,7 +30,7 @@ import (
 )
 
 type ListService interface {
-	AllLists(ctx context.Context, limit int64) ([]list.List, error)
+	AllLists(ctx context.Context, limit int32) ([]list.List, error)
 	GetList(ctx context.Context, id int64) (list.List, error)
 	CreateList(ctx context.Context, name string) (list.List, error)
 	UpdateList(ctx context.Context, id int64, name string) (list.List, error)
@@ -52,7 +52,7 @@ func NewListApp(listService ListService) ListApp {
 	}
 }
 
-func (s ListApp) AllLists(ctx context.Context, limit int64) ([]List, error) {
+func (s ListApp) AllLists(ctx context.Context, limit int32) ([]List, error) {
 	var lists = make([]List, 0, limit)
 	if results, err := s.listService.AllLists(ctx, limit); err != nil {
 		return lists, fmt.Errorf("application failed enumerate lists: %w", err)

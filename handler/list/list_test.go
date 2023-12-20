@@ -73,7 +73,7 @@ func TestListHandlers_FetchAllLists(t *testing.T) {
 			res = httptest.NewRecorder()
 		)
 
-		mockListApp.EXPECT().AllLists(context.Background(), int64(10)).
+		mockListApp.EXPECT().AllLists(context.Background(), int32(10)).
 			Return([]listapp.List{}, nil).Times(1)
 
 		hdls.FetchAllLists(res, req)
@@ -89,7 +89,7 @@ func TestListHandlers_FetchAllLists(t *testing.T) {
 			res = httptest.NewRecorder()
 		)
 
-		mockListApp.EXPECT().AllLists(context.Background(), int64(10)).
+		mockListApp.EXPECT().AllLists(context.Background(), int32(10)).
 			Return(appListSlice, nil).Times(1)
 
 		hdls.FetchAllLists(res, req)
@@ -105,7 +105,7 @@ func TestListHandlers_FetchAllLists(t *testing.T) {
 			res = httptest.NewRecorder()
 		)
 
-		mockListApp.EXPECT().AllLists(context.Background(), int64(10)).
+		mockListApp.EXPECT().AllLists(context.Background(), int32(10)).
 			Return(nil, errAppFailure).Times(1)
 
 		hdls.FetchAllLists(res, req)

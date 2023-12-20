@@ -3,7 +3,7 @@
 //   sqlc v1.24.0
 // source: list.sql
 
-package sqlite
+package sqlc
 
 import (
 	"context"
@@ -12,10 +12,10 @@ import (
 const allLists = `-- name: AllLists :many
 SELECT id, name FROM lists
 ORDER BY id ASC
-LIMIT ?
+LIMIT $1
 `
 
-func (q *Queries) AllLists(ctx context.Context, limit int64) ([]List, error) {
+func (q *Queries) AllLists(ctx context.Context, limit int32) ([]List, error) {
 	rows, err := q.db.QueryContext(ctx, allLists, limit)
 	if err != nil {
 		return nil, err
@@ -40,7 +40,7 @@ func (q *Queries) AllLists(ctx context.Context, limit int64) ([]List, error) {
 
 const createList = `-- name: CreateList :one
 INSERT INTO lists (name)
-VALUES (?)
+VALUES ($1)
 RETURNING id, name
 `
 
@@ -53,7 +53,7 @@ func (q *Queries) CreateList(ctx context.Context, name string) (List, error) {
 
 const deleteList = `-- name: DeleteList :exec
 DELETE FROM lists
-WHERE id = ?
+WHERE id = $1
 `
 
 func (q *Queries) DeleteList(ctx context.Context, id int64) error {
@@ -63,7 +63,7 @@ func (q *Queries) DeleteList(ctx context.Context, id int64) error {
 
 const getList = `-- name: GetList :one
 SELECT id, name FROM lists
-WHERE id = ? LIMIT 1
+WHERE id = $1 LIMIT 1
 `
 
 func (q *Queries) GetList(ctx context.Context, id int64) (List, error) {
@@ -75,8 +75,8 @@ func (q *Queries) GetList(ctx context.Context, id int64) (List, error) {
 
 const renameList = `-- name: RenameList :one
 UPDATE lists
-SET name = ?
-WHERE id = ?
+SET name = $1
+WHERE id = $2
 RETURNING id, name
 `
 

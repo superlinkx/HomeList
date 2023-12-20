@@ -130,7 +130,7 @@ func (_c *MockListItemApp_DeleteListItem_Call) RunAndReturn(run func(context.Con
 }
 
 // FetchAllItemsFromList provides a mock function with given fields: ctx, listID, limit
-func (_m *MockListItemApp) FetchAllItemsFromList(ctx context.Context, listID int64, limit int64) ([]listitem.ListItem, error) {
+func (_m *MockListItemApp) FetchAllItemsFromList(ctx context.Context, listID int64, limit int32) ([]listitem.ListItem, error) {
 	ret := _m.Called(ctx, listID, limit)
 
 	if len(ret) == 0 {
@@ -139,10 +139,10 @@ func (_m *MockListItemApp) FetchAllItemsFromList(ctx context.Context, listID int
 
 	var r0 []listitem.ListItem
 	var r1 error
-	if rf, ok := ret.Get(0).(func(context.Context, int64, int64) ([]listitem.ListItem, error)); ok {
+	if rf, ok := ret.Get(0).(func(context.Context, int64, int32) ([]listitem.ListItem, error)); ok {
 		return rf(ctx, listID, limit)
 	}
-	if rf, ok := ret.Get(0).(func(context.Context, int64, int64) []listitem.ListItem); ok {
+	if rf, ok := ret.Get(0).(func(context.Context, int64, int32) []listitem.ListItem); ok {
 		r0 = rf(ctx, listID, limit)
 	} else {
 		if ret.Get(0) != nil {
@@ -150,7 +150,7 @@ func (_m *MockListItemApp) FetchAllItemsFromList(ctx context.Context, listID int
 		}
 	}
 
-	if rf, ok := ret.Get(1).(func(context.Context, int64, int64) error); ok {
+	if rf, ok := ret.Get(1).(func(context.Context, int64, int32) error); ok {
 		r1 = rf(ctx, listID, limit)
 	} else {
 		r1 = ret.Error(1)
@@ -167,14 +167,14 @@ type MockListItemApp_FetchAllItemsFromList_Call struct {
 // FetchAllItemsFromList is a helper method to define mock.On call
 //   - ctx context.Context
 //   - listID int64
-//   - limit int64
+//   - limit int32
 func (_e *MockListItemApp_Expecter) FetchAllItemsFromList(ctx interface{}, listID interface{}, limit interface{}) *MockListItemApp_FetchAllItemsFromList_Call {
 	return &MockListItemApp_FetchAllItemsFromList_Call{Call: _e.mock.On("FetchAllItemsFromList", ctx, listID, limit)}
 }
 
-func (_c *MockListItemApp_FetchAllItemsFromList_Call) Run(run func(ctx context.Context, listID int64, limit int64)) *MockListItemApp_FetchAllItemsFromList_Call {
+func (_c *MockListItemApp_FetchAllItemsFromList_Call) Run(run func(ctx context.Context, listID int64, limit int32)) *MockListItemApp_FetchAllItemsFromList_Call {
 	_c.Call.Run(func(args mock.Arguments) {
-		run(args[0].(context.Context), args[1].(int64), args[2].(int64))
+		run(args[0].(context.Context), args[1].(int64), args[2].(int32))
 	})
 	return _c
 }
@@ -184,7 +184,7 @@ func (_c *MockListItemApp_FetchAllItemsFromList_Call) Return(_a0 []listitem.List
 	return _c
 }
 
-func (_c *MockListItemApp_FetchAllItemsFromList_Call) RunAndReturn(run func(context.Context, int64, int64) ([]listitem.ListItem, error)) *MockListItemApp_FetchAllItemsFromList_Call {
+func (_c *MockListItemApp_FetchAllItemsFromList_Call) RunAndReturn(run func(context.Context, int64, int32) ([]listitem.ListItem, error)) *MockListItemApp_FetchAllItemsFromList_Call {
 	_c.Call.Return(run)
 	return _c
 }

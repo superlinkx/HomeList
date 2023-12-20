@@ -57,7 +57,7 @@ func TestListItemApp_FetchListItem(t *testing.T) {
 		mockListItemService.EXPECT().FetchListItem(context.Background(), int64(1)).
 			Return(listItemSrvListItem, nil).Times(1)
 
-		item, err := listItemApp.FetchListItem(context.Background(), int64(1))
+		item, err := listItemApp.FetchListItem(context.Background(), 1)
 		assert.Nil(t, err)
 		assert.Equal(t, listItemAppListItem, item)
 	})
@@ -66,7 +66,7 @@ func TestListItemApp_FetchListItem(t *testing.T) {
 		mockListItemService.EXPECT().FetchListItem(context.Background(), int64(1)).
 			Return(listitemsrv.ListItem{}, errServiceFailure).Times(1)
 
-		_, err := listItemApp.FetchListItem(context.Background(), int64(1))
+		_, err := listItemApp.FetchListItem(context.Background(), 1)
 
 		assert.ErrorIs(t, err, errServiceFailure)
 	})
@@ -79,19 +79,19 @@ func TestListItemApp_FetchAllItemsFromList(t *testing.T) {
 	)
 
 	t.Run("happy path", func(t *testing.T) {
-		mockListItemService.EXPECT().FetchAllItemsFromList(context.Background(), int64(1), int64(10)).
+		mockListItemService.EXPECT().FetchAllItemsFromList(context.Background(), int64(1), int32(10)).
 			Return(listItemSrvListItemSlice, nil).Times(1)
 
-		items, err := listItemApp.FetchAllItemsFromList(context.Background(), int64(1), int64(10))
+		items, err := listItemApp.FetchAllItemsFromList(context.Background(), 1, 10)
 		assert.Nil(t, err)
 		assert.Equal(t, listItemAppListItemSlice, items)
 	})
 
 	t.Run("service failure", func(t *testing.T) {
-		mockListItemService.EXPECT().FetchAllItemsFromList(context.Background(), int64(1), int64(10)).
+		mockListItemService.EXPECT().FetchAllItemsFromList(context.Background(), int64(1), int32(10)).
 			Return(nil, errServiceFailure).Times(1)
 
-		_, err := listItemApp.FetchAllItemsFromList(context.Background(), int64(1), int64(10))
+		_, err := listItemApp.FetchAllItemsFromList(context.Background(), 1, 10)
 
 		assert.ErrorIs(t, err, errServiceFailure)
 	})

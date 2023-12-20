@@ -28,14 +28,14 @@ import (
 	"testing"
 
 	"github.com/stretchr/testify/assert"
-	"github.com/superlinkx/HomeList/db/sqlite"
+	"github.com/superlinkx/HomeList/data/adapter"
 	"github.com/superlinkx/HomeList/service/list"
 	"github.com/superlinkx/HomeList/service/list/mocks"
 )
 
 var (
 	errUnhappyPath = errors.New("unhappy path")
-	happySqlList   = sqlite.List{
+	happySqlList   = adapter.List{
 		ID:   1,
 		Name: "test",
 	}
@@ -62,7 +62,7 @@ func TestListService_GetList(t *testing.T) {
 
 	t.Run("unhappy path", func(t *testing.T) {
 		mockQueries.EXPECT().GetList(context.Background(), int64(1)).
-			Return(sqlite.List{}, errUnhappyPath).Times(1)
+			Return(adapter.List{}, errUnhappyPath).Times(1)
 
 		_, err := srv.GetList(context.Background(), 1)
 		assert.ErrorIs(t, err, errUnhappyPath)
@@ -76,8 +76,8 @@ func TestListService_AllLists(t *testing.T) {
 	)
 
 	t.Run("happy path", func(t *testing.T) {
-		mockQueries.EXPECT().AllLists(context.Background(), int64(1)).
-			Return([]sqlite.List{happySqlList}, nil).Times(1)
+		mockQueries.EXPECT().AllLists(context.Background(), int32(1)).
+			Return([]adapter.List{happySqlList}, nil).Times(1)
 
 		l, err := srv.AllLists(context.Background(), 1)
 		assert.Nil(t, err)
@@ -87,7 +87,7 @@ func TestListService_AllLists(t *testing.T) {
 	})
 
 	t.Run("unhappy path", func(t *testing.T) {
-		mockQueries.EXPECT().AllLists(context.Background(), int64(1)).
+		mockQueries.EXPECT().AllLists(context.Background(), int32(1)).
 			Return(nil, errUnhappyPath).Times(1)
 
 		_, err := srv.AllLists(context.Background(), 1)
@@ -112,7 +112,7 @@ func TestListService_CreateList(t *testing.T) {
 
 	t.Run("unhappy path", func(t *testing.T) {
 		mockQueries.EXPECT().CreateList(context.Background(), "test").
-			Return(sqlite.List{}, errUnhappyPath).Times(1)
+			Return(adapter.List{}, errUnhappyPath).Times(1)
 
 		_, err := srv.CreateList(context.Background(), "test")
 		assert.ErrorIs(t, err, errUnhappyPath)
@@ -121,16 +121,12 @@ func TestListService_CreateList(t *testing.T) {
 
 func TestListService_UpdateList(t *testing.T) {
 	var (
-		mockQueries      = mocks.NewMockQueries(t)
-		srv              = list.NewService(mockQueries)
-		renameListParams = sqlite.RenameListParams{
-			ID:   1,
-			Name: "test",
-		}
+		mockQueries = mocks.NewMockQueries(t)
+		srv         = list.NewService(mockQueries)
 	)
 
 	t.Run("happy path", func(t *testing.T) {
-		mockQueries.EXPECT().RenameList(context.Background(), renameListParams).
+		mockQueries.EXPECT().RenameList(context.Background(), happySqlList.ID, happySqlList.Name).
 			Return(happySqlList, nil).Times(1)
 
 		l, err := srv.UpdateList(context.Background(), 1, "test")
@@ -139,8 +135,8 @@ func TestListService_UpdateList(t *testing.T) {
 	})
 
 	t.Run("unhappy path", func(t *testing.T) {
-		mockQueries.EXPECT().RenameList(context.Background(), renameListParams).
-			Return(sqlite.List{}, errUnhappyPath).Times(1)
+		mockQueries.EXPECT().RenameList(context.Background(), happySqlList.ID, happySqlList.Name).
+			Return(adapter.List{}, errUnhappyPath).Times(1)
 
 		_, err := srv.UpdateList(context.Background(), 1, "test")
 		assert.ErrorIs(t, err, errUnhappyPath)

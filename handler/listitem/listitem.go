@@ -33,7 +33,7 @@ import (
 )
 
 type ListItemApp interface {
-	FetchAllItemsFromList(ctx context.Context, listID int64, limit int64) ([]listitem.ListItem, error)
+	FetchAllItemsFromList(ctx context.Context, listID int64, limit int32) ([]listitem.ListItem, error)
 	FetchListItem(ctx context.Context, id int64) (listitem.ListItem, error)
 	AddItemToList(ctx context.Context, listID int64, content string, sort int64) (listitem.ListItem, error)
 	UpdateListItemContent(ctx context.Context, id int64, content string) (listitem.ListItem, error)

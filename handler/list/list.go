@@ -33,7 +33,7 @@ import (
 )
 
 type ListApp interface {
-	AllLists(ctx context.Context, limit int64) ([]list.List, error)
+	AllLists(ctx context.Context, limit int32) ([]list.List, error)
 	GetList(ctx context.Context, id int64) (list.List, error)
 	CreateList(ctx context.Context, name string) (list.List, error)
 	UpdateList(ctx context.Context, id int64, name string) (list.List, error)

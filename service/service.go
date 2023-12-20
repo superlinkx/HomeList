@@ -25,7 +25,7 @@ package service
 import (
 	"database/sql"
 
-	"github.com/superlinkx/HomeList/db/sqlite"
+	"github.com/superlinkx/HomeList/data/sqlite/adapter"
 	"github.com/superlinkx/HomeList/service/list"
 	"github.com/superlinkx/HomeList/service/listitem"
 )
@@ -36,7 +36,7 @@ type Services struct {
 }
 
 func Init(db *sql.DB) Services {
-	queries := sqlite.New(db)
+	queries := adapter.NewSqliteAdapter(db)
 	return Services{
 		ListService:     list.NewService(queries),
 		ListItemService: listitem.NewService(queries),

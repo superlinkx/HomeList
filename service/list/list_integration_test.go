@@ -28,7 +28,7 @@ import (
 	"testing"
 
 	"github.com/stretchr/testify/require"
-	"github.com/superlinkx/HomeList/db/sqlite"
+	"github.com/superlinkx/HomeList/data/sqlite/adapter"
 	"github.com/superlinkx/HomeList/harnesses/integration"
 	"github.com/superlinkx/HomeList/service/list"
 )
@@ -45,7 +45,7 @@ func setupService() (list.ListService, closer, error) {
 	} else if err := integration.ResetDatabase(db); err != nil {
 		return list.ListService{}, db, fmt.Errorf("failed to reset database: %s", err)
 	} else {
-		queries := sqlite.New(db)
+		queries := adapter.NewSqliteAdapter(db)
 		srv := list.NewService(queries)
 		return srv, db, nil
 	}

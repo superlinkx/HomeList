@@ -3,7 +3,7 @@
 //   sqlc v1.24.0
 // source: listitem.sql
 
-package sqlite
+package sqlc
 
 import (
 	"context"
@@ -11,14 +11,14 @@ import (
 
 const allItemsFromList = `-- name: AllItemsFromList :many
 SELECT id, list_id, content, checked, sort FROM list_items
-WHERE list_id = ?
+WHERE list_id = $1
 ORDER BY sort ASC
-LIMIT ?
+LIMIT $2
 `
 
 type AllItemsFromListParams struct {
 	ListID int64
-	Limit  int64
+	Limit  int32
 }
 
 func (q *Queries) AllItemsFromList(ctx context.Context, arg AllItemsFromListParams) ([]ListItem, error) {
@@ -52,7 +52,7 @@ func (q *Queries) AllItemsFromList(ctx context.Context, arg AllItemsFromListPara
 
 const createListItem = `-- name: CreateListItem :one
 INSERT INTO list_items (list_id, content, sort)
-VALUES (?, ?, ?)
+VALUES ($1, $2, $3)
 RETURNING id, list_id, content, checked, sort
 `
 
@@ -77,7 +77,7 @@ func (q *Queries) CreateListItem(ctx context.Context, arg CreateListItemParams) 
 
 const deleteListItem = `-- name: DeleteListItem :exec
 DELETE FROM list_items
-WHERE id = ?
+WHERE id = $1
 `
 
 func (q *Queries) DeleteListItem(ctx context.Context, id int64) error {
@@ -87,7 +87,7 @@ func (q *Queries) DeleteListItem(ctx context.Context, id int64) error {
 
 const getListItem = `-- name: GetListItem :one
 SELECT id, list_id, content, checked, sort FROM list_items
-WHERE id = ? LIMIT 1
+WHERE id = $1 LIMIT 1
 `
 
 func (q *Queries) GetListItem(ctx context.Context, id int64) (ListItem, error) {
@@ -105,8 +105,8 @@ func (q *Queries) GetListItem(ctx context.Context, id int64) (ListItem, error) {
 
 const updateListItemChecked = `-- name: UpdateListItemChecked :one
 UPDATE list_items
-SET checked =?
-WHERE id =?
+SET checked = $1
+WHERE id = $2
 RETURNING id, list_id, content, checked, sort
 `
 
@@ -130,8 +130,8 @@ func (q *Queries) UpdateListItemChecked(ctx context.Context, arg UpdateListItemC
 
 const updateListItemSort = `-- name: UpdateListItemSort :one
 UPDATE list_items
-SET sort = ?
-WHERE id = ?
+SET sort = $1
+WHERE id = $2
 RETURNING id, list_id, content, checked, sort
 `
 
@@ -155,8 +155,8 @@ func (q *Queries) UpdateListItemSort(ctx context.Context, arg UpdateListItemSort
 
 const updateListItemText = `-- name: UpdateListItemText :one
 UPDATE list_items
-SET content = ?
-WHERE id = ?
+SET content = $1
+WHERE id = $2
 RETURNING id, list_id, content, checked, sort
 `
 

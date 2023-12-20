@@ -26,16 +26,16 @@ import (
 	"context"
 	"fmt"
 
-	"github.com/superlinkx/HomeList/db/sqlite"
+	"github.com/superlinkx/HomeList/data/adapter"
 )
 
 type queries interface {
-	GetListItem(ctx context.Context, id int64) (sqlite.ListItem, error)
-	AllItemsFromList(ctx context.Context, params sqlite.AllItemsFromListParams) ([]sqlite.ListItem, error)
-	CreateListItem(ctx context.Context, params sqlite.CreateListItemParams) (sqlite.ListItem, error)
-	UpdateListItemText(ctx context.Context, params sqlite.UpdateListItemTextParams) (sqlite.ListItem, error)
-	UpdateListItemSort(ctx context.Context, params sqlite.UpdateListItemSortParams) (sqlite.ListItem, error)
-	UpdateListItemChecked(ctx context.Context, params sqlite.UpdateListItemCheckedParams) (sqlite.ListItem, error)
+	GetListItem(ctx context.Context, id int64) (adapter.ListItem, error)
+	AllItemsFromList(ctx context.Context, listID int64, limit int32) ([]adapter.ListItem, error)
+	CreateListItem(ctx context.Context, listID int64, content string, sort int64) (adapter.ListItem, error)
+	UpdateListItemText(ctx context.Context, id int64, content string) (adapter.ListItem, error)
+	UpdateListItemSort(ctx context.Context, id int64, sort int64) (adapter.ListItem, error)
+	UpdateListItemChecked(ctx context.Context, id int64, checked bool) (adapter.ListItem, error)
 	DeleteListItem(ctx context.Context, id int64) error
 }
 
@@ -63,10 +63,8 @@ func (s ListItemService) FetchListItem(ctx context.Context, id int64) (ListItem,
 	}
 }
 
-func (s ListItemService) FetchAllItemsFromList(ctx context.Context, listID int64, limit int64) ([]ListItem, error) {
-	var params = sqlite.AllItemsFromListParams{ListID: listID, Limit: limit}
-
-	if results, err := s.queries.AllItemsFromList(ctx, params); err != nil {
+func (s ListItemService) FetchAllItemsFromList(ctx context.Context, listID int64, limit int32) ([]ListItem, error) {
+	if results, err := s.queries.AllItemsFromList(ctx, listID, limit); err != nil {
 		return []ListItem{}, fmt.Errorf("failed to fetch list items: %w", err)
 	} else {
 		var listitems = make([]ListItem, 0, len(results))
@@ -79,13 +77,7 @@ func (s ListItemService) FetchAllItemsFromList(ctx context.Context, listID int64
 }
 
 func (s ListItemService) AddItemToList(ctx context.Context, listID int64, content string, sort int64) (ListItem, error) {
-	params := sqlite.CreateListItemParams{
-		ListID:  listID,
-		Content: content,
-		Sort:    sort,
-	}
-
-	if listItem, err := s.queries.CreateListItem(ctx, params); err != nil {
+	if listItem, err := s.queries.CreateListItem(ctx, listID, content, sort); err != nil {
 		return ListItem{}, fmt.Errorf("failed to create list item: %w", err)
 	} else {
 		return ListItem(listItem), nil
@@ -93,12 +85,7 @@ func (s ListItemService) AddItemToList(ctx context.Context, listID int64, conten
 }
 
 func (s ListItemService) UpdateListItemContent(ctx context.Context, itemID int64, content string) (ListItem, error) {
-	params := sqlite.UpdateListItemTextParams{
-		ID:      itemID,
-		Content: content,
-	}
-
-	if listItem, err := s.queries.UpdateListItemText(ctx, params); err != nil {
+	if listItem, err := s.queries.UpdateListItemText(ctx, itemID, content); err != nil {
 		return ListItem{}, fmt.Errorf("failed to update list item text: %w", err)
 	} else {
 		return ListItem(listItem), nil
@@ -106,12 +93,7 @@ func (s ListItemService) UpdateListItemContent(ctx context.Context, itemID int64
 }
 
 func (s ListItemService) UpdateListItemSort(ctx context.Context, itemID int64, sort int64) (ListItem, error) {
-	params := sqlite.UpdateListItemSortParams{
-		ID:   itemID,
-		Sort: sort,
-	}
-
-	if listItem, err := s.queries.UpdateListItemSort(ctx, params); err != nil {
+	if listItem, err := s.queries.UpdateListItemSort(ctx, itemID, sort); err != nil {
 		return ListItem{}, fmt.Errorf("failed to update list item sort: %w", err)
 	} else {
 		return ListItem(listItem), nil
@@ -119,12 +101,7 @@ func (s ListItemService) UpdateListItemSort(ctx context.Context, itemID int64, s
 }
 
 func (s ListItemService) UpdateListItemChecked(ctx context.Context, itemID int64, checked bool) (ListItem, error) {
-	params := sqlite.UpdateListItemCheckedParams{
-		ID:      itemID,
-		Checked: checked,
-	}
-
-	if listItem, err := s.queries.UpdateListItemChecked(ctx, params); err != nil {
+	if listItem, err := s.queries.UpdateListItemChecked(ctx, itemID, checked); err != nil {
 		return ListItem{}, fmt.Errorf("failed to update list item checked state: %w", err)
 	} else {
 		return ListItem(listItem), nil

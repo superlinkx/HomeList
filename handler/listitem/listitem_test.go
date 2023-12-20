@@ -159,7 +159,7 @@ func TestListItemHandlers_FetchAllItemsFromList(t *testing.T) {
 		rctx.URLParams.Add("listID", "1")
 		req = req.WithContext(ctx)
 
-		mockListItemApp.EXPECT().FetchAllItemsFromList(ctx, int64(1), int64(10)).
+		mockListItemApp.EXPECT().FetchAllItemsFromList(ctx, int64(1), int32(10)).
 			Return(appListItemSlice, nil).Times(1)
 
 		hdls.FetchAllItemsFromList(res, req)
@@ -195,7 +195,7 @@ func TestListItemHandlers_FetchAllItemsFromList(t *testing.T) {
 		rctx.URLParams.Add("listID", "1")
 		req = req.WithContext(ctx)
 
-		mockListItemApp.EXPECT().FetchAllItemsFromList(ctx, int64(1), int64(10)).
+		mockListItemApp.EXPECT().FetchAllItemsFromList(ctx, int64(1), int32(10)).
 			Return(nil, errAppFailure).Times(1)
 
 		hdls.FetchAllItemsFromList(res, req)

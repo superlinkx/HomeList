@@ -26,14 +26,14 @@ import (
 	"context"
 	"fmt"
 
-	"github.com/superlinkx/HomeList/db/sqlite"
+	"github.com/superlinkx/HomeList/data/adapter"
 )
 
 type queries interface {
-	AllLists(ctx context.Context, limit int64) ([]sqlite.List, error)
-	GetList(ctx context.Context, id int64) (sqlite.List, error)
-	CreateList(ctx context.Context, name string) (sqlite.List, error)
-	RenameList(ctx context.Context, params sqlite.RenameListParams) (sqlite.List, error)
+	AllLists(ctx context.Context, limit int32) ([]adapter.List, error)
+	GetList(ctx context.Context, id int64) (adapter.List, error)
+	CreateList(ctx context.Context, name string) (adapter.List, error)
+	RenameList(ctx context.Context, id int64, name string) (adapter.List, error)
 	DeleteList(ctx context.Context, id int64) error
 }
 
@@ -50,7 +50,7 @@ func NewService(q queries) ListService {
 	return ListService{queries: q}
 }
 
-func (s ListService) AllLists(ctx context.Context, limit int64) ([]List, error) {
+func (s ListService) AllLists(ctx context.Context, limit int32) ([]List, error) {
 	if results, err := s.queries.AllLists(ctx, limit); err != nil {
 		return []List{}, fmt.Errorf("unable to get all lists: %w", err)
 	} else {
@@ -79,7 +79,7 @@ func (s ListService) CreateList(ctx context.Context, name string) (List, error) 
 }
 
 func (s ListService) UpdateList(ctx context.Context, id int64, name string) (List, error) {
-	if result, err := s.queries.RenameList(ctx, sqlite.RenameListParams{ID: id, Name: name}); err != nil {
+	if result, err := s.queries.RenameList(ctx, id, name); err != nil {
 		return List{}, fmt.Errorf("unable to update list: %w", err)
 	} else {
 		return List(result), nil

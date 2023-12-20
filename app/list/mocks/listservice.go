@@ -23,7 +23,7 @@ func (_m *MockListService) EXPECT() *MockListService_Expecter {
 }
 
 // AllLists provides a mock function with given fields: ctx, limit
-func (_m *MockListService) AllLists(ctx context.Context, limit int64) ([]list.List, error) {
+func (_m *MockListService) AllLists(ctx context.Context, limit int32) ([]list.List, error) {
 	ret := _m.Called(ctx, limit)
 
 	if len(ret) == 0 {
@@ -32,10 +32,10 @@ func (_m *MockListService) AllLists(ctx context.Context, limit int64) ([]list.Li
 
 	var r0 []list.List
 	var r1 error
-	if rf, ok := ret.Get(0).(func(context.Context, int64) ([]list.List, error)); ok {
+	if rf, ok := ret.Get(0).(func(context.Context, int32) ([]list.List, error)); ok {
 		return rf(ctx, limit)
 	}
-	if rf, ok := ret.Get(0).(func(context.Context, int64) []list.List); ok {
+	if rf, ok := ret.Get(0).(func(context.Context, int32) []list.List); ok {
 		r0 = rf(ctx, limit)
 	} else {
 		if ret.Get(0) != nil {
@@ -43,7 +43,7 @@ func (_m *MockListService) AllLists(ctx context.Context, limit int64) ([]list.Li
 		}
 	}
 
-	if rf, ok := ret.Get(1).(func(context.Context, int64) error); ok {
+	if rf, ok := ret.Get(1).(func(context.Context, int32) error); ok {
 		r1 = rf(ctx, limit)
 	} else {
 		r1 = ret.Error(1)
@@ -59,14 +59,14 @@ type MockListService_AllLists_Call struct {
 
 // AllLists is a helper method to define mock.On call
 //   - ctx context.Context
-//   - limit int64
+//   - limit int32
 func (_e *MockListService_Expecter) AllLists(ctx interface{}, limit interface{}) *MockListService_AllLists_Call {
 	return &MockListService_AllLists_Call{Call: _e.mock.On("AllLists", ctx, limit)}
 }
 
-func (_c *MockListService_AllLists_Call) Run(run func(ctx context.Context, limit int64)) *MockListService_AllLists_Call {
+func (_c *MockListService_AllLists_Call) Run(run func(ctx context.Context, limit int32)) *MockListService_AllLists_Call {
 	_c.Call.Run(func(args mock.Arguments) {
-		run(args[0].(context.Context), args[1].(int64))
+		run(args[0].(context.Context), args[1].(int32))
 	})
 	return _c
 }
@@ -76,7 +76,7 @@ func (_c *MockListService_AllLists_Call) Return(_a0 []list.List, _a1 error) *Moc
 	return _c
 }
 
-func (_c *MockListService_AllLists_Call) RunAndReturn(run func(context.Context, int64) ([]list.List, error)) *MockListService_AllLists_Call {
+func (_c *MockListService_AllLists_Call) RunAndReturn(run func(context.Context, int32) ([]list.List, error)) *MockListService_AllLists_Call {
 	_c.Call.Return(run)
 	return _c
 }

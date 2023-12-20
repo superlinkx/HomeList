@@ -51,19 +51,19 @@ func TestListApp_AllLists(t *testing.T) {
 	)
 
 	t.Run("happy path", func(t *testing.T) {
-		mockListService.EXPECT().AllLists(context.Background(), int64(10)).
+		mockListService.EXPECT().AllLists(context.Background(), int32(10)).
 			Return(listSrvListSlice, nil).Times(1)
 
-		lists, err := listApp.AllLists(context.Background(), int64(10))
+		lists, err := listApp.AllLists(context.Background(), 10)
 		assert.Nil(t, err)
 		assert.Equal(t, listAppListSlice, lists)
 	})
 
 	t.Run("service failure", func(t *testing.T) {
-		mockListService.EXPECT().AllLists(context.Background(), int64(10)).
+		mockListService.EXPECT().AllLists(context.Background(), int32(10)).
 			Return(nil, errServiceFailure).Times(1)
 
-		_, err := listApp.AllLists(context.Background(), int64(10))
+		_, err := listApp.AllLists(context.Background(), 10)
 
 		assert.ErrorIs(t, err, errServiceFailure)
 	})

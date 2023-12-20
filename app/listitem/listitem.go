@@ -31,7 +31,7 @@ import (
 
 type ListItemService interface {
 	FetchListItem(ctx context.Context, id int64) (listitem.ListItem, error)
-	FetchAllItemsFromList(ctx context.Context, listID int64, limit int64) ([]listitem.ListItem, error)
+	FetchAllItemsFromList(ctx context.Context, listID int64, limit int32) ([]listitem.ListItem, error)
 	AddItemToList(ctx context.Context, listID int64, name string, sort int64) (listitem.ListItem, error)
 	UpdateListItemContent(ctx context.Context, id int64, content string) (listitem.ListItem, error)
 	UpdateListItemSort(ctx context.Context, id int64, sort int64) (listitem.ListItem, error)
@@ -65,7 +65,7 @@ func (s ListItemApp) FetchListItem(ctx context.Context, itemID int64) (ListItem,
 	}
 }
 
-func (s ListItemApp) FetchAllItemsFromList(ctx context.Context, listID int64, limit int64) ([]ListItem, error) {
+func (s ListItemApp) FetchAllItemsFromList(ctx context.Context, listID int64, limit int32) ([]ListItem, error) {
 	if results, err := s.listItemService.FetchAllItemsFromList(ctx, listID, limit); err != nil {
 		return []ListItem{}, fmt.Errorf("application failed to fetch all items from list with id %d: %w", listID, err)
 	} else {
