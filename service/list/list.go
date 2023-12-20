@@ -37,7 +37,7 @@ type queries interface {
 	DeleteList(ctx context.Context, id int64) error
 }
 
-type Service struct {
+type ListService struct {
 	queries queries
 }
 
@@ -46,11 +46,11 @@ type List struct {
 	Name string
 }
 
-func NewService(q queries) Service {
-	return Service{queries: q}
+func NewService(q queries) ListService {
+	return ListService{queries: q}
 }
 
-func (s Service) AllLists(ctx context.Context, limit int64) ([]List, error) {
+func (s ListService) AllLists(ctx context.Context, limit int64) ([]List, error) {
 	if results, err := s.queries.AllLists(ctx, limit); err != nil {
 		return []List{}, fmt.Errorf("unable to get all lists: %w", err)
 	} else {
@@ -62,7 +62,7 @@ func (s Service) AllLists(ctx context.Context, limit int64) ([]List, error) {
 	}
 }
 
-func (s Service) GetList(ctx context.Context, id int64) (List, error) {
+func (s ListService) GetList(ctx context.Context, id int64) (List, error) {
 	if result, err := s.queries.GetList(ctx, id); err != nil {
 		return List{}, fmt.Errorf("unable to get list: %w", err)
 	} else {
@@ -70,7 +70,7 @@ func (s Service) GetList(ctx context.Context, id int64) (List, error) {
 	}
 }
 
-func (s Service) CreateList(ctx context.Context, name string) (List, error) {
+func (s ListService) CreateList(ctx context.Context, name string) (List, error) {
 	if result, err := s.queries.CreateList(ctx, name); err != nil {
 		return List{}, fmt.Errorf("unable to create list: %w", err)
 	} else {
@@ -78,7 +78,7 @@ func (s Service) CreateList(ctx context.Context, name string) (List, error) {
 	}
 }
 
-func (s Service) UpdateList(ctx context.Context, id int64, name string) (List, error) {
+func (s ListService) UpdateList(ctx context.Context, id int64, name string) (List, error) {
 	if result, err := s.queries.RenameList(ctx, sqlite.RenameListParams{ID: id, Name: name}); err != nil {
 		return List{}, fmt.Errorf("unable to update list: %w", err)
 	} else {
@@ -86,7 +86,7 @@ func (s Service) UpdateList(ctx context.Context, id int64, name string) (List, e
 	}
 }
 
-func (s Service) DeleteList(ctx context.Context, id int64) error {
+func (s ListService) DeleteList(ctx context.Context, id int64) error {
 	if err := s.queries.DeleteList(ctx, id); err != nil {
 		return fmt.Errorf("unable to delete list: %w", err)
 	} else {

@@ -37,13 +37,13 @@ type closer interface {
 	Close() error
 }
 
-func setupService() (listitem.Service, closer, error) {
+func setupService() (listitem.ListItemService, closer, error) {
 	if db, err := integration.ConnectDatabase(); err != nil {
-		return listitem.Service{}, db, fmt.Errorf("failed to generate db connection: %s", err)
+		return listitem.ListItemService{}, db, fmt.Errorf("failed to generate db connection: %s", err)
 	} else if err := db.Ping(); err != nil {
-		return listitem.Service{}, db, fmt.Errorf("failed to ping database: %s", err)
+		return listitem.ListItemService{}, db, fmt.Errorf("failed to ping database: %s", err)
 	} else if err := integration.ResetDatabase(db); err != nil {
-		return listitem.Service{}, db, fmt.Errorf("failed to reset database: %s", err)
+		return listitem.ListItemService{}, db, fmt.Errorf("failed to reset database: %s", err)
 	} else {
 		queries := sqlite.New(db)
 		srv := listitem.NewService(queries)

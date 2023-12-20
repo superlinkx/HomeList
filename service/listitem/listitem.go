@@ -39,7 +39,7 @@ type queries interface {
 	DeleteListItem(ctx context.Context, id int64) error
 }
 
-type Service struct {
+type ListItemService struct {
 	queries queries
 }
 
@@ -51,11 +51,11 @@ type ListItem struct {
 	Sort    int64
 }
 
-func NewService(q queries) Service {
-	return Service{queries: q}
+func NewService(q queries) ListItemService {
+	return ListItemService{queries: q}
 }
 
-func (s Service) FetchListItem(ctx context.Context, id int64) (ListItem, error) {
+func (s ListItemService) FetchListItem(ctx context.Context, id int64) (ListItem, error) {
 	if listitem, err := s.queries.GetListItem(ctx, id); err != nil {
 		return ListItem{}, fmt.Errorf("failed to fetch list item: %w", err)
 	} else {
@@ -63,7 +63,7 @@ func (s Service) FetchListItem(ctx context.Context, id int64) (ListItem, error) 
 	}
 }
 
-func (s Service) FetchAllItemsFromList(ctx context.Context, listID int64, limit int64) ([]ListItem, error) {
+func (s ListItemService) FetchAllItemsFromList(ctx context.Context, listID int64, limit int64) ([]ListItem, error) {
 	var params = sqlite.AllItemsFromListParams{ListID: listID, Limit: limit}
 
 	if results, err := s.queries.AllItemsFromList(ctx, params); err != nil {
@@ -78,7 +78,7 @@ func (s Service) FetchAllItemsFromList(ctx context.Context, listID int64, limit 
 	}
 }
 
-func (s Service) AddItemToList(ctx context.Context, listID int64, content string, sort int64) (ListItem, error) {
+func (s ListItemService) AddItemToList(ctx context.Context, listID int64, content string, sort int64) (ListItem, error) {
 	params := sqlite.CreateListItemParams{
 		ListID:  listID,
 		Content: content,
@@ -92,7 +92,7 @@ func (s Service) AddItemToList(ctx context.Context, listID int64, content string
 	}
 }
 
-func (s Service) UpdateListItemContent(ctx context.Context, itemID int64, content string) (ListItem, error) {
+func (s ListItemService) UpdateListItemContent(ctx context.Context, itemID int64, content string) (ListItem, error) {
 	params := sqlite.UpdateListItemTextParams{
 		ID:      itemID,
 		Content: content,
@@ -105,7 +105,7 @@ func (s Service) UpdateListItemContent(ctx context.Context, itemID int64, conten
 	}
 }
 
-func (s Service) UpdateListItemSort(ctx context.Context, itemID int64, sort int64) (ListItem, error) {
+func (s ListItemService) UpdateListItemSort(ctx context.Context, itemID int64, sort int64) (ListItem, error) {
 	params := sqlite.UpdateListItemSortParams{
 		ID:   itemID,
 		Sort: sort,
@@ -118,7 +118,7 @@ func (s Service) UpdateListItemSort(ctx context.Context, itemID int64, sort int6
 	}
 }
 
-func (s Service) UpdateListItemChecked(ctx context.Context, itemID int64, checked bool) (ListItem, error) {
+func (s ListItemService) UpdateListItemChecked(ctx context.Context, itemID int64, checked bool) (ListItem, error) {
 	params := sqlite.UpdateListItemCheckedParams{
 		ID:      itemID,
 		Checked: checked,
@@ -131,7 +131,7 @@ func (s Service) UpdateListItemChecked(ctx context.Context, itemID int64, checke
 	}
 }
 
-func (s Service) DeleteListItem(ctx context.Context, itemID int64) error {
+func (s ListItemService) DeleteListItem(ctx context.Context, itemID int64) error {
 	if err := s.queries.DeleteListItem(ctx, itemID); err != nil {
 		return fmt.Errorf("failed to delete list item: %w", err)
 	} else {

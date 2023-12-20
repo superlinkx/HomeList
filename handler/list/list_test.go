@@ -20,12 +20,13 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-package handler_test
+package list_test
 
 import (
 	"bytes"
 	"context"
 	"encoding/json"
+	"errors"
 	"net/http"
 	"net/http/httptest"
 	"testing"
@@ -33,36 +34,37 @@ import (
 	"github.com/go-chi/chi/v5"
 	"github.com/ridge/must"
 	"github.com/stretchr/testify/assert"
-	"github.com/superlinkx/HomeList/app"
-	"github.com/superlinkx/HomeList/handler"
-	"github.com/superlinkx/HomeList/handler/mocks"
+	listapp "github.com/superlinkx/HomeList/app/list"
+	"github.com/superlinkx/HomeList/handler/list"
+	"github.com/superlinkx/HomeList/handler/list/mocks"
 )
 
 var (
-	appList = app.List{
+	errAppFailure = errors.New("application failed")
+	appList       = listapp.List{
 		ID:   1,
 		Name: "Test List",
 	}
-	appListSlice = []app.List{
+	appListSlice = []listapp.List{
 		appList,
 	}
-	handlerList      = handler.List(appList)
-	handlerListSlice = []handler.List{
+	handlerList      = list.ListView(appList)
+	handlerListSlice = []list.ListView{
 		handlerList,
 	}
 	jsonList      = string(must.Bytes(json.Marshal(handlerList)))
 	jsonListSlice = string(must.Bytes(json.Marshal(handlerListSlice)))
-	listRequest   = handler.ListRequest{
+	listRequest   = list.ListRequest{
 		Name: "Test List",
 	}
 	jsonListRequest        = must.Bytes(json.Marshal(listRequest))
 	jsonInvalidListRequest = []byte(`{"name": []}`)
 )
 
-func TestHandlers_FetchAllLists(t *testing.T) {
+func TestListHandlers_FetchAllLists(t *testing.T) {
 	var (
-		mockApplication = mocks.NewMockApplication(t)
-		hdls            = handler.NewHandlersWithApplication(mockApplication)
+		mockListApp = mocks.NewMockListApp(t)
+		hdls        = list.NewHandlers(mockListApp)
 	)
 
 	t.Run("empty list", func(t *testing.T) {
@@ -71,8 +73,8 @@ func TestHandlers_FetchAllLists(t *testing.T) {
 			res = httptest.NewRecorder()
 		)
 
-		mockApplication.EXPECT().AllLists(context.Background(), int64(10)).
-			Return([]app.List{}, nil).Times(1)
+		mockListApp.EXPECT().AllLists(context.Background(), int64(10)).
+			Return([]listapp.List{}, nil).Times(1)
 
 		hdls.FetchAllLists(res, req)
 
@@ -87,7 +89,7 @@ func TestHandlers_FetchAllLists(t *testing.T) {
 			res = httptest.NewRecorder()
 		)
 
-		mockApplication.EXPECT().AllLists(context.Background(), int64(10)).
+		mockListApp.EXPECT().AllLists(context.Background(), int64(10)).
 			Return(appListSlice, nil).Times(1)
 
 		hdls.FetchAllLists(res, req)
@@ -103,7 +105,7 @@ func TestHandlers_FetchAllLists(t *testing.T) {
 			res = httptest.NewRecorder()
 		)
 
-		mockApplication.EXPECT().AllLists(context.Background(), int64(10)).
+		mockListApp.EXPECT().AllLists(context.Background(), int64(10)).
 			Return(nil, errAppFailure).Times(1)
 
 		hdls.FetchAllLists(res, req)
@@ -112,10 +114,10 @@ func TestHandlers_FetchAllLists(t *testing.T) {
 	})
 }
 
-func TestHandlers_FetchList(t *testing.T) {
+func TestListHandlers_FetchList(t *testing.T) {
 	var (
-		mockApplication = mocks.NewMockApplication(t)
-		hdls            = handler.NewHandlersWithApplication(mockApplication)
+		mockListApp = mocks.NewMockListApp(t)
+		hdls        = list.NewHandlers(mockListApp)
 	)
 
 	t.Run("happy path", func(t *testing.T) {
@@ -129,7 +131,7 @@ func TestHandlers_FetchList(t *testing.T) {
 		rctx.URLParams.Add("listID", "1")
 		req = req.WithContext(ctx)
 
-		mockApplication.EXPECT().GetList(ctx, int64(1)).
+		mockListApp.EXPECT().GetList(ctx, int64(1)).
 			Return(appList, nil).Times(1)
 
 		hdls.FetchList(res, req)
@@ -166,8 +168,8 @@ func TestHandlers_FetchList(t *testing.T) {
 		rctx.URLParams.Add("listID", "1")
 		req = req.WithContext(ctx)
 
-		mockApplication.EXPECT().GetList(ctx, int64(1)).
-			Return(app.List{}, errAppFailure).Times(1)
+		mockListApp.EXPECT().GetList(ctx, int64(1)).
+			Return(listapp.List{}, errAppFailure).Times(1)
 
 		hdls.FetchList(res, req)
 
@@ -175,10 +177,10 @@ func TestHandlers_FetchList(t *testing.T) {
 	})
 }
 
-func TestHandlers_CreateList(t *testing.T) {
+func TestListHandlers_CreateList(t *testing.T) {
 	var (
-		mockApplication = mocks.NewMockApplication(t)
-		hdls            = handler.NewHandlersWithApplication(mockApplication)
+		mockListApp = mocks.NewMockListApp(t)
+		hdls        = list.NewHandlers(mockListApp)
 	)
 
 	t.Run("happy path", func(t *testing.T) {
@@ -187,7 +189,7 @@ func TestHandlers_CreateList(t *testing.T) {
 			res = httptest.NewRecorder()
 		)
 
-		mockApplication.EXPECT().CreateList(context.Background(), listRequest.Name).
+		mockListApp.EXPECT().CreateList(context.Background(), listRequest.Name).
 			Return(appList, nil).Times(1)
 
 		hdls.CreateList(res, req)
@@ -214,8 +216,8 @@ func TestHandlers_CreateList(t *testing.T) {
 			res = httptest.NewRecorder()
 		)
 
-		mockApplication.EXPECT().CreateList(context.Background(), listRequest.Name).
-			Return(app.List{}, errAppFailure).Times(1)
+		mockListApp.EXPECT().CreateList(context.Background(), listRequest.Name).
+			Return(listapp.List{}, errAppFailure).Times(1)
 
 		hdls.CreateList(res, req)
 
@@ -223,10 +225,10 @@ func TestHandlers_CreateList(t *testing.T) {
 	})
 }
 
-func TestHandlers_RenameList(t *testing.T) {
+func TestListHandlers_RenameList(t *testing.T) {
 	var (
-		mockApplication = mocks.NewMockApplication(t)
-		hdls            = handler.NewHandlersWithApplication(mockApplication)
+		mockListApp = mocks.NewMockListApp(t)
+		hdls        = list.NewHandlers(mockListApp)
 	)
 
 	t.Run("happy path", func(t *testing.T) {
@@ -240,7 +242,7 @@ func TestHandlers_RenameList(t *testing.T) {
 		rctx.URLParams.Add("listID", "1")
 		req = req.WithContext(ctx)
 
-		mockApplication.EXPECT().UpdateList(ctx, int64(1), listRequest.Name).
+		mockListApp.EXPECT().UpdateList(ctx, int64(1), listRequest.Name).
 			Return(appList, nil).Times(1)
 
 		hdls.RenameList(res, req)
@@ -293,8 +295,8 @@ func TestHandlers_RenameList(t *testing.T) {
 		rctx.URLParams.Add("listID", "1")
 		req = req.WithContext(ctx)
 
-		mockApplication.EXPECT().UpdateList(ctx, int64(1), listRequest.Name).
-			Return(app.List{}, errAppFailure).Times(1)
+		mockListApp.EXPECT().UpdateList(ctx, int64(1), listRequest.Name).
+			Return(listapp.List{}, errAppFailure).Times(1)
 
 		hdls.RenameList(res, req)
 
@@ -302,10 +304,10 @@ func TestHandlers_RenameList(t *testing.T) {
 	})
 }
 
-func TestHandlers_DeleteList(t *testing.T) {
+func TestListHandlers_DeleteList(t *testing.T) {
 	var (
-		mockApplication = mocks.NewMockApplication(t)
-		hdls            = handler.NewHandlersWithApplication(mockApplication)
+		mockListApp = mocks.NewMockListApp(t)
+		hdls        = list.NewHandlers(mockListApp)
 	)
 
 	t.Run("happy path", func(t *testing.T) {
@@ -319,7 +321,7 @@ func TestHandlers_DeleteList(t *testing.T) {
 		rctx.URLParams.Add("listID", "1")
 		req = req.WithContext(ctx)
 
-		mockApplication.EXPECT().DeleteList(ctx, int64(1)).
+		mockListApp.EXPECT().DeleteList(ctx, int64(1)).
 			Return(nil).Times(1)
 
 		hdls.DeleteList(res, req)
@@ -355,7 +357,7 @@ func TestHandlers_DeleteList(t *testing.T) {
 		rctx.URLParams.Add("listID", "1")
 		req = req.WithContext(ctx)
 
-		mockApplication.EXPECT().DeleteList(ctx, int64(1)).
+		mockListApp.EXPECT().DeleteList(ctx, int64(1)).
 			Return(errAppFailure).Times(1)
 
 		hdls.DeleteList(res, req)

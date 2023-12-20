@@ -45,7 +45,7 @@ var (
 	}
 )
 
-func TestGetList(t *testing.T) {
+func TestListService_GetList(t *testing.T) {
 	var (
 		mockQueries = mocks.NewMockQueries(t)
 		srv         = list.NewService(mockQueries)
@@ -69,7 +69,7 @@ func TestGetList(t *testing.T) {
 	})
 }
 
-func TestAllLists(t *testing.T) {
+func TestListService_AllLists(t *testing.T) {
 	var (
 		mockQueries = mocks.NewMockQueries(t)
 		srv         = list.NewService(mockQueries)
@@ -95,7 +95,7 @@ func TestAllLists(t *testing.T) {
 	})
 }
 
-func TestCreateList(t *testing.T) {
+func TestListService_CreateList(t *testing.T) {
 	var (
 		mockQueries = mocks.NewMockQueries(t)
 		srv         = list.NewService(mockQueries)
@@ -119,7 +119,7 @@ func TestCreateList(t *testing.T) {
 	})
 }
 
-func TestUpdateList(t *testing.T) {
+func TestListService_UpdateList(t *testing.T) {
 	var (
 		mockQueries      = mocks.NewMockQueries(t)
 		srv              = list.NewService(mockQueries)
@@ -147,7 +147,7 @@ func TestUpdateList(t *testing.T) {
 	})
 }
 
-func TestDeleteList(t *testing.T) {
+func TestListService_DeleteList(t *testing.T) {
 	var (
 		mockQueries = mocks.NewMockQueries(t)
 		srv         = list.NewService(mockQueries)

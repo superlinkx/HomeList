@@ -76,7 +76,7 @@ func startApp(db *sql.DB, config environment.Config) {
 
 	services := service.Init(db)
 	application := app.NewApplication(services)
-	handlers := handler.NewHandlersWithApplication(application)
+	handlers := handler.NewHandlers(application)
 	srv := restapi.NewServer(restapi.Config{HostURL: config.HostURL}, handlers)
 
 	go func() {

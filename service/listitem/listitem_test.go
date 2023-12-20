@@ -51,7 +51,7 @@ var (
 	}
 )
 
-func TestFetchListItem(t *testing.T) {
+func TestListItemService_FetchListItem(t *testing.T) {
 	var (
 		mockQueries = mocks.NewMockQueries(t)
 		srv         = listitem.NewService(mockQueries)
@@ -75,7 +75,7 @@ func TestFetchListItem(t *testing.T) {
 	})
 }
 
-func TestFetchAllItemsFromList(t *testing.T) {
+func TestListItemService_FetchAllItemsFromList(t *testing.T) {
 	var (
 		mockQueries            = mocks.NewMockQueries(t)
 		srv                    = listitem.NewService(mockQueries)
@@ -105,7 +105,7 @@ func TestFetchAllItemsFromList(t *testing.T) {
 	})
 }
 
-func TestAddItemToList(t *testing.T) {
+func TestListItemService_AddItemToList(t *testing.T) {
 	var (
 		mockQueries          = mocks.NewMockQueries(t)
 		srv                  = listitem.NewService(mockQueries)
@@ -134,7 +134,7 @@ func TestAddItemToList(t *testing.T) {
 	})
 }
 
-func TestUpdateListItemContent(t *testing.T) {
+func TestListItemService_UpdateListItemContent(t *testing.T) {
 	var (
 		mockQueries              = mocks.NewMockQueries(t)
 		srv                      = listitem.NewService(mockQueries)
@@ -162,7 +162,7 @@ func TestUpdateListItemContent(t *testing.T) {
 	})
 }
 
-func TestUpdateListItemSort(t *testing.T) {
+func TestListItemService_UpdateListItemSort(t *testing.T) {
 	var (
 		mockQueries              = mocks.NewMockQueries(t)
 		srv                      = listitem.NewService(mockQueries)
@@ -190,7 +190,7 @@ func TestUpdateListItemSort(t *testing.T) {
 	})
 }
 
-func TestUpdateListItemChecked(t *testing.T) {
+func TestListItemService_UpdateListItemChecked(t *testing.T) {
 	var (
 		mockQueries                 = mocks.NewMockQueries(t)
 		srv                         = listitem.NewService(mockQueries)
@@ -218,7 +218,7 @@ func TestUpdateListItemChecked(t *testing.T) {
 	})
 }
 
-func TestDeleteListItem(t *testing.T) {
+func TestListItemService_DeleteListItem(t *testing.T) {
 	var (
 		mockQueries = mocks.NewMockQueries(t)
 		srv         = listitem.NewService(mockQueries)

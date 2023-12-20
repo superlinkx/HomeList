@@ -23,15 +23,23 @@
 package app
 
 import (
-	"github.com/superlinkx/HomeList/service"
+	"github.com/superlinkx/HomeList/app/list"
+	"github.com/superlinkx/HomeList/app/listitem"
 )
 
-type Application struct {
-	services service.Services
+type services interface {
+	list.ListService
+	listitem.ListItemService
 }
 
-func NewApplication(services service.Services) *Application {
-	return &Application{
-		services: services,
+type Application struct {
+	list.ListApp
+	listitem.ListItemApp
+}
+
+func NewApplication(s services) Application {
+	return Application{
+		ListApp:     list.NewListApp(s),
+		ListItemApp: listitem.NewListItemApp(s),
 	}
 }

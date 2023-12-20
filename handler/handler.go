@@ -23,65 +23,23 @@
 package handler
 
 import (
-	"context"
-
-	"github.com/superlinkx/HomeList/app"
+	"github.com/superlinkx/HomeList/handler/list"
+	"github.com/superlinkx/HomeList/handler/listitem"
 )
 
-type Handlers struct {
-	ListHandlers
-	ListItemHandlers
-}
-
-type ListHandlers struct {
-	list list
-}
-
-type ListItemHandlers struct {
-	listItem listItem
-}
-
 type application interface {
-	list
-	listItem
+	list.ListApp
+	listitem.ListItemApp
 }
 
-type list interface {
-	AllLists(context.Context, int64) ([]app.List, error)
-	GetList(context.Context, int64) (app.List, error)
-	CreateList(context.Context, string) (app.List, error)
-	UpdateList(context.Context, int64, string) (app.List, error)
-	DeleteList(context.Context, int64) error
+type Handlers struct {
+	list.ListHandlers
+	listitem.ListItemHandlers
 }
 
-type listItem interface {
-	FetchAllItemsFromList(context.Context, int64, int64) ([]app.ListItem, error)
-	FetchListItem(context.Context, int64) (app.ListItem, error)
-	AddItemToList(context.Context, int64, string, int64) (app.ListItem, error)
-	UpdateListItemContent(context.Context, int64, string) (app.ListItem, error)
-	UpdateListItemChecked(context.Context, int64, bool) (app.ListItem, error)
-	UpdateListItemSort(context.Context, int64, int64) (app.ListItem, error)
-	DeleteListItem(context.Context, int64) error
-}
-
-func NewHandlersWithApplication(a application) Handlers {
+func NewHandlers(a application) Handlers {
 	return Handlers{
-		ListHandlers: ListHandlers{
-			list: a,
-		},
-		ListItemHandlers: ListItemHandlers{
-			listItem: a,
-		},
-	}
-}
-
-func NewHandlersWithComponents(l list, li listItem) Handlers {
-	return Handlers{
-		ListHandlers: ListHandlers{
-			list: l,
-		},
-		ListItemHandlers: ListItemHandlers{
-			listItem: li,
-		},
+		ListHandlers:     list.NewHandlers(a),
+		ListItemHandlers: listitem.NewHandlers(a),
 	}
 }

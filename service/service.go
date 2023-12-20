@@ -31,14 +31,14 @@ import (
 )
 
 type Services struct {
-	List     list.Service
-	ListItem listitem.Service
+	list.ListService
+	listitem.ListItemService
 }
 
 func Init(db *sql.DB) Services {
 	queries := sqlite.New(db)
 	return Services{
-		List:     list.NewService(queries),
-		ListItem: listitem.NewService(queries),
+		ListService:     list.NewService(queries),
+		ListItemService: listitem.NewService(queries),
 	}
 }
