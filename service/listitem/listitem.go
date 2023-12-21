@@ -24,9 +24,11 @@ package listitem
 
 import (
 	"context"
+	"errors"
 	"fmt"
 
 	"github.com/superlinkx/HomeList/data/adapter"
+	"github.com/superlinkx/HomeList/service/common"
 )
 
 type queries interface {
@@ -56,7 +58,9 @@ func NewService(q queries) ListItemService {
 }
 
 func (s ListItemService) FetchListItem(ctx context.Context, id int64) (ListItem, error) {
-	if listitem, err := s.queries.GetListItem(ctx, id); err != nil {
+	if listitem, err := s.queries.GetListItem(ctx, id); errors.Is(err, adapter.ErrNotFound) {
+		return ListItem{}, fmt.Errorf("no list item found: %w", common.ErrNotFound)
+	} else if err != nil {
 		return ListItem{}, fmt.Errorf("failed to fetch list item: %w", err)
 	} else {
 		return ListItem(listitem), nil
