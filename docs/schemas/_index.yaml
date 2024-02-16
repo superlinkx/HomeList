@@ -1,0 +1,6 @@
+List:
+  $ref: "./list.yml"
+ListItem:
+  $ref: "./listitem.yml"
+ListBody:
+  $ref: "./body/list.yml"

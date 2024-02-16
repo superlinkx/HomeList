@@ -12,11 +12,16 @@ import (
 const allLists = `-- name: AllLists :many
 SELECT id, name FROM lists
 ORDER BY id ASC
-LIMIT ?
+LIMIT ? OFFSET ?
 `
 
-func (q *Queries) AllLists(ctx context.Context, limit int64) ([]List, error) {
-	rows, err := q.db.QueryContext(ctx, allLists, limit)
+type AllListsParams struct {
+	Limit  int64
+	Offset int64
+}
+
+func (q *Queries) AllLists(ctx context.Context, arg AllListsParams) ([]List, error) {
+	rows, err := q.db.QueryContext(ctx, allLists, arg.Limit, arg.Offset)
 	if err != nil {
 		return nil, err
 	}

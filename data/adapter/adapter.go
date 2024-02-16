@@ -25,42 +25,20 @@ package adapter
 import (
 	"context"
 	"errors"
+
+	"github.com/superlinkx/HomeList/model"
 )
 
 type Adapter interface {
 	ListAdapter
-	ListItemAdapter
 }
 
 type ListAdapter interface {
-	AllLists(ctx context.Context, limit int32) ([]List, error)
-	GetList(ctx context.Context, id int64) (List, error)
-	RenameList(ctx context.Context, id int64, name string) (List, error)
-	CreateList(ctx context.Context, name string) (List, error)
+	AllLists(ctx context.Context, limit int32, offset int32) ([]model.List, error)
+	GetList(ctx context.Context, id int64) (model.List, error)
+	RenameList(ctx context.Context, id int64, name string) (model.List, error)
+	CreateList(ctx context.Context, name string) (model.List, error)
 	DeleteList(ctx context.Context, id int64) error
-}
-
-type ListItemAdapter interface {
-	AllItemsFromList(ctx context.Context, listID int64, limit int32) ([]ListItem, error)
-	CreateListItem(ctx context.Context, listID int64, content string, sort int64) (ListItem, error)
-	DeleteListItem(ctx context.Context, id int64) error
-	GetListItem(ctx context.Context, id int64) (ListItem, error)
-	UpdateListItemChecked(ctx context.Context, id int64, checked bool) (ListItem, error)
-	UpdateListItemSort(ctx context.Context, id int64, sort int64) (ListItem, error)
-	UpdateListItemText(ctx context.Context, id int64, content string) (ListItem, error)
-}
-
-type List struct {
-	ID   int64
-	Name string
-}
-
-type ListItem struct {
-	ID      int64
-	ListID  int64
-	Content string
-	Checked bool
-	Sort    int64
 }
 
 var (

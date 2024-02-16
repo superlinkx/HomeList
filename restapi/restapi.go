@@ -23,50 +23,49 @@
 package restapi
 
 import (
+	"log"
 	"net/http"
 
 	"github.com/go-chi/chi/v5"
-	"github.com/go-chi/chi/v5/middleware"
+	chimiddleware "github.com/go-chi/chi/v5/middleware"
+	oapimiddleware "github.com/oapi-codegen/nethttp-middleware"
 	"github.com/superlinkx/HomeList/handler"
+	"github.com/superlinkx/HomeList/oapiserver"
 )
 
 type Config struct {
 	HostURL string
 }
 
-func NewServer(config Config, hdls handler.Handlers) *http.Server {
+func NewServer(config Config, hdls handler.Handlers) (*http.Server, error) {
 	if config.HostURL == "" {
 		config.HostURL = ":80"
 	}
 
 	r := chi.NewRouter()
-	r.Use(middleware.Logger)
+
+	swagger, err := oapiserver.GetSwagger()
+	if err != nil {
+		return nil, err
+	}
+
+	r.Use(chimiddleware.Logger, oapimiddleware.OapiRequestValidator(swagger))
 	r.Mount("/api/v1", v1ApiRouter(hdls))
 
 	return &http.Server{
 		Addr:    config.HostURL,
 		Handler: r,
-	}
+	}, nil
 }
 
 func v1ApiRouter(hdls handler.Handlers) http.Handler {
+	swagger, err := oapiserver.GetSwagger()
+	if err != nil {
+		log.Fatalf("Failed to get swagger: %v", err)
+	}
+
 	r := chi.NewRouter()
+	r.Use(oapimiddleware.OapiRequestValidator(swagger))
 
-	r.Get("/lists", hdls.FetchAllLists)
-	r.Get("/list/{listID}", hdls.FetchList)
-	r.Get("/list/{listID}/items", hdls.FetchAllItemsFromList)
-	r.Get("/listitem/{id}", hdls.FetchListItem)
-
-	r.Post("/list", hdls.CreateList)
-	r.Post("/list/{listID}/item", hdls.CreateListItem)
-
-	r.Put("/list/{listID}", hdls.RenameList)
-	r.Put("/listitem/{id}/content", hdls.UpdateListItemContent)
-	r.Put("/listitem/{id}/sort", hdls.UpdateListItemSort)
-	r.Put("/listitem/{id}/checked", hdls.UpdateListItemChecked)
-
-	r.Delete("/list/{listID}", hdls.DeleteList)
-	r.Delete("/listitem/{id}", hdls.DeleteListItem)
-
-	return r
+	return oapiserver.HandlerFromMux(hdls, r)
 }

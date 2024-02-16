@@ -20,35 +20,17 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-package app
+package model
 
-import (
-	"context"
-	"errors"
-
-	"github.com/superlinkx/HomeList/data/adapter"
-	"github.com/superlinkx/HomeList/model"
-)
-
-var ErrNotFound = errors.New("not found")
-var ErrInternal = errors.New("internal error")
-
-type App struct {
-	adapter adapter.Adapter
+type List struct {
+	ID   int64
+	Name string
 }
 
-func NewApp(adapter adapter.Adapter) App {
-	return App{
-		adapter: adapter,
-	}
-}
-
-func (a App) AllLists(ctx context.Context, limit int32, offset int32) ([]model.List, error) {
-	if ls, err := a.adapter.AllLists(ctx, limit, offset); errors.Is(err, adapter.ErrNotFound) {
-		return nil, ErrNotFound
-	} else if err != nil {
-		return nil, ErrInternal
-	} else {
-		return ls, nil
-	}
+type Item struct {
+	ID      int64
+	ListID  int64
+	Name    string
+	Checked bool
+	Sort    int64
 }

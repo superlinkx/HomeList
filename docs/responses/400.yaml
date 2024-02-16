@@ -1,0 +1,5 @@
+description: Invalid Parameter(s)
+content:
+  text/plain:
+    schema:
+      type: string

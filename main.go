@@ -20,8 +20,6 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-//go:generate mockery
-
 package main
 
 import (
@@ -38,11 +36,13 @@ import (
 	_ "github.com/glebarez/go-sqlite"
 	migrate "github.com/rubenv/sql-migrate"
 	"github.com/superlinkx/HomeList/app"
+	"github.com/superlinkx/HomeList/data/sqlite/adapter"
 	"github.com/superlinkx/HomeList/environment"
 	"github.com/superlinkx/HomeList/handler"
 	"github.com/superlinkx/HomeList/restapi"
-	"github.com/superlinkx/HomeList/service"
 )
+
+//go:generate go run github.com/vektra/mockery/v2@v2.41.0
 
 func main() {
 	if config, err := environment.LoadConfig(); err != nil {
@@ -60,7 +60,7 @@ func main() {
 
 func migrateDB(db *sql.DB) error {
 	migrations := &migrate.FileMigrationSource{
-		Dir: "sql/migrations",
+		Dir: "sql/sqlite/migrations",
 	}
 
 	if _, err := migrate.Exec(db, "sqlite3", migrations, migrate.Up); err != nil {
@@ -74,10 +74,13 @@ func startApp(db *sql.DB, config environment.Config) {
 	done := make(chan os.Signal, 1)
 	signal.Notify(done, os.Interrupt, syscall.SIGINT, syscall.SIGTERM)
 
-	services := service.Init(db)
-	application := app.NewApplication(services)
-	handlers := handler.NewHandlers(application)
-	srv := restapi.NewServer(restapi.Config{HostURL: config.HostURL}, handlers)
+	dataAdapter := adapter.NewSqliteAdapter(db)
+	app := app.NewApp(dataAdapter)
+	handlers := handler.NewHandlers(app)
+	srv, err := restapi.NewServer(restapi.Config{HostURL: config.HostURL}, handlers)
+	if err != nil {
+		log.Fatalf("Failed to create server: %s\n", err)
+	}
 
 	go func() {
 		err := srv.ListenAndServe()

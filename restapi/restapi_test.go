@@ -26,6 +26,7 @@ import (
 	"testing"
 
 	"github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/require"
 	"github.com/superlinkx/HomeList/handler"
 	"github.com/superlinkx/HomeList/restapi"
 )
@@ -39,12 +40,14 @@ func TestNewServer(t *testing.T) {
 	)
 
 	t.Run("full config", func(t *testing.T) {
-		s := restapi.NewServer(fullConfig, handler.Handlers{})
+		s, err := restapi.NewServer(fullConfig, handler.Handlers{})
+		require.Nil(t, err)
 		assert.Equal(t, "localhost:8080", s.Addr)
 	})
 
 	t.Run("empty config", func(t *testing.T) {
-		s := restapi.NewServer(emptyConfig, handler.Handlers{})
+		s, err := restapi.NewServer(emptyConfig, handler.Handlers{})
+		require.Nil(t, err)
 		assert.Equal(t, ":80", s.Addr)
 	})
 }

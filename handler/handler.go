@@ -23,23 +23,15 @@
 package handler
 
 import (
-	"github.com/superlinkx/HomeList/handler/list"
-	"github.com/superlinkx/HomeList/handler/listitem"
+	"github.com/superlinkx/HomeList/app"
 )
 
-type application interface {
-	list.ListApp
-	listitem.ListItemApp
-}
-
 type Handlers struct {
-	list.ListHandlers
-	listitem.ListItemHandlers
+	app app.App
 }
 
-func NewHandlers(a application) Handlers {
+func NewHandlers(app app.App) Handlers {
 	return Handlers{
-		ListHandlers:     list.NewHandlers(a),
-		ListItemHandlers: listitem.NewHandlers(a),
+		app: app,
 	}
 }

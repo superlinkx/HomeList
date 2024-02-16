@@ -32,6 +32,7 @@ init:
   go install github.com/golangci/golangci-lint/cmd/golangci-lint@v1.52.2
   go install github.com/superlinkx/go-runner@latest
   go install github.com/vektra/mockery/v2@v2.38.0
+  go install github.com/deepmap/oapi-codegen/v2/cmd/oapi-codegen@latest
   just tidy
 
 # Run application in development mode
