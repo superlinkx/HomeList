@@ -928,8 +928,8 @@ type GetListsResponse struct {
 	Body         []byte
 	HTTPResponse *http.Response
 	JSON200      *[]struct {
-		Id   *int64  `json:"id,omitempty"`
-		Name *string `json:"name,omitempty"`
+		Id   *int64 `json:"id,omitempty"`
+		Name string `json:"name"`
 	}
 }
 
@@ -953,8 +953,8 @@ type CreateListResponse struct {
 	Body         []byte
 	HTTPResponse *http.Response
 	JSON201      *struct {
-		Id   *int64  `json:"id,omitempty"`
-		Name *string `json:"name,omitempty"`
+		Id   *int64 `json:"id,omitempty"`
+		Name string `json:"name"`
 	}
 }
 
@@ -999,8 +999,8 @@ type GetListResponse struct {
 	Body         []byte
 	HTTPResponse *http.Response
 	JSON200      *struct {
-		Id   *int64  `json:"id,omitempty"`
-		Name *string `json:"name,omitempty"`
+		Id   *int64 `json:"id,omitempty"`
+		Name string `json:"name"`
 	}
 }
 
@@ -1024,8 +1024,8 @@ type UpdateListResponse struct {
 	Body         []byte
 	HTTPResponse *http.Response
 	JSON200      *struct {
-		Id   *int64  `json:"id,omitempty"`
-		Name *string `json:"name,omitempty"`
+		Id   *int64 `json:"id,omitempty"`
+		Name string `json:"name"`
 	}
 }
 
@@ -1049,11 +1049,11 @@ type GetItemsResponse struct {
 	Body         []byte
 	HTTPResponse *http.Response
 	JSON200      *[]struct {
-		Checked *bool   `json:"checked,omitempty"`
-		Content *string `json:"content,omitempty"`
-		Id      *int64  `json:"id,omitempty"`
-		ListId  *int64  `json:"list_id,omitempty"`
-		Sort    *int64  `json:"sort,omitempty"`
+		Checked bool   `json:"checked"`
+		Content string `json:"content"`
+		Id      *int64 `json:"id,omitempty"`
+		ListId  *int64 `json:"list_id,omitempty"`
+		Sort    int64  `json:"sort"`
 	}
 }
 
@@ -1077,8 +1077,8 @@ type CreateItemResponse struct {
 	Body         []byte
 	HTTPResponse *http.Response
 	JSON201      *struct {
-		Id   *int64  `json:"id,omitempty"`
-		Name *string `json:"name,omitempty"`
+		Id   *int64 `json:"id,omitempty"`
+		Name string `json:"name"`
 	}
 }
 
@@ -1123,11 +1123,11 @@ type GetItemResponse struct {
 	Body         []byte
 	HTTPResponse *http.Response
 	JSON200      *struct {
-		Checked *bool   `json:"checked,omitempty"`
-		Content *string `json:"content,omitempty"`
-		Id      *int64  `json:"id,omitempty"`
-		ListId  *int64  `json:"list_id,omitempty"`
-		Sort    *int64  `json:"sort,omitempty"`
+		Checked bool   `json:"checked"`
+		Content string `json:"content"`
+		Id      *int64 `json:"id,omitempty"`
+		ListId  *int64 `json:"list_id,omitempty"`
+		Sort    int64  `json:"sort"`
 	}
 }
 
@@ -1151,11 +1151,11 @@ type UpdateItemResponse struct {
 	Body         []byte
 	HTTPResponse *http.Response
 	JSON200      *struct {
-		Checked *bool   `json:"checked,omitempty"`
-		Content *string `json:"content,omitempty"`
-		Id      *int64  `json:"id,omitempty"`
-		ListId  *int64  `json:"list_id,omitempty"`
-		Sort    *int64  `json:"sort,omitempty"`
+		Checked bool   `json:"checked"`
+		Content string `json:"content"`
+		Id      *int64 `json:"id,omitempty"`
+		ListId  *int64 `json:"list_id,omitempty"`
+		Sort    int64  `json:"sort"`
 	}
 }
 
@@ -1313,8 +1313,8 @@ func ParseGetListsResponse(rsp *http.Response) (*GetListsResponse, error) {
 	switch {
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
 		var dest []struct {
-			Id   *int64  `json:"id,omitempty"`
-			Name *string `json:"name,omitempty"`
+			Id   *int64 `json:"id,omitempty"`
+			Name string `json:"name"`
 		}
 		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
 			return nil, err
@@ -1342,8 +1342,8 @@ func ParseCreateListResponse(rsp *http.Response) (*CreateListResponse, error) {
 	switch {
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 201:
 		var dest struct {
-			Id   *int64  `json:"id,omitempty"`
-			Name *string `json:"name,omitempty"`
+			Id   *int64 `json:"id,omitempty"`
+			Name string `json:"name"`
 		}
 		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
 			return nil, err
@@ -1387,8 +1387,8 @@ func ParseGetListResponse(rsp *http.Response) (*GetListResponse, error) {
 	switch {
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
 		var dest struct {
-			Id   *int64  `json:"id,omitempty"`
-			Name *string `json:"name,omitempty"`
+			Id   *int64 `json:"id,omitempty"`
+			Name string `json:"name"`
 		}
 		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
 			return nil, err
@@ -1416,8 +1416,8 @@ func ParseUpdateListResponse(rsp *http.Response) (*UpdateListResponse, error) {
 	switch {
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
 		var dest struct {
-			Id   *int64  `json:"id,omitempty"`
-			Name *string `json:"name,omitempty"`
+			Id   *int64 `json:"id,omitempty"`
+			Name string `json:"name"`
 		}
 		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
 			return nil, err
@@ -1445,11 +1445,11 @@ func ParseGetItemsResponse(rsp *http.Response) (*GetItemsResponse, error) {
 	switch {
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
 		var dest []struct {
-			Checked *bool   `json:"checked,omitempty"`
-			Content *string `json:"content,omitempty"`
-			Id      *int64  `json:"id,omitempty"`
-			ListId  *int64  `json:"list_id,omitempty"`
-			Sort    *int64  `json:"sort,omitempty"`
+			Checked bool   `json:"checked"`
+			Content string `json:"content"`
+			Id      *int64 `json:"id,omitempty"`
+			ListId  *int64 `json:"list_id,omitempty"`
+			Sort    int64  `json:"sort"`
 		}
 		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
 			return nil, err
@@ -1477,8 +1477,8 @@ func ParseCreateItemResponse(rsp *http.Response) (*CreateItemResponse, error) {
 	switch {
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 201:
 		var dest struct {
-			Id   *int64  `json:"id,omitempty"`
-			Name *string `json:"name,omitempty"`
+			Id   *int64 `json:"id,omitempty"`
+			Name string `json:"name"`
 		}
 		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
 			return nil, err
@@ -1522,11 +1522,11 @@ func ParseGetItemResponse(rsp *http.Response) (*GetItemResponse, error) {
 	switch {
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
 		var dest struct {
-			Checked *bool   `json:"checked,omitempty"`
-			Content *string `json:"content,omitempty"`
-			Id      *int64  `json:"id,omitempty"`
-			ListId  *int64  `json:"list_id,omitempty"`
-			Sort    *int64  `json:"sort,omitempty"`
+			Checked bool   `json:"checked"`
+			Content string `json:"content"`
+			Id      *int64 `json:"id,omitempty"`
+			ListId  *int64 `json:"list_id,omitempty"`
+			Sort    int64  `json:"sort"`
 		}
 		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
 			return nil, err
@@ -1554,11 +1554,11 @@ func ParseUpdateItemResponse(rsp *http.Response) (*UpdateItemResponse, error) {
 	switch {
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
 		var dest struct {
-			Checked *bool   `json:"checked,omitempty"`
-			Content *string `json:"content,omitempty"`
-			Id      *int64  `json:"id,omitempty"`
-			ListId  *int64  `json:"list_id,omitempty"`
-			Sort    *int64  `json:"sort,omitempty"`
+			Checked bool   `json:"checked"`
+			Content string `json:"content"`
+			Id      *int64 `json:"id,omitempty"`
+			ListId  *int64 `json:"list_id,omitempty"`
+			Sort    int64  `json:"sort"`
 		}
 		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
 			return nil, err
@@ -1573,22 +1573,22 @@ func ParseUpdateItemResponse(rsp *http.Response) (*UpdateItemResponse, error) {
 // Base64 encoded, gzipped, json marshaled Swagger object
 var swaggerSpec = []string{
 
-	"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",
+	"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",
 }
 
 // GetSwagger returns the content of the embedded swagger specification file

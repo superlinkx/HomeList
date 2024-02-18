@@ -61,7 +61,7 @@ func (s App) CreateItemOnList(ctx context.Context, listID int64, content string,
 }
 
 func (s App) UpdateItemFromList(ctx context.Context, listID int64, itemID int64, content string, checked bool, sort int64) (model.Item, error) {
-	if item, err := s.adapter.UpdateItemFromList(ctx, listID, itemID, content, checked, sort); errors.Is(err, adapter.ErrNotFound) {
+	if item, err := s.adapter.UpdateItemFromListContent(ctx, listID, itemID, content); errors.Is(err, adapter.ErrNotFound) {
 		return model.Item{}, ErrNotFound
 	} else if err != nil {
 		return model.Item{}, ErrInternal

@@ -37,7 +37,15 @@ func (s PostgresAdapter) GetItemFromList(ctx context.Context, listID int64, id i
 	return model.Item{}, errors.New("not implemented")
 }
 
-func (s PostgresAdapter) UpdateItemFromList(ctx context.Context, listID int64, id int64, content string, checked bool, sort int64) (model.Item, error) {
+func (s PostgresAdapter) UpdateItemFromListContent(ctx context.Context, listID int64, id int64, content string) (model.Item, error) {
+	return model.Item{}, errors.New("not implemented")
+}
+
+func (s PostgresAdapter) UpdateItemFromListSort(ctx context.Context, listID int64, id int64, sort int64) (model.Item, error) {
+	return model.Item{}, errors.New("not implemented")
+}
+
+func (s PostgresAdapter) UpdateItemFromListChecked(ctx context.Context, listID int64, id int64, checked bool) (model.Item, error) {
 	return model.Item{}, errors.New("not implemented")
 }
 

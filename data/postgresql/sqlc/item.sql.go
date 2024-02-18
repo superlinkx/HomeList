@@ -14,15 +14,17 @@ SELECT id, list_id, content, checked, sort FROM items
 WHERE list_id = $1
 ORDER BY sort ASC
 LIMIT $2
+OFFSET $3
 `
 
 type AllItemsFromListParams struct {
 	ListID int64
 	Limit  int32
+	Offset int32
 }
 
 func (q *Queries) AllItemsFromList(ctx context.Context, arg AllItemsFromListParams) ([]Item, error) {
-	rows, err := q.db.QueryContext(ctx, allItemsFromList, arg.ListID, arg.Limit)
+	rows, err := q.db.QueryContext(ctx, allItemsFromList, arg.ListID, arg.Limit, arg.Offset)
 	if err != nil {
 		return nil, err
 	}
@@ -128,6 +130,31 @@ func (q *Queries) UpdateListItemChecked(ctx context.Context, arg UpdateListItemC
 	return i, err
 }
 
+const updateListItemContent = `-- name: UpdateListItemContent :one
+UPDATE items
+SET content = $1
+WHERE id = $2
+RETURNING id, list_id, content, checked, sort
+`
+
+type UpdateListItemContentParams struct {
+	Content string
+	ID      int64
+}
+
+func (q *Queries) UpdateListItemContent(ctx context.Context, arg UpdateListItemContentParams) (Item, error) {
+	row := q.db.QueryRowContext(ctx, updateListItemContent, arg.Content, arg.ID)
+	var i Item
+	err := row.Scan(
+		&i.ID,
+		&i.ListID,
+		&i.Content,
+		&i.Checked,
+		&i.Sort,
+	)
+	return i, err
+}
+
 const updateListItemSort = `-- name: UpdateListItemSort :one
 UPDATE items
 SET sort = $1
@@ -142,31 +169,6 @@ type UpdateListItemSortParams struct {
 
 func (q *Queries) UpdateListItemSort(ctx context.Context, arg UpdateListItemSortParams) (Item, error) {
 	row := q.db.QueryRowContext(ctx, updateListItemSort, arg.Sort, arg.ID)
-	var i Item
-	err := row.Scan(
-		&i.ID,
-		&i.ListID,
-		&i.Content,
-		&i.Checked,
-		&i.Sort,
-	)
-	return i, err
-}
-
-const updateListItemText = `-- name: UpdateListItemText :one
-UPDATE items
-SET content = $1
-WHERE id = $2
-RETURNING id, list_id, content, checked, sort
-`
-
-type UpdateListItemTextParams struct {
-	Content string
-	ID      int64
-}
-
-func (q *Queries) UpdateListItemText(ctx context.Context, arg UpdateListItemTextParams) (Item, error) {
-	row := q.db.QueryRowContext(ctx, updateListItemText, arg.Content, arg.ID)
 	var i Item
 	err := row.Scan(
 		&i.ID,

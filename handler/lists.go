@@ -51,9 +51,9 @@ func (s Handlers) GetLists(w http.ResponseWriter, r *http.Request, params oapise
 	}
 
 	if ls, err := s.app.AllLists(r.Context(), limit, offset); errors.Is(err, app.ErrNotFound) {
-		http.Error(w, "No lists found", http.StatusNotFound)
+		errorResponse(w, http.StatusNotFound, "No lists found")
 	} else if err != nil {
-		http.Error(w, "Internal Server Error", http.StatusInternalServerError)
+		errorResponse(w, http.StatusInternalServerError)
 	} else {
 		var lists = make([]List, 0, len(ls))
 		for _, l := range ls {
@@ -61,22 +61,74 @@ func (s Handlers) GetLists(w http.ResponseWriter, r *http.Request, params oapise
 		}
 		w.Header().Add("Content-Type", "application/json")
 		w.WriteHeader(http.StatusOK)
-		json.NewEncoder(w).Encode(lists)
+		err := json.NewEncoder(w).Encode(lists)
+		if err != nil {
+			errorResponse(w, http.StatusInternalServerError)
+		}
 	}
 }
 
 func (s Handlers) CreateList(w http.ResponseWriter, r *http.Request) {
-	w.WriteHeader(http.StatusNotImplemented)
-}
+	var requestJSON oapiserver.CreateListJSONRequestBody
 
-func (s Handlers) DeleteList(w http.ResponseWriter, r *http.Request, listID int64) {
-	w.WriteHeader(http.StatusNotImplemented)
+	if err := json.NewDecoder(r.Body).Decode(&requestJSON); err != nil {
+		errorResponse(w, http.StatusBadRequest, "invalid body")
+	} else if requestJSON.Name == "" {
+		errorResponse(w, http.StatusBadRequest, "name is required")
+	} else if l, err := s.app.CreateList(r.Context(), requestJSON.Name); err != nil {
+		errorResponse(w, http.StatusInternalServerError)
+	} else {
+		w.Header().Add("Content-Type", "application/json")
+		w.WriteHeader(http.StatusCreated)
+		err := json.NewEncoder(w).Encode(List(l))
+		if err != nil {
+			errorResponse(w, http.StatusInternalServerError)
+		}
+	}
 }
 
 func (s Handlers) GetList(w http.ResponseWriter, r *http.Request, listID int64) {
-	w.WriteHeader(http.StatusNotImplemented)
+	if l, err := s.app.GetList(r.Context(), listID); errors.Is(err, app.ErrNotFound) {
+		errorResponse(w, http.StatusNotFound, "List not found")
+	} else if err != nil {
+		errorResponse(w, http.StatusInternalServerError)
+	} else {
+		w.Header().Add("Content-Type", "application/json")
+		w.WriteHeader(http.StatusOK)
+		err := json.NewEncoder(w).Encode(List(l))
+		if err != nil {
+			errorResponse(w, http.StatusInternalServerError)
+		}
+	}
 }
 
 func (s Handlers) UpdateList(w http.ResponseWriter, r *http.Request, listID int64) {
-	w.WriteHeader(http.StatusNotImplemented)
+	var requestJSON oapiserver.UpdateListJSONRequestBody
+
+	if err := json.NewDecoder(r.Body).Decode(&requestJSON); err != nil {
+		errorResponse(w, http.StatusBadRequest, "invalid body")
+	} else if requestJSON.Name == "" {
+		errorResponse(w, http.StatusBadRequest, "name is required")
+	} else if l, err := s.app.UpdateList(r.Context(), listID, requestJSON.Name); errors.Is(err, app.ErrNotFound) {
+		errorResponse(w, http.StatusNotFound, "List not found")
+	} else if err != nil {
+		errorResponse(w, http.StatusInternalServerError)
+	} else {
+		w.Header().Add("Content-Type", "application/json")
+		w.WriteHeader(http.StatusOK)
+		err := json.NewEncoder(w).Encode(List(l))
+		if err != nil {
+			errorResponse(w, http.StatusInternalServerError)
+		}
+	}
+}
+
+func (s Handlers) DeleteList(w http.ResponseWriter, r *http.Request, listID int64) {
+	if err := s.app.DeleteList(r.Context(), listID); errors.Is(err, app.ErrNotFound) {
+		errorResponse(w, http.StatusNotFound, "List not found")
+	} else if err != nil {
+		errorResponse(w, http.StatusInternalServerError)
+	} else {
+		w.WriteHeader(http.StatusNoContent)
+	}
 }

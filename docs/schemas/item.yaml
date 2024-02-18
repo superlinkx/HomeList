@@ -8,8 +8,13 @@ properties:
     format: int64
   content:
     type: string
+    minLength: 1
   checked:
     type: boolean
   sort:
     type: integer
     format: int64
+required:
+  - content
+  - checked
+  - sort

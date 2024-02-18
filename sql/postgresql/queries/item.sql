@@ -6,14 +6,15 @@ WHERE id = $1 LIMIT 1;
 SELECT * FROM items
 WHERE list_id = $1
 ORDER BY sort ASC
-LIMIT $2;
+LIMIT $2
+OFFSET $3;
 
 -- name: CreateListItem :one
 INSERT INTO items (list_id, content, sort)
 VALUES ($1, $2, $3)
 RETURNING *;
 
--- name: UpdateListItemText :one
+-- name: UpdateListItemContent :one
 UPDATE items
 SET content = $1
 WHERE id = $2

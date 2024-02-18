@@ -46,7 +46,9 @@ type ItemAdapter interface {
 	AllItemsFromList(ctx context.Context, listID int64, limit int32, offset int32) ([]model.Item, error)
 	GetItemFromList(ctx context.Context, listID int64, itemID int64) (model.Item, error)
 	CreateItemOnList(ctx context.Context, listID int64, content string, sort int64) (model.Item, error)
-	UpdateItemFromList(ctx context.Context, listID int64, itemID int64, content string, checked bool, sort int64) (model.Item, error)
+	UpdateItemFromListContent(ctx context.Context, listID int64, itemID int64, content string) (model.Item, error)
+	UpdateItemFromListSort(ctx context.Context, listID int64, itemID int64, sort int64) (model.Item, error)
+	UpdateItemFromListChecked(ctx context.Context, listID int64, itemID int64, checked bool) (model.Item, error)
 	DeleteItemFromList(ctx context.Context, listID int64, itemID int64) error
 }
 

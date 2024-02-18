@@ -527,27 +527,27 @@ func (_c *MockAdapter_RenameList_Call) RunAndReturn(run func(context.Context, in
 	return _c
 }
 
-// UpdateItemFromList provides a mock function with given fields: ctx, listID, itemID, content, checked, sort
-func (_m *MockAdapter) UpdateItemFromList(ctx context.Context, listID int64, itemID int64, content string, checked bool, sort int64) (model.Item, error) {
-	ret := _m.Called(ctx, listID, itemID, content, checked, sort)
+// UpdateItemFromListChecked provides a mock function with given fields: ctx, listID, itemID, checked
+func (_m *MockAdapter) UpdateItemFromListChecked(ctx context.Context, listID int64, itemID int64, checked bool) (model.Item, error) {
+	ret := _m.Called(ctx, listID, itemID, checked)
 
 	if len(ret) == 0 {
-		panic("no return value specified for UpdateItemFromList")
+		panic("no return value specified for UpdateItemFromListChecked")
 	}
 
 	var r0 model.Item
 	var r1 error
-	if rf, ok := ret.Get(0).(func(context.Context, int64, int64, string, bool, int64) (model.Item, error)); ok {
-		return rf(ctx, listID, itemID, content, checked, sort)
+	if rf, ok := ret.Get(0).(func(context.Context, int64, int64, bool) (model.Item, error)); ok {
+		return rf(ctx, listID, itemID, checked)
 	}
-	if rf, ok := ret.Get(0).(func(context.Context, int64, int64, string, bool, int64) model.Item); ok {
-		r0 = rf(ctx, listID, itemID, content, checked, sort)
+	if rf, ok := ret.Get(0).(func(context.Context, int64, int64, bool) model.Item); ok {
+		r0 = rf(ctx, listID, itemID, checked)
 	} else {
 		r0 = ret.Get(0).(model.Item)
 	}
 
-	if rf, ok := ret.Get(1).(func(context.Context, int64, int64, string, bool, int64) error); ok {
-		r1 = rf(ctx, listID, itemID, content, checked, sort)
+	if rf, ok := ret.Get(1).(func(context.Context, int64, int64, bool) error); ok {
+		r1 = rf(ctx, listID, itemID, checked)
 	} else {
 		r1 = ret.Error(1)
 	}
@@ -555,35 +555,151 @@ func (_m *MockAdapter) UpdateItemFromList(ctx context.Context, listID int64, ite
 	return r0, r1
 }
 
-// MockAdapter_UpdateItemFromList_Call is a *mock.Call that shadows Run/Return methods with type explicit version for method 'UpdateItemFromList'
-type MockAdapter_UpdateItemFromList_Call struct {
+// MockAdapter_UpdateItemFromListChecked_Call is a *mock.Call that shadows Run/Return methods with type explicit version for method 'UpdateItemFromListChecked'
+type MockAdapter_UpdateItemFromListChecked_Call struct {
 	*mock.Call
 }
 
-// UpdateItemFromList is a helper method to define mock.On call
+// UpdateItemFromListChecked is a helper method to define mock.On call
 //   - ctx context.Context
 //   - listID int64
 //   - itemID int64
-//   - content string
 //   - checked bool
-//   - sort int64
-func (_e *MockAdapter_Expecter) UpdateItemFromList(ctx interface{}, listID interface{}, itemID interface{}, content interface{}, checked interface{}, sort interface{}) *MockAdapter_UpdateItemFromList_Call {
-	return &MockAdapter_UpdateItemFromList_Call{Call: _e.mock.On("UpdateItemFromList", ctx, listID, itemID, content, checked, sort)}
+func (_e *MockAdapter_Expecter) UpdateItemFromListChecked(ctx interface{}, listID interface{}, itemID interface{}, checked interface{}) *MockAdapter_UpdateItemFromListChecked_Call {
+	return &MockAdapter_UpdateItemFromListChecked_Call{Call: _e.mock.On("UpdateItemFromListChecked", ctx, listID, itemID, checked)}
 }
 
-func (_c *MockAdapter_UpdateItemFromList_Call) Run(run func(ctx context.Context, listID int64, itemID int64, content string, checked bool, sort int64)) *MockAdapter_UpdateItemFromList_Call {
+func (_c *MockAdapter_UpdateItemFromListChecked_Call) Run(run func(ctx context.Context, listID int64, itemID int64, checked bool)) *MockAdapter_UpdateItemFromListChecked_Call {
 	_c.Call.Run(func(args mock.Arguments) {
-		run(args[0].(context.Context), args[1].(int64), args[2].(int64), args[3].(string), args[4].(bool), args[5].(int64))
+		run(args[0].(context.Context), args[1].(int64), args[2].(int64), args[3].(bool))
 	})
 	return _c
 }
 
-func (_c *MockAdapter_UpdateItemFromList_Call) Return(_a0 model.Item, _a1 error) *MockAdapter_UpdateItemFromList_Call {
+func (_c *MockAdapter_UpdateItemFromListChecked_Call) Return(_a0 model.Item, _a1 error) *MockAdapter_UpdateItemFromListChecked_Call {
 	_c.Call.Return(_a0, _a1)
 	return _c
 }
 
-func (_c *MockAdapter_UpdateItemFromList_Call) RunAndReturn(run func(context.Context, int64, int64, string, bool, int64) (model.Item, error)) *MockAdapter_UpdateItemFromList_Call {
+func (_c *MockAdapter_UpdateItemFromListChecked_Call) RunAndReturn(run func(context.Context, int64, int64, bool) (model.Item, error)) *MockAdapter_UpdateItemFromListChecked_Call {
+	_c.Call.Return(run)
+	return _c
+}
+
+// UpdateItemFromListContent provides a mock function with given fields: ctx, listID, itemID, content
+func (_m *MockAdapter) UpdateItemFromListContent(ctx context.Context, listID int64, itemID int64, content string) (model.Item, error) {
+	ret := _m.Called(ctx, listID, itemID, content)
+
+	if len(ret) == 0 {
+		panic("no return value specified for UpdateItemFromListContent")
+	}
+
+	var r0 model.Item
+	var r1 error
+	if rf, ok := ret.Get(0).(func(context.Context, int64, int64, string) (model.Item, error)); ok {
+		return rf(ctx, listID, itemID, content)
+	}
+	if rf, ok := ret.Get(0).(func(context.Context, int64, int64, string) model.Item); ok {
+		r0 = rf(ctx, listID, itemID, content)
+	} else {
+		r0 = ret.Get(0).(model.Item)
+	}
+
+	if rf, ok := ret.Get(1).(func(context.Context, int64, int64, string) error); ok {
+		r1 = rf(ctx, listID, itemID, content)
+	} else {
+		r1 = ret.Error(1)
+	}
+
+	return r0, r1
+}
+
+// MockAdapter_UpdateItemFromListContent_Call is a *mock.Call that shadows Run/Return methods with type explicit version for method 'UpdateItemFromListContent'
+type MockAdapter_UpdateItemFromListContent_Call struct {
+	*mock.Call
+}
+
+// UpdateItemFromListContent is a helper method to define mock.On call
+//   - ctx context.Context
+//   - listID int64
+//   - itemID int64
+//   - content string
+func (_e *MockAdapter_Expecter) UpdateItemFromListContent(ctx interface{}, listID interface{}, itemID interface{}, content interface{}) *MockAdapter_UpdateItemFromListContent_Call {
+	return &MockAdapter_UpdateItemFromListContent_Call{Call: _e.mock.On("UpdateItemFromListContent", ctx, listID, itemID, content)}
+}
+
+func (_c *MockAdapter_UpdateItemFromListContent_Call) Run(run func(ctx context.Context, listID int64, itemID int64, content string)) *MockAdapter_UpdateItemFromListContent_Call {
+	_c.Call.Run(func(args mock.Arguments) {
+		run(args[0].(context.Context), args[1].(int64), args[2].(int64), args[3].(string))
+	})
+	return _c
+}
+
+func (_c *MockAdapter_UpdateItemFromListContent_Call) Return(_a0 model.Item, _a1 error) *MockAdapter_UpdateItemFromListContent_Call {
+	_c.Call.Return(_a0, _a1)
+	return _c
+}
+
+func (_c *MockAdapter_UpdateItemFromListContent_Call) RunAndReturn(run func(context.Context, int64, int64, string) (model.Item, error)) *MockAdapter_UpdateItemFromListContent_Call {
+	_c.Call.Return(run)
+	return _c
+}
+
+// UpdateItemFromListSort provides a mock function with given fields: ctx, listID, itemID, sort
+func (_m *MockAdapter) UpdateItemFromListSort(ctx context.Context, listID int64, itemID int64, sort int64) (model.Item, error) {
+	ret := _m.Called(ctx, listID, itemID, sort)
+
+	if len(ret) == 0 {
+		panic("no return value specified for UpdateItemFromListSort")
+	}
+
+	var r0 model.Item
+	var r1 error
+	if rf, ok := ret.Get(0).(func(context.Context, int64, int64, int64) (model.Item, error)); ok {
+		return rf(ctx, listID, itemID, sort)
+	}
+	if rf, ok := ret.Get(0).(func(context.Context, int64, int64, int64) model.Item); ok {
+		r0 = rf(ctx, listID, itemID, sort)
+	} else {
+		r0 = ret.Get(0).(model.Item)
+	}
+
+	if rf, ok := ret.Get(1).(func(context.Context, int64, int64, int64) error); ok {
+		r1 = rf(ctx, listID, itemID, sort)
+	} else {
+		r1 = ret.Error(1)
+	}
+
+	return r0, r1
+}
+
+// MockAdapter_UpdateItemFromListSort_Call is a *mock.Call that shadows Run/Return methods with type explicit version for method 'UpdateItemFromListSort'
+type MockAdapter_UpdateItemFromListSort_Call struct {
+	*mock.Call
+}
+
+// UpdateItemFromListSort is a helper method to define mock.On call
+//   - ctx context.Context
+//   - listID int64
+//   - itemID int64
+//   - sort int64
+func (_e *MockAdapter_Expecter) UpdateItemFromListSort(ctx interface{}, listID interface{}, itemID interface{}, sort interface{}) *MockAdapter_UpdateItemFromListSort_Call {
+	return &MockAdapter_UpdateItemFromListSort_Call{Call: _e.mock.On("UpdateItemFromListSort", ctx, listID, itemID, sort)}
+}
+
+func (_c *MockAdapter_UpdateItemFromListSort_Call) Run(run func(ctx context.Context, listID int64, itemID int64, sort int64)) *MockAdapter_UpdateItemFromListSort_Call {
+	_c.Call.Run(func(args mock.Arguments) {
+		run(args[0].(context.Context), args[1].(int64), args[2].(int64), args[3].(int64))
+	})
+	return _c
+}
+
+func (_c *MockAdapter_UpdateItemFromListSort_Call) Return(_a0 model.Item, _a1 error) *MockAdapter_UpdateItemFromListSort_Call {
+	_c.Call.Return(_a0, _a1)
+	return _c
+}
+
+func (_c *MockAdapter_UpdateItemFromListSort_Call) RunAndReturn(run func(context.Context, int64, int64, int64) (model.Item, error)) *MockAdapter_UpdateItemFromListSort_Call {
 	_c.Call.Return(run)
 	return _c
 }

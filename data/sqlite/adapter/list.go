@@ -83,5 +83,13 @@ func (s SqliteAdapter) CreateList(ctx context.Context, name string) (model.List,
 }
 
 func (s SqliteAdapter) DeleteList(ctx context.Context, id int64) error {
-	return s.queries.DeleteList(ctx, id)
+	if list, err := s.queries.GetList(ctx, id); errors.Is(err, sql.ErrNoRows) {
+		return fmt.Errorf("could not find list: %w", adapter.ErrNotFound)
+	} else if err != nil {
+		return fmt.Errorf("failed to get list: %w", err)
+	} else if err := s.queries.DeleteList(ctx, list.ID); err != nil {
+		return fmt.Errorf("failed to delete list: %w", err)
+	} else {
+		return nil
+	}
 }

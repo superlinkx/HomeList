@@ -180,22 +180,22 @@ func TestApp_UpdateItem(t *testing.T) {
 	t.Parallel()
 
 	t.Run("Item not found", func(t *testing.T) {
-		mockAdapter.EXPECT().UpdateItemFromList(context.TODO(), int64(0), int64(0), "Item 0", false, int64(1024)).Return(model.Item{}, adapter.ErrNotFound).Times(1)
+		mockAdapter.EXPECT().UpdateItemFromListContent(context.TODO(), int64(0), int64(0), "Item 0").Return(model.Item{}, adapter.ErrNotFound).Times(1)
 		item, err := appInst.UpdateItemFromList(context.TODO(), 0, 0, "Item 0", false, 1024)
 		assert.ErrorIs(t, err, app.ErrNotFound)
 		assert.Empty(t, item)
 	})
 
 	t.Run("Generic error", func(t *testing.T) {
-		mockAdapter.EXPECT().UpdateItemFromList(context.TODO(), int64(0), int64(0), "Item 0", false, int64(1024)).Return(model.Item{}, errGeneric).Times(1)
+		mockAdapter.EXPECT().UpdateItemFromListContent(context.TODO(), int64(0), int64(0), "Item 0").Return(model.Item{}, errGeneric).Times(1)
 		item, err := appInst.UpdateItemFromList(context.TODO(), 0, 0, "Item 0", false, 1024)
 		assert.ErrorIs(t, err, app.ErrInternal)
 		assert.Empty(t, item)
 	})
 
 	t.Run("Success", func(t *testing.T) {
-		var result = model.Item{ID: 0, ListID: 0, Content: "Item 20", Checked: true, Sort: 512}
-		mockAdapter.EXPECT().UpdateItemFromList(context.TODO(), int64(0), int64(0), "Item 20", true, int64(512)).Return(result, nil).Times(1)
+		var result = model.Item{ID: 0, ListID: 0, Content: "Item 20", Checked: false, Sort: 1024}
+		mockAdapter.EXPECT().UpdateItemFromListContent(context.TODO(), int64(0), int64(0), "Item 20").Return(result, nil).Times(1)
 		item, err := appInst.UpdateItemFromList(context.TODO(), 0, 0, "Item 20", true, 512)
 		assert.NoError(t, err)
 		assert.Equal(t, result, item)

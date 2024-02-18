@@ -25,6 +25,7 @@ package app
 import (
 	"context"
 	"errors"
+	"log/slog"
 
 	"github.com/superlinkx/HomeList/app/model"
 	"github.com/superlinkx/HomeList/data/adapter"
@@ -32,8 +33,10 @@ import (
 
 func (s App) AllLists(ctx context.Context, limit int32, offset int32) ([]model.List, error) {
 	if lists, err := s.adapter.AllLists(ctx, limit, offset); errors.Is(err, adapter.ErrNotFound) {
+		slog.Error("No lists found", "error", err)
 		return nil, ErrNotFound
 	} else if err != nil {
+		slog.Error("Unexpected error getting lists", "error", err)
 		return nil, ErrInternal
 	} else {
 		return lists, nil
@@ -42,8 +45,10 @@ func (s App) AllLists(ctx context.Context, limit int32, offset int32) ([]model.L
 
 func (s App) GetList(ctx context.Context, id int64) (model.List, error) {
 	if list, err := s.adapter.GetList(ctx, id); errors.Is(err, adapter.ErrNotFound) {
+		slog.Error("No list found", "id", id, "error", err)
 		return model.List{}, ErrNotFound
 	} else if err != nil {
+		slog.Error("Unexpected error getting list", "id", id, "error", err)
 		return model.List{}, ErrInternal
 	} else {
 		return list, nil
@@ -51,9 +56,8 @@ func (s App) GetList(ctx context.Context, id int64) (model.List, error) {
 }
 
 func (s App) CreateList(ctx context.Context, name string) (model.List, error) {
-	if list, err := s.adapter.CreateList(ctx, name); errors.Is(err, adapter.ErrNotFound) {
-		return model.List{}, ErrNotFound
-	} else if err != nil {
+	if list, err := s.adapter.CreateList(ctx, name); err != nil {
+		slog.Error("Unexpected error creating list", "name", name, "error", err)
 		return model.List{}, ErrInternal
 	} else {
 		return list, nil
@@ -62,8 +66,10 @@ func (s App) CreateList(ctx context.Context, name string) (model.List, error) {
 
 func (s App) UpdateList(ctx context.Context, id int64, name string) (model.List, error) {
 	if list, err := s.adapter.RenameList(ctx, id, name); errors.Is(err, adapter.ErrNotFound) {
+		slog.Error("No list found", "id", id, "error", err)
 		return model.List{}, ErrNotFound
 	} else if err != nil {
+		slog.Error("Unexpected error renaming list", "id", id, "name", name, "error", err)
 		return model.List{}, ErrInternal
 	} else {
 		return list, nil
@@ -72,8 +78,10 @@ func (s App) UpdateList(ctx context.Context, id int64, name string) (model.List,
 
 func (s App) DeleteList(ctx context.Context, id int64) error {
 	if err := s.adapter.DeleteList(ctx, id); errors.Is(err, adapter.ErrNotFound) {
+		slog.Error("No list found", "id", id, "error", err)
 		return ErrNotFound
 	} else if err != nil {
+		slog.Error("Unexpected error deleting list", "id", id, "error", err)
 		return ErrInternal
 	} else {
 		return nil

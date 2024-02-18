@@ -6,14 +6,15 @@ WHERE id = ? LIMIT 1;
 SELECT * FROM items
 WHERE list_id = ?
 ORDER BY sort ASC
-LIMIT ?;
+LIMIT ?
+OFFSET ?;
 
 -- name: CreateListItem :one
 INSERT INTO items (list_id, content, sort)
 VALUES (?, ?, ?)
 RETURNING *;
 
--- name: UpdateListItemText :one
+-- name: UpdateListItemContent :one
 UPDATE items
 SET content = ?
 WHERE id = ?

@@ -23,6 +23,9 @@
 package handler
 
 import (
+	"net/http"
+	"strings"
+
 	"github.com/superlinkx/HomeList/app"
 )
 
@@ -33,5 +36,13 @@ type Handlers struct {
 func NewHandlers(app app.App) Handlers {
 	return Handlers{
 		app: app,
+	}
+}
+
+func errorResponse(w http.ResponseWriter, errCode int, errMsgs ...string) {
+	if len(errMsgs) == 0 {
+		http.Error(w, http.StatusText(errCode), errCode)
+	} else {
+		http.Error(w, strings.Join(errMsgs, ","), errCode)
 	}
 }
