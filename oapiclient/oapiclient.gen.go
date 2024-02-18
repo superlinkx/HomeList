@@ -48,21 +48,44 @@ type GetListsParams struct {
 	Offset *int32 `form:"offset,omitempty" json:"offset,omitempty"`
 }
 
-// PostListsJSONBody defines parameters for PostLists.
-type PostListsJSONBody struct {
+// CreateListJSONBody defines parameters for CreateList.
+type CreateListJSONBody struct {
 	Name string `json:"name"`
 }
 
-// PutListsListIDJSONBody defines parameters for PutListsListID.
-type PutListsListIDJSONBody struct {
+// UpdateListJSONBody defines parameters for UpdateList.
+type UpdateListJSONBody struct {
 	Name string `json:"name"`
 }
 
-// PostListsJSONRequestBody defines body for PostLists for application/json ContentType.
-type PostListsJSONRequestBody PostListsJSONBody
+// GetItemsParams defines parameters for GetItems.
+type GetItemsParams struct {
+	Limit  *int32 `form:"limit,omitempty" json:"limit,omitempty"`
+	Offset *int32 `form:"offset,omitempty" json:"offset,omitempty"`
+}
 
-// PutListsListIDJSONRequestBody defines body for PutListsListID for application/json ContentType.
-type PutListsListIDJSONRequestBody PutListsListIDJSONBody
+// CreateItemJSONBody defines parameters for CreateItem.
+type CreateItemJSONBody struct {
+	Content string `json:"content"`
+	Sort    int64  `json:"sort"`
+}
+
+// UpdateItemJSONBody defines parameters for UpdateItem.
+type UpdateItemJSONBody struct {
+	Name string `json:"name"`
+}
+
+// CreateListJSONRequestBody defines body for CreateList for application/json ContentType.
+type CreateListJSONRequestBody CreateListJSONBody
+
+// UpdateListJSONRequestBody defines body for UpdateList for application/json ContentType.
+type UpdateListJSONRequestBody UpdateListJSONBody
+
+// CreateItemJSONRequestBody defines body for CreateItem for application/json ContentType.
+type CreateItemJSONRequestBody CreateItemJSONBody
+
+// UpdateItemJSONRequestBody defines body for UpdateItem for application/json ContentType.
+type UpdateItemJSONRequestBody UpdateItemJSONBody
 
 // RequestEditorFn  is the function signature for the RequestEditor callback function
 type RequestEditorFn func(ctx context.Context, req *http.Request) error
@@ -140,21 +163,40 @@ type ClientInterface interface {
 	// GetLists request
 	GetLists(ctx context.Context, params *GetListsParams, reqEditors ...RequestEditorFn) (*http.Response, error)
 
-	// PostListsWithBody request with any body
-	PostListsWithBody(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
+	// CreateListWithBody request with any body
+	CreateListWithBody(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
 
-	PostLists(ctx context.Context, body PostListsJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
+	CreateList(ctx context.Context, body CreateListJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
 
-	// DeleteListsListID request
-	DeleteListsListID(ctx context.Context, listID int64, reqEditors ...RequestEditorFn) (*http.Response, error)
+	// DeleteList request
+	DeleteList(ctx context.Context, listID int64, reqEditors ...RequestEditorFn) (*http.Response, error)
 
-	// GetListsListID request
-	GetListsListID(ctx context.Context, listID int64, reqEditors ...RequestEditorFn) (*http.Response, error)
+	// GetList request
+	GetList(ctx context.Context, listID int64, reqEditors ...RequestEditorFn) (*http.Response, error)
 
-	// PutListsListIDWithBody request with any body
-	PutListsListIDWithBody(ctx context.Context, listID int64, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
+	// UpdateListWithBody request with any body
+	UpdateListWithBody(ctx context.Context, listID int64, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
 
-	PutListsListID(ctx context.Context, listID int64, body PutListsListIDJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
+	UpdateList(ctx context.Context, listID int64, body UpdateListJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// GetItems request
+	GetItems(ctx context.Context, listID int64, params *GetItemsParams, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// CreateItemWithBody request with any body
+	CreateItemWithBody(ctx context.Context, listID int64, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	CreateItem(ctx context.Context, listID int64, body CreateItemJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// DeleteItem request
+	DeleteItem(ctx context.Context, listID int64, itemID int64, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// GetItem request
+	GetItem(ctx context.Context, listID int64, itemID int64, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// UpdateItemWithBody request with any body
+	UpdateItemWithBody(ctx context.Context, listID int64, itemID int64, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	UpdateItem(ctx context.Context, listID int64, itemID int64, body UpdateItemJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
 }
 
 func (c *Client) GetLists(ctx context.Context, params *GetListsParams, reqEditors ...RequestEditorFn) (*http.Response, error) {
@@ -169,8 +211,8 @@ func (c *Client) GetLists(ctx context.Context, params *GetListsParams, reqEditor
 	return c.Client.Do(req)
 }
 
-func (c *Client) PostListsWithBody(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error) {
-	req, err := NewPostListsRequestWithBody(c.Server, contentType, body)
+func (c *Client) CreateListWithBody(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewCreateListRequestWithBody(c.Server, contentType, body)
 	if err != nil {
 		return nil, err
 	}
@@ -181,8 +223,8 @@ func (c *Client) PostListsWithBody(ctx context.Context, contentType string, body
 	return c.Client.Do(req)
 }
 
-func (c *Client) PostLists(ctx context.Context, body PostListsJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
-	req, err := NewPostListsRequest(c.Server, body)
+func (c *Client) CreateList(ctx context.Context, body CreateListJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewCreateListRequest(c.Server, body)
 	if err != nil {
 		return nil, err
 	}
@@ -193,8 +235,8 @@ func (c *Client) PostLists(ctx context.Context, body PostListsJSONRequestBody, r
 	return c.Client.Do(req)
 }
 
-func (c *Client) DeleteListsListID(ctx context.Context, listID int64, reqEditors ...RequestEditorFn) (*http.Response, error) {
-	req, err := NewDeleteListsListIDRequest(c.Server, listID)
+func (c *Client) DeleteList(ctx context.Context, listID int64, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewDeleteListRequest(c.Server, listID)
 	if err != nil {
 		return nil, err
 	}
@@ -205,8 +247,8 @@ func (c *Client) DeleteListsListID(ctx context.Context, listID int64, reqEditors
 	return c.Client.Do(req)
 }
 
-func (c *Client) GetListsListID(ctx context.Context, listID int64, reqEditors ...RequestEditorFn) (*http.Response, error) {
-	req, err := NewGetListsListIDRequest(c.Server, listID)
+func (c *Client) GetList(ctx context.Context, listID int64, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewGetListRequest(c.Server, listID)
 	if err != nil {
 		return nil, err
 	}
@@ -217,8 +259,8 @@ func (c *Client) GetListsListID(ctx context.Context, listID int64, reqEditors ..
 	return c.Client.Do(req)
 }
 
-func (c *Client) PutListsListIDWithBody(ctx context.Context, listID int64, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error) {
-	req, err := NewPutListsListIDRequestWithBody(c.Server, listID, contentType, body)
+func (c *Client) UpdateListWithBody(ctx context.Context, listID int64, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewUpdateListRequestWithBody(c.Server, listID, contentType, body)
 	if err != nil {
 		return nil, err
 	}
@@ -229,8 +271,92 @@ func (c *Client) PutListsListIDWithBody(ctx context.Context, listID int64, conte
 	return c.Client.Do(req)
 }
 
-func (c *Client) PutListsListID(ctx context.Context, listID int64, body PutListsListIDJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
-	req, err := NewPutListsListIDRequest(c.Server, listID, body)
+func (c *Client) UpdateList(ctx context.Context, listID int64, body UpdateListJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewUpdateListRequest(c.Server, listID, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) GetItems(ctx context.Context, listID int64, params *GetItemsParams, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewGetItemsRequest(c.Server, listID, params)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) CreateItemWithBody(ctx context.Context, listID int64, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewCreateItemRequestWithBody(c.Server, listID, contentType, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) CreateItem(ctx context.Context, listID int64, body CreateItemJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewCreateItemRequest(c.Server, listID, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) DeleteItem(ctx context.Context, listID int64, itemID int64, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewDeleteItemRequest(c.Server, listID, itemID)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) GetItem(ctx context.Context, listID int64, itemID int64, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewGetItemRequest(c.Server, listID, itemID)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) UpdateItemWithBody(ctx context.Context, listID int64, itemID int64, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewUpdateItemRequestWithBody(c.Server, listID, itemID, contentType, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) UpdateItem(ctx context.Context, listID int64, itemID int64, body UpdateItemJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewUpdateItemRequest(c.Server, listID, itemID, body)
 	if err != nil {
 		return nil, err
 	}
@@ -306,19 +432,19 @@ func NewGetListsRequest(server string, params *GetListsParams) (*http.Request, e
 	return req, nil
 }
 
-// NewPostListsRequest calls the generic PostLists builder with application/json body
-func NewPostListsRequest(server string, body PostListsJSONRequestBody) (*http.Request, error) {
+// NewCreateListRequest calls the generic CreateList builder with application/json body
+func NewCreateListRequest(server string, body CreateListJSONRequestBody) (*http.Request, error) {
 	var bodyReader io.Reader
 	buf, err := json.Marshal(body)
 	if err != nil {
 		return nil, err
 	}
 	bodyReader = bytes.NewReader(buf)
-	return NewPostListsRequestWithBody(server, "application/json", bodyReader)
+	return NewCreateListRequestWithBody(server, "application/json", bodyReader)
 }
 
-// NewPostListsRequestWithBody generates requests for PostLists with any type of body
-func NewPostListsRequestWithBody(server string, contentType string, body io.Reader) (*http.Request, error) {
+// NewCreateListRequestWithBody generates requests for CreateList with any type of body
+func NewCreateListRequestWithBody(server string, contentType string, body io.Reader) (*http.Request, error) {
 	var err error
 
 	serverURL, err := url.Parse(server)
@@ -346,8 +472,8 @@ func NewPostListsRequestWithBody(server string, contentType string, body io.Read
 	return req, nil
 }
 
-// NewDeleteListsListIDRequest generates requests for DeleteListsListID
-func NewDeleteListsListIDRequest(server string, listID int64) (*http.Request, error) {
+// NewDeleteListRequest generates requests for DeleteList
+func NewDeleteListRequest(server string, listID int64) (*http.Request, error) {
 	var err error
 
 	var pathParam0 string
@@ -380,8 +506,8 @@ func NewDeleteListsListIDRequest(server string, listID int64) (*http.Request, er
 	return req, nil
 }
 
-// NewGetListsListIDRequest generates requests for GetListsListID
-func NewGetListsListIDRequest(server string, listID int64) (*http.Request, error) {
+// NewGetListRequest generates requests for GetList
+func NewGetListRequest(server string, listID int64) (*http.Request, error) {
 	var err error
 
 	var pathParam0 string
@@ -414,19 +540,19 @@ func NewGetListsListIDRequest(server string, listID int64) (*http.Request, error
 	return req, nil
 }
 
-// NewPutListsListIDRequest calls the generic PutListsListID builder with application/json body
-func NewPutListsListIDRequest(server string, listID int64, body PutListsListIDJSONRequestBody) (*http.Request, error) {
+// NewUpdateListRequest calls the generic UpdateList builder with application/json body
+func NewUpdateListRequest(server string, listID int64, body UpdateListJSONRequestBody) (*http.Request, error) {
 	var bodyReader io.Reader
 	buf, err := json.Marshal(body)
 	if err != nil {
 		return nil, err
 	}
 	bodyReader = bytes.NewReader(buf)
-	return NewPutListsListIDRequestWithBody(server, listID, "application/json", bodyReader)
+	return NewUpdateListRequestWithBody(server, listID, "application/json", bodyReader)
 }
 
-// NewPutListsListIDRequestWithBody generates requests for PutListsListID with any type of body
-func NewPutListsListIDRequestWithBody(server string, listID int64, contentType string, body io.Reader) (*http.Request, error) {
+// NewUpdateListRequestWithBody generates requests for UpdateList with any type of body
+func NewUpdateListRequestWithBody(server string, listID int64, contentType string, body io.Reader) (*http.Request, error) {
 	var err error
 
 	var pathParam0 string
@@ -442,6 +568,261 @@ func NewPutListsListIDRequestWithBody(server string, listID int64, contentType s
 	}
 
 	operationPath := fmt.Sprintf("/lists/%s", pathParam0)
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest("PUT", queryURL.String(), body)
+	if err != nil {
+		return nil, err
+	}
+
+	req.Header.Add("Content-Type", contentType)
+
+	return req, nil
+}
+
+// NewGetItemsRequest generates requests for GetItems
+func NewGetItemsRequest(server string, listID int64, params *GetItemsParams) (*http.Request, error) {
+	var err error
+
+	var pathParam0 string
+
+	pathParam0, err = runtime.StyleParamWithLocation("simple", false, "listID", runtime.ParamLocationPath, listID)
+	if err != nil {
+		return nil, err
+	}
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/lists/%s/items", pathParam0)
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	if params != nil {
+		queryValues := queryURL.Query()
+
+		if params.Limit != nil {
+
+			if queryFrag, err := runtime.StyleParamWithLocation("form", true, "limit", runtime.ParamLocationQuery, *params.Limit); err != nil {
+				return nil, err
+			} else if parsed, err := url.ParseQuery(queryFrag); err != nil {
+				return nil, err
+			} else {
+				for k, v := range parsed {
+					for _, v2 := range v {
+						queryValues.Add(k, v2)
+					}
+				}
+			}
+
+		}
+
+		if params.Offset != nil {
+
+			if queryFrag, err := runtime.StyleParamWithLocation("form", true, "offset", runtime.ParamLocationQuery, *params.Offset); err != nil {
+				return nil, err
+			} else if parsed, err := url.ParseQuery(queryFrag); err != nil {
+				return nil, err
+			} else {
+				for k, v := range parsed {
+					for _, v2 := range v {
+						queryValues.Add(k, v2)
+					}
+				}
+			}
+
+		}
+
+		queryURL.RawQuery = queryValues.Encode()
+	}
+
+	req, err := http.NewRequest("GET", queryURL.String(), nil)
+	if err != nil {
+		return nil, err
+	}
+
+	return req, nil
+}
+
+// NewCreateItemRequest calls the generic CreateItem builder with application/json body
+func NewCreateItemRequest(server string, listID int64, body CreateItemJSONRequestBody) (*http.Request, error) {
+	var bodyReader io.Reader
+	buf, err := json.Marshal(body)
+	if err != nil {
+		return nil, err
+	}
+	bodyReader = bytes.NewReader(buf)
+	return NewCreateItemRequestWithBody(server, listID, "application/json", bodyReader)
+}
+
+// NewCreateItemRequestWithBody generates requests for CreateItem with any type of body
+func NewCreateItemRequestWithBody(server string, listID int64, contentType string, body io.Reader) (*http.Request, error) {
+	var err error
+
+	var pathParam0 string
+
+	pathParam0, err = runtime.StyleParamWithLocation("simple", false, "listID", runtime.ParamLocationPath, listID)
+	if err != nil {
+		return nil, err
+	}
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/lists/%s/items", pathParam0)
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest("POST", queryURL.String(), body)
+	if err != nil {
+		return nil, err
+	}
+
+	req.Header.Add("Content-Type", contentType)
+
+	return req, nil
+}
+
+// NewDeleteItemRequest generates requests for DeleteItem
+func NewDeleteItemRequest(server string, listID int64, itemID int64) (*http.Request, error) {
+	var err error
+
+	var pathParam0 string
+
+	pathParam0, err = runtime.StyleParamWithLocation("simple", false, "listID", runtime.ParamLocationPath, listID)
+	if err != nil {
+		return nil, err
+	}
+
+	var pathParam1 string
+
+	pathParam1, err = runtime.StyleParamWithLocation("simple", false, "itemID", runtime.ParamLocationPath, itemID)
+	if err != nil {
+		return nil, err
+	}
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/lists/%s/items/%s", pathParam0, pathParam1)
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest("DELETE", queryURL.String(), nil)
+	if err != nil {
+		return nil, err
+	}
+
+	return req, nil
+}
+
+// NewGetItemRequest generates requests for GetItem
+func NewGetItemRequest(server string, listID int64, itemID int64) (*http.Request, error) {
+	var err error
+
+	var pathParam0 string
+
+	pathParam0, err = runtime.StyleParamWithLocation("simple", false, "listID", runtime.ParamLocationPath, listID)
+	if err != nil {
+		return nil, err
+	}
+
+	var pathParam1 string
+
+	pathParam1, err = runtime.StyleParamWithLocation("simple", false, "itemID", runtime.ParamLocationPath, itemID)
+	if err != nil {
+		return nil, err
+	}
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/lists/%s/items/%s", pathParam0, pathParam1)
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest("GET", queryURL.String(), nil)
+	if err != nil {
+		return nil, err
+	}
+
+	return req, nil
+}
+
+// NewUpdateItemRequest calls the generic UpdateItem builder with application/json body
+func NewUpdateItemRequest(server string, listID int64, itemID int64, body UpdateItemJSONRequestBody) (*http.Request, error) {
+	var bodyReader io.Reader
+	buf, err := json.Marshal(body)
+	if err != nil {
+		return nil, err
+	}
+	bodyReader = bytes.NewReader(buf)
+	return NewUpdateItemRequestWithBody(server, listID, itemID, "application/json", bodyReader)
+}
+
+// NewUpdateItemRequestWithBody generates requests for UpdateItem with any type of body
+func NewUpdateItemRequestWithBody(server string, listID int64, itemID int64, contentType string, body io.Reader) (*http.Request, error) {
+	var err error
+
+	var pathParam0 string
+
+	pathParam0, err = runtime.StyleParamWithLocation("simple", false, "listID", runtime.ParamLocationPath, listID)
+	if err != nil {
+		return nil, err
+	}
+
+	var pathParam1 string
+
+	pathParam1, err = runtime.StyleParamWithLocation("simple", false, "itemID", runtime.ParamLocationPath, itemID)
+	if err != nil {
+		return nil, err
+	}
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/lists/%s/items/%s", pathParam0, pathParam1)
 	if operationPath[0] == '/' {
 		operationPath = "." + operationPath
 	}
@@ -507,21 +888,40 @@ type ClientWithResponsesInterface interface {
 	// GetListsWithResponse request
 	GetListsWithResponse(ctx context.Context, params *GetListsParams, reqEditors ...RequestEditorFn) (*GetListsResponse, error)
 
-	// PostListsWithBodyWithResponse request with any body
-	PostListsWithBodyWithResponse(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*PostListsResponse, error)
+	// CreateListWithBodyWithResponse request with any body
+	CreateListWithBodyWithResponse(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*CreateListResponse, error)
 
-	PostListsWithResponse(ctx context.Context, body PostListsJSONRequestBody, reqEditors ...RequestEditorFn) (*PostListsResponse, error)
+	CreateListWithResponse(ctx context.Context, body CreateListJSONRequestBody, reqEditors ...RequestEditorFn) (*CreateListResponse, error)
 
-	// DeleteListsListIDWithResponse request
-	DeleteListsListIDWithResponse(ctx context.Context, listID int64, reqEditors ...RequestEditorFn) (*DeleteListsListIDResponse, error)
+	// DeleteListWithResponse request
+	DeleteListWithResponse(ctx context.Context, listID int64, reqEditors ...RequestEditorFn) (*DeleteListResponse, error)
 
-	// GetListsListIDWithResponse request
-	GetListsListIDWithResponse(ctx context.Context, listID int64, reqEditors ...RequestEditorFn) (*GetListsListIDResponse, error)
+	// GetListWithResponse request
+	GetListWithResponse(ctx context.Context, listID int64, reqEditors ...RequestEditorFn) (*GetListResponse, error)
 
-	// PutListsListIDWithBodyWithResponse request with any body
-	PutListsListIDWithBodyWithResponse(ctx context.Context, listID int64, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*PutListsListIDResponse, error)
+	// UpdateListWithBodyWithResponse request with any body
+	UpdateListWithBodyWithResponse(ctx context.Context, listID int64, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*UpdateListResponse, error)
 
-	PutListsListIDWithResponse(ctx context.Context, listID int64, body PutListsListIDJSONRequestBody, reqEditors ...RequestEditorFn) (*PutListsListIDResponse, error)
+	UpdateListWithResponse(ctx context.Context, listID int64, body UpdateListJSONRequestBody, reqEditors ...RequestEditorFn) (*UpdateListResponse, error)
+
+	// GetItemsWithResponse request
+	GetItemsWithResponse(ctx context.Context, listID int64, params *GetItemsParams, reqEditors ...RequestEditorFn) (*GetItemsResponse, error)
+
+	// CreateItemWithBodyWithResponse request with any body
+	CreateItemWithBodyWithResponse(ctx context.Context, listID int64, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*CreateItemResponse, error)
+
+	CreateItemWithResponse(ctx context.Context, listID int64, body CreateItemJSONRequestBody, reqEditors ...RequestEditorFn) (*CreateItemResponse, error)
+
+	// DeleteItemWithResponse request
+	DeleteItemWithResponse(ctx context.Context, listID int64, itemID int64, reqEditors ...RequestEditorFn) (*DeleteItemResponse, error)
+
+	// GetItemWithResponse request
+	GetItemWithResponse(ctx context.Context, listID int64, itemID int64, reqEditors ...RequestEditorFn) (*GetItemResponse, error)
+
+	// UpdateItemWithBodyWithResponse request with any body
+	UpdateItemWithBodyWithResponse(ctx context.Context, listID int64, itemID int64, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*UpdateItemResponse, error)
+
+	UpdateItemWithResponse(ctx context.Context, listID int64, itemID int64, body UpdateItemJSONRequestBody, reqEditors ...RequestEditorFn) (*UpdateItemResponse, error)
 }
 
 type GetListsResponse struct {
@@ -549,7 +949,7 @@ func (r GetListsResponse) StatusCode() int {
 	return 0
 }
 
-type PostListsResponse struct {
+type CreateListResponse struct {
 	Body         []byte
 	HTTPResponse *http.Response
 	JSON201      *struct {
@@ -559,7 +959,7 @@ type PostListsResponse struct {
 }
 
 // Status returns HTTPResponse.Status
-func (r PostListsResponse) Status() string {
+func (r CreateListResponse) Status() string {
 	if r.HTTPResponse != nil {
 		return r.HTTPResponse.Status
 	}
@@ -567,20 +967,20 @@ func (r PostListsResponse) Status() string {
 }
 
 // StatusCode returns HTTPResponse.StatusCode
-func (r PostListsResponse) StatusCode() int {
+func (r CreateListResponse) StatusCode() int {
 	if r.HTTPResponse != nil {
 		return r.HTTPResponse.StatusCode
 	}
 	return 0
 }
 
-type DeleteListsListIDResponse struct {
+type DeleteListResponse struct {
 	Body         []byte
 	HTTPResponse *http.Response
 }
 
 // Status returns HTTPResponse.Status
-func (r DeleteListsListIDResponse) Status() string {
+func (r DeleteListResponse) Status() string {
 	if r.HTTPResponse != nil {
 		return r.HTTPResponse.Status
 	}
@@ -588,39 +988,14 @@ func (r DeleteListsListIDResponse) Status() string {
 }
 
 // StatusCode returns HTTPResponse.StatusCode
-func (r DeleteListsListIDResponse) StatusCode() int {
+func (r DeleteListResponse) StatusCode() int {
 	if r.HTTPResponse != nil {
 		return r.HTTPResponse.StatusCode
 	}
 	return 0
 }
 
-type GetListsListIDResponse struct {
-	Body         []byte
-	HTTPResponse *http.Response
-	JSON200      *struct {
-		Id   *int64  `json:"id,omitempty"`
-		Name *string `json:"name,omitempty"`
-	}
-}
-
-// Status returns HTTPResponse.Status
-func (r GetListsListIDResponse) Status() string {
-	if r.HTTPResponse != nil {
-		return r.HTTPResponse.Status
-	}
-	return http.StatusText(0)
-}
-
-// StatusCode returns HTTPResponse.StatusCode
-func (r GetListsListIDResponse) StatusCode() int {
-	if r.HTTPResponse != nil {
-		return r.HTTPResponse.StatusCode
-	}
-	return 0
-}
-
-type PutListsListIDResponse struct {
+type GetListResponse struct {
 	Body         []byte
 	HTTPResponse *http.Response
 	JSON200      *struct {
@@ -630,7 +1005,7 @@ type PutListsListIDResponse struct {
 }
 
 // Status returns HTTPResponse.Status
-func (r PutListsListIDResponse) Status() string {
+func (r GetListResponse) Status() string {
 	if r.HTTPResponse != nil {
 		return r.HTTPResponse.Status
 	}
@@ -638,7 +1013,162 @@ func (r PutListsListIDResponse) Status() string {
 }
 
 // StatusCode returns HTTPResponse.StatusCode
-func (r PutListsListIDResponse) StatusCode() int {
+func (r GetListResponse) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+type UpdateListResponse struct {
+	Body         []byte
+	HTTPResponse *http.Response
+	JSON200      *struct {
+		Id   *int64  `json:"id,omitempty"`
+		Name *string `json:"name,omitempty"`
+	}
+}
+
+// Status returns HTTPResponse.Status
+func (r UpdateListResponse) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r UpdateListResponse) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+type GetItemsResponse struct {
+	Body         []byte
+	HTTPResponse *http.Response
+	JSON200      *[]struct {
+		Checked *bool   `json:"checked,omitempty"`
+		Content *string `json:"content,omitempty"`
+		Id      *int64  `json:"id,omitempty"`
+		ListId  *int64  `json:"list_id,omitempty"`
+		Sort    *int64  `json:"sort,omitempty"`
+	}
+}
+
+// Status returns HTTPResponse.Status
+func (r GetItemsResponse) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r GetItemsResponse) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+type CreateItemResponse struct {
+	Body         []byte
+	HTTPResponse *http.Response
+	JSON201      *struct {
+		Id   *int64  `json:"id,omitempty"`
+		Name *string `json:"name,omitempty"`
+	}
+}
+
+// Status returns HTTPResponse.Status
+func (r CreateItemResponse) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r CreateItemResponse) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+type DeleteItemResponse struct {
+	Body         []byte
+	HTTPResponse *http.Response
+}
+
+// Status returns HTTPResponse.Status
+func (r DeleteItemResponse) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r DeleteItemResponse) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+type GetItemResponse struct {
+	Body         []byte
+	HTTPResponse *http.Response
+	JSON200      *struct {
+		Checked *bool   `json:"checked,omitempty"`
+		Content *string `json:"content,omitempty"`
+		Id      *int64  `json:"id,omitempty"`
+		ListId  *int64  `json:"list_id,omitempty"`
+		Sort    *int64  `json:"sort,omitempty"`
+	}
+}
+
+// Status returns HTTPResponse.Status
+func (r GetItemResponse) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r GetItemResponse) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+type UpdateItemResponse struct {
+	Body         []byte
+	HTTPResponse *http.Response
+	JSON200      *struct {
+		Checked *bool   `json:"checked,omitempty"`
+		Content *string `json:"content,omitempty"`
+		Id      *int64  `json:"id,omitempty"`
+		ListId  *int64  `json:"list_id,omitempty"`
+		Sort    *int64  `json:"sort,omitempty"`
+	}
+}
+
+// Status returns HTTPResponse.Status
+func (r UpdateItemResponse) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r UpdateItemResponse) StatusCode() int {
 	if r.HTTPResponse != nil {
 		return r.HTTPResponse.StatusCode
 	}
@@ -654,56 +1184,117 @@ func (c *ClientWithResponses) GetListsWithResponse(ctx context.Context, params *
 	return ParseGetListsResponse(rsp)
 }
 
-// PostListsWithBodyWithResponse request with arbitrary body returning *PostListsResponse
-func (c *ClientWithResponses) PostListsWithBodyWithResponse(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*PostListsResponse, error) {
-	rsp, err := c.PostListsWithBody(ctx, contentType, body, reqEditors...)
+// CreateListWithBodyWithResponse request with arbitrary body returning *CreateListResponse
+func (c *ClientWithResponses) CreateListWithBodyWithResponse(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*CreateListResponse, error) {
+	rsp, err := c.CreateListWithBody(ctx, contentType, body, reqEditors...)
 	if err != nil {
 		return nil, err
 	}
-	return ParsePostListsResponse(rsp)
+	return ParseCreateListResponse(rsp)
 }
 
-func (c *ClientWithResponses) PostListsWithResponse(ctx context.Context, body PostListsJSONRequestBody, reqEditors ...RequestEditorFn) (*PostListsResponse, error) {
-	rsp, err := c.PostLists(ctx, body, reqEditors...)
+func (c *ClientWithResponses) CreateListWithResponse(ctx context.Context, body CreateListJSONRequestBody, reqEditors ...RequestEditorFn) (*CreateListResponse, error) {
+	rsp, err := c.CreateList(ctx, body, reqEditors...)
 	if err != nil {
 		return nil, err
 	}
-	return ParsePostListsResponse(rsp)
+	return ParseCreateListResponse(rsp)
 }
 
-// DeleteListsListIDWithResponse request returning *DeleteListsListIDResponse
-func (c *ClientWithResponses) DeleteListsListIDWithResponse(ctx context.Context, listID int64, reqEditors ...RequestEditorFn) (*DeleteListsListIDResponse, error) {
-	rsp, err := c.DeleteListsListID(ctx, listID, reqEditors...)
+// DeleteListWithResponse request returning *DeleteListResponse
+func (c *ClientWithResponses) DeleteListWithResponse(ctx context.Context, listID int64, reqEditors ...RequestEditorFn) (*DeleteListResponse, error) {
+	rsp, err := c.DeleteList(ctx, listID, reqEditors...)
 	if err != nil {
 		return nil, err
 	}
-	return ParseDeleteListsListIDResponse(rsp)
+	return ParseDeleteListResponse(rsp)
 }
 
-// GetListsListIDWithResponse request returning *GetListsListIDResponse
-func (c *ClientWithResponses) GetListsListIDWithResponse(ctx context.Context, listID int64, reqEditors ...RequestEditorFn) (*GetListsListIDResponse, error) {
-	rsp, err := c.GetListsListID(ctx, listID, reqEditors...)
+// GetListWithResponse request returning *GetListResponse
+func (c *ClientWithResponses) GetListWithResponse(ctx context.Context, listID int64, reqEditors ...RequestEditorFn) (*GetListResponse, error) {
+	rsp, err := c.GetList(ctx, listID, reqEditors...)
 	if err != nil {
 		return nil, err
 	}
-	return ParseGetListsListIDResponse(rsp)
+	return ParseGetListResponse(rsp)
 }
 
-// PutListsListIDWithBodyWithResponse request with arbitrary body returning *PutListsListIDResponse
-func (c *ClientWithResponses) PutListsListIDWithBodyWithResponse(ctx context.Context, listID int64, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*PutListsListIDResponse, error) {
-	rsp, err := c.PutListsListIDWithBody(ctx, listID, contentType, body, reqEditors...)
+// UpdateListWithBodyWithResponse request with arbitrary body returning *UpdateListResponse
+func (c *ClientWithResponses) UpdateListWithBodyWithResponse(ctx context.Context, listID int64, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*UpdateListResponse, error) {
+	rsp, err := c.UpdateListWithBody(ctx, listID, contentType, body, reqEditors...)
 	if err != nil {
 		return nil, err
 	}
-	return ParsePutListsListIDResponse(rsp)
+	return ParseUpdateListResponse(rsp)
 }
 
-func (c *ClientWithResponses) PutListsListIDWithResponse(ctx context.Context, listID int64, body PutListsListIDJSONRequestBody, reqEditors ...RequestEditorFn) (*PutListsListIDResponse, error) {
-	rsp, err := c.PutListsListID(ctx, listID, body, reqEditors...)
+func (c *ClientWithResponses) UpdateListWithResponse(ctx context.Context, listID int64, body UpdateListJSONRequestBody, reqEditors ...RequestEditorFn) (*UpdateListResponse, error) {
+	rsp, err := c.UpdateList(ctx, listID, body, reqEditors...)
 	if err != nil {
 		return nil, err
 	}
-	return ParsePutListsListIDResponse(rsp)
+	return ParseUpdateListResponse(rsp)
+}
+
+// GetItemsWithResponse request returning *GetItemsResponse
+func (c *ClientWithResponses) GetItemsWithResponse(ctx context.Context, listID int64, params *GetItemsParams, reqEditors ...RequestEditorFn) (*GetItemsResponse, error) {
+	rsp, err := c.GetItems(ctx, listID, params, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseGetItemsResponse(rsp)
+}
+
+// CreateItemWithBodyWithResponse request with arbitrary body returning *CreateItemResponse
+func (c *ClientWithResponses) CreateItemWithBodyWithResponse(ctx context.Context, listID int64, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*CreateItemResponse, error) {
+	rsp, err := c.CreateItemWithBody(ctx, listID, contentType, body, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseCreateItemResponse(rsp)
+}
+
+func (c *ClientWithResponses) CreateItemWithResponse(ctx context.Context, listID int64, body CreateItemJSONRequestBody, reqEditors ...RequestEditorFn) (*CreateItemResponse, error) {
+	rsp, err := c.CreateItem(ctx, listID, body, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseCreateItemResponse(rsp)
+}
+
+// DeleteItemWithResponse request returning *DeleteItemResponse
+func (c *ClientWithResponses) DeleteItemWithResponse(ctx context.Context, listID int64, itemID int64, reqEditors ...RequestEditorFn) (*DeleteItemResponse, error) {
+	rsp, err := c.DeleteItem(ctx, listID, itemID, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseDeleteItemResponse(rsp)
+}
+
+// GetItemWithResponse request returning *GetItemResponse
+func (c *ClientWithResponses) GetItemWithResponse(ctx context.Context, listID int64, itemID int64, reqEditors ...RequestEditorFn) (*GetItemResponse, error) {
+	rsp, err := c.GetItem(ctx, listID, itemID, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseGetItemResponse(rsp)
+}
+
+// UpdateItemWithBodyWithResponse request with arbitrary body returning *UpdateItemResponse
+func (c *ClientWithResponses) UpdateItemWithBodyWithResponse(ctx context.Context, listID int64, itemID int64, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*UpdateItemResponse, error) {
+	rsp, err := c.UpdateItemWithBody(ctx, listID, itemID, contentType, body, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseUpdateItemResponse(rsp)
+}
+
+func (c *ClientWithResponses) UpdateItemWithResponse(ctx context.Context, listID int64, itemID int64, body UpdateItemJSONRequestBody, reqEditors ...RequestEditorFn) (*UpdateItemResponse, error) {
+	rsp, err := c.UpdateItem(ctx, listID, itemID, body, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseUpdateItemResponse(rsp)
 }
 
 // ParseGetListsResponse parses an HTTP response from a GetListsWithResponse call
@@ -735,15 +1326,15 @@ func ParseGetListsResponse(rsp *http.Response) (*GetListsResponse, error) {
 	return response, nil
 }
 
-// ParsePostListsResponse parses an HTTP response from a PostListsWithResponse call
-func ParsePostListsResponse(rsp *http.Response) (*PostListsResponse, error) {
+// ParseCreateListResponse parses an HTTP response from a CreateListWithResponse call
+func ParseCreateListResponse(rsp *http.Response) (*CreateListResponse, error) {
 	bodyBytes, err := io.ReadAll(rsp.Body)
 	defer func() { _ = rsp.Body.Close() }()
 	if err != nil {
 		return nil, err
 	}
 
-	response := &PostListsResponse{
+	response := &CreateListResponse{
 		Body:         bodyBytes,
 		HTTPResponse: rsp,
 	}
@@ -764,15 +1355,15 @@ func ParsePostListsResponse(rsp *http.Response) (*PostListsResponse, error) {
 	return response, nil
 }
 
-// ParseDeleteListsListIDResponse parses an HTTP response from a DeleteListsListIDWithResponse call
-func ParseDeleteListsListIDResponse(rsp *http.Response) (*DeleteListsListIDResponse, error) {
+// ParseDeleteListResponse parses an HTTP response from a DeleteListWithResponse call
+func ParseDeleteListResponse(rsp *http.Response) (*DeleteListResponse, error) {
 	bodyBytes, err := io.ReadAll(rsp.Body)
 	defer func() { _ = rsp.Body.Close() }()
 	if err != nil {
 		return nil, err
 	}
 
-	response := &DeleteListsListIDResponse{
+	response := &DeleteListResponse{
 		Body:         bodyBytes,
 		HTTPResponse: rsp,
 	}
@@ -780,15 +1371,15 @@ func ParseDeleteListsListIDResponse(rsp *http.Response) (*DeleteListsListIDRespo
 	return response, nil
 }
 
-// ParseGetListsListIDResponse parses an HTTP response from a GetListsListIDWithResponse call
-func ParseGetListsListIDResponse(rsp *http.Response) (*GetListsListIDResponse, error) {
+// ParseGetListResponse parses an HTTP response from a GetListWithResponse call
+func ParseGetListResponse(rsp *http.Response) (*GetListResponse, error) {
 	bodyBytes, err := io.ReadAll(rsp.Body)
 	defer func() { _ = rsp.Body.Close() }()
 	if err != nil {
 		return nil, err
 	}
 
-	response := &GetListsListIDResponse{
+	response := &GetListResponse{
 		Body:         bodyBytes,
 		HTTPResponse: rsp,
 	}
@@ -809,15 +1400,15 @@ func ParseGetListsListIDResponse(rsp *http.Response) (*GetListsListIDResponse, e
 	return response, nil
 }
 
-// ParsePutListsListIDResponse parses an HTTP response from a PutListsListIDWithResponse call
-func ParsePutListsListIDResponse(rsp *http.Response) (*PutListsListIDResponse, error) {
+// ParseUpdateListResponse parses an HTTP response from a UpdateListWithResponse call
+func ParseUpdateListResponse(rsp *http.Response) (*UpdateListResponse, error) {
 	bodyBytes, err := io.ReadAll(rsp.Body)
 	defer func() { _ = rsp.Body.Close() }()
 	if err != nil {
 		return nil, err
 	}
 
-	response := &PutListsListIDResponse{
+	response := &UpdateListResponse{
 		Body:         bodyBytes,
 		HTTPResponse: rsp,
 	}
@@ -827,6 +1418,147 @@ func ParsePutListsListIDResponse(rsp *http.Response) (*PutListsListIDResponse, e
 		var dest struct {
 			Id   *int64  `json:"id,omitempty"`
 			Name *string `json:"name,omitempty"`
+		}
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON200 = &dest
+
+	}
+
+	return response, nil
+}
+
+// ParseGetItemsResponse parses an HTTP response from a GetItemsWithResponse call
+func ParseGetItemsResponse(rsp *http.Response) (*GetItemsResponse, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &GetItemsResponse{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
+		var dest []struct {
+			Checked *bool   `json:"checked,omitempty"`
+			Content *string `json:"content,omitempty"`
+			Id      *int64  `json:"id,omitempty"`
+			ListId  *int64  `json:"list_id,omitempty"`
+			Sort    *int64  `json:"sort,omitempty"`
+		}
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON200 = &dest
+
+	}
+
+	return response, nil
+}
+
+// ParseCreateItemResponse parses an HTTP response from a CreateItemWithResponse call
+func ParseCreateItemResponse(rsp *http.Response) (*CreateItemResponse, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &CreateItemResponse{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 201:
+		var dest struct {
+			Id   *int64  `json:"id,omitempty"`
+			Name *string `json:"name,omitempty"`
+		}
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON201 = &dest
+
+	}
+
+	return response, nil
+}
+
+// ParseDeleteItemResponse parses an HTTP response from a DeleteItemWithResponse call
+func ParseDeleteItemResponse(rsp *http.Response) (*DeleteItemResponse, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &DeleteItemResponse{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	return response, nil
+}
+
+// ParseGetItemResponse parses an HTTP response from a GetItemWithResponse call
+func ParseGetItemResponse(rsp *http.Response) (*GetItemResponse, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &GetItemResponse{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
+		var dest struct {
+			Checked *bool   `json:"checked,omitempty"`
+			Content *string `json:"content,omitempty"`
+			Id      *int64  `json:"id,omitempty"`
+			ListId  *int64  `json:"list_id,omitempty"`
+			Sort    *int64  `json:"sort,omitempty"`
+		}
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON200 = &dest
+
+	}
+
+	return response, nil
+}
+
+// ParseUpdateItemResponse parses an HTTP response from a UpdateItemWithResponse call
+func ParseUpdateItemResponse(rsp *http.Response) (*UpdateItemResponse, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &UpdateItemResponse{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
+		var dest struct {
+			Checked *bool   `json:"checked,omitempty"`
+			Content *string `json:"content,omitempty"`
+			Id      *int64  `json:"id,omitempty"`
+			ListId  *int64  `json:"list_id,omitempty"`
+			Sort    *int64  `json:"sort,omitempty"`
 		}
 		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
 			return nil, err
@@ -841,19 +1573,22 @@ func ParsePutListsListIDResponse(rsp *http.Response) (*PutListsListIDResponse, e
 // Base64 encoded, gzipped, json marshaled Swagger object
 var swaggerSpec = []string{
 
-	"H4sIAAAAAAAC/8xWQW/bPAz9KwK/77ABRuWk6Q6+bSu2BeiGHrZT0YNiM4kKW1IlOlsQ+L8PkpykiZ10",
-	"GbKiN8em+B75HqmsINeV0QoVOchWYIQVFRLa8KuUlST/IBVk8FijXUICSlQIWfsxAZfPsRI+aqptJQgy",
-	"kIouh5AALQ3GnzhDC02TQCkdyWKT0wiaP03paHwNCVh8rKXFAjKyNR7CeDfqx9DTqcODvNuvpxFvIid0",
-	"9EEXEtvuuACSa0WowqMwppS5IKkVf3Ba+XdbGGO1QUvt8UhntcZyZKWawRopVn8Xo+43jPTkAXOKhAp0",
-	"uZXGg0EGN9IRm+hiyUizCbLcoiAsOs2MAM5o5SKPUZruVUH4i7gphdzjv8+0w2GsFqKUBbtdu+iNewtN",
-	"AqN0dC6Ib5rYJ12rwue9Oid1QqtEyRzaBVqG1uropphkR/FdIaOdnzVmckTxHnWlmuqImaNyuHUMfB1/",
-	"hwRqW0IGcyLjMs61QeV0bXO80HbG20OO+1ifX1Lpj37RFXqjQAILtC6WPvARPoEwEjK4vBhcpJCE0Qz1",
-	"cV92eJrFqfLFB4+PC8jgM9JNCEh2tsfdCv63OIUM/uPbHcO3ITwukCZ5NrCd2OZ+z7nDjvzH508SVu4l",
-	"9Nu8ENaKZZ/d3jPfVKanLDZ3OyR9vdhUzX3Qixm/riphl1FiJrqMjXY9frjVbmOI7c5cHq7tyVoNVoOm",
-	"o/PgJJ37YNopbgEOrM/1zgxqpH+iRvpEjeOxPmi3qx8DGhNM4U/W8kraaeOreBc2PnGBJRJ2O30d3ode",
-	"36xvzlNHMNzGPZM1isCdFkUuJ7foL8x9ajtjN6JLJ0s2vva5jm6sszct/ec29ZO4W+ErU6FL0NR9S6I+",
-	"nwTnWTHpy6yY2hTidc7Pj8BsR7wQEK6FqMr2P0fGealzUc61o2x4dTXkwki+GEBz3/wOAAD//ypEwdtU",
-	"DAAA",
+	"H4sIAAAAAAAC/9RYzW7jNhB+FWLaQwsIoZN1etCtbdDWwLbooT0tgoKWxjG3EsklqbSCoXcv+BMplizZ",
+	"3lW93lNsczh/33wzE+4gk6WSAoU1kO5AMc1KtKj9N26x5Ln/JCAFxewWEhCsREj94eoBEtD4oeIac0it",
+	"rjABk22xZO7WRuqSWScr7HdLSMDWCsNXfEINTZNAwUtuWxMfKtR1ZyMcjql8czem0thRt93hDG7Lzcbg",
+	"qN/x9DzHm+ATGvuDzDm2CLi/mRQWhbfHlCp4xiyXgr43UrjfOjNKS4XaxuuvrkVzxmounqBJwEhtT422",
+	"y9W7VmfU8NhekOv3mNkQSI4m01w5JyGFt9xYspZ5TawkaySZRmYxH4AQsfuEgEP+B9H2QvBSszruDRgl",
+	"hQl+LBeLfv7xX0tVwXjP/76nAx9W4pkVPCe/v1DzG/Otw2+5WM5l4jdpyU+yErnTez+n6xa1YAUxqJ9R",
+	"E9RahoIKSvZKvFe5W8z+xvyVmbWUBTLhXJwq60D8o0UdKu2vk6XPYUuvrLqi3g/xZNvjRX2ggLnYSCdc",
+	"8AyFwY4U8OvqD0ig0gWksLVWmZRSqVAYWekMb6R+ovGSoU7W6ee2cFd/kSU6LkACz6hNQPfWSTgFTHFI",
+	"4c3N7c0CEt9ufXzUhe0/PYVO6YL3NF7lkMLPaN96gWRv6rzbwdcaN5DCV7SbTbQToWEoNMlRwdiFm8ce",
+	"Oe8GFT7dYlyF+ouH7MVK9sFCBwnTmtWHOPE9cZJEbkhIT8fkQ9pbv6kTuhg7q7Jkug4gETb0WElzANEf",
+	"fXeMddKNsno8uFfTrk1gD6rbs6A6jtBIk3/p7B6OxSlwLF7BMS3rhPbTGjJFGBH4D4l+JZEwdBdWlMYp",
+	"zrFAi8NUP/jfY6rPpY/fjg6wYhksDnITnDg7Nx9R1ufmMaQh1Oe6JqsHp2uq28yYrcX/XpiOfPuhXVn6",
+	"hw6q6kDu/1Q5m6NY52koi8s0lMoHfY2kCXDsATdsPrQdemN0WnmBjwU0+ULHvN9WTxjzfp1uB2dQ/SWN",
+	"eu8x2WhZkvgf85Gx78rhovR+QeLi+4KL9HPuCy5wIgWxW2yxGSMw3YVnmhOWiU8C8DhL41vSaWuHT/HV",
+	"rx0eiHUdQSBM5CQ+ik1sIZ8tzfPNvcC8EWJsXt4RrnBXmQRsYnW5JGbXtuRMgn31S84E4l7ej8MAZ/cw",
+	"klJayIwVW2lsend/f0eZ4vT5FprH5r8AAAD//8QPFhkxFwAA",
 }
 
 // GetSwagger returns the content of the embedded swagger specification file

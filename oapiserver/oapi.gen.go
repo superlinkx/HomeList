@@ -46,21 +46,44 @@ type GetListsParams struct {
 	Offset *int32 `form:"offset,omitempty" json:"offset,omitempty"`
 }
 
-// PostListsJSONBody defines parameters for PostLists.
-type PostListsJSONBody struct {
+// CreateListJSONBody defines parameters for CreateList.
+type CreateListJSONBody struct {
 	Name string `json:"name"`
 }
 
-// PutListsListIDJSONBody defines parameters for PutListsListID.
-type PutListsListIDJSONBody struct {
+// UpdateListJSONBody defines parameters for UpdateList.
+type UpdateListJSONBody struct {
 	Name string `json:"name"`
 }
 
-// PostListsJSONRequestBody defines body for PostLists for application/json ContentType.
-type PostListsJSONRequestBody PostListsJSONBody
+// GetItemsParams defines parameters for GetItems.
+type GetItemsParams struct {
+	Limit  *int32 `form:"limit,omitempty" json:"limit,omitempty"`
+	Offset *int32 `form:"offset,omitempty" json:"offset,omitempty"`
+}
 
-// PutListsListIDJSONRequestBody defines body for PutListsListID for application/json ContentType.
-type PutListsListIDJSONRequestBody PutListsListIDJSONBody
+// CreateItemJSONBody defines parameters for CreateItem.
+type CreateItemJSONBody struct {
+	Content string `json:"content"`
+	Sort    int64  `json:"sort"`
+}
+
+// UpdateItemJSONBody defines parameters for UpdateItem.
+type UpdateItemJSONBody struct {
+	Name string `json:"name"`
+}
+
+// CreateListJSONRequestBody defines body for CreateList for application/json ContentType.
+type CreateListJSONRequestBody CreateListJSONBody
+
+// UpdateListJSONRequestBody defines body for UpdateList for application/json ContentType.
+type UpdateListJSONRequestBody UpdateListJSONBody
+
+// CreateItemJSONRequestBody defines body for CreateItem for application/json ContentType.
+type CreateItemJSONRequestBody CreateItemJSONBody
+
+// UpdateItemJSONRequestBody defines body for UpdateItem for application/json ContentType.
+type UpdateItemJSONRequestBody UpdateItemJSONBody
 
 // ServerInterface represents all server handlers.
 type ServerInterface interface {
@@ -69,16 +92,31 @@ type ServerInterface interface {
 	GetLists(w http.ResponseWriter, r *http.Request, params GetListsParams)
 	// Create a new list
 	// (POST /lists)
-	PostLists(w http.ResponseWriter, r *http.Request)
+	CreateList(w http.ResponseWriter, r *http.Request)
 	// Delete list by ID
 	// (DELETE /lists/{listID})
-	DeleteListsListID(w http.ResponseWriter, r *http.Request, listID int64)
+	DeleteList(w http.ResponseWriter, r *http.Request, listID int64)
 	// Get list by ID
 	// (GET /lists/{listID})
-	GetListsListID(w http.ResponseWriter, r *http.Request, listID int64)
+	GetList(w http.ResponseWriter, r *http.Request, listID int64)
 	// Update list by ID
 	// (PUT /lists/{listID})
-	PutListsListID(w http.ResponseWriter, r *http.Request, listID int64)
+	UpdateList(w http.ResponseWriter, r *http.Request, listID int64)
+	// Get a list of items from listID
+	// (GET /lists/{listID}/items)
+	GetItems(w http.ResponseWriter, r *http.Request, listID int64, params GetItemsParams)
+	// Create a new item on the listID
+	// (POST /lists/{listID}/items)
+	CreateItem(w http.ResponseWriter, r *http.Request, listID int64)
+	// Delete item by listID and itemID
+	// (DELETE /lists/{listID}/items/{itemID})
+	DeleteItem(w http.ResponseWriter, r *http.Request, listID int64, itemID int64)
+	// Get item by listID and itemID
+	// (GET /lists/{listID}/items/{itemID})
+	GetItem(w http.ResponseWriter, r *http.Request, listID int64, itemID int64)
+	// Update item by listID and itemID
+	// (PUT /lists/{listID}/items/{itemID})
+	UpdateItem(w http.ResponseWriter, r *http.Request, listID int64, itemID int64)
 }
 
 // Unimplemented server implementation that returns http.StatusNotImplemented for each endpoint.
@@ -93,25 +131,55 @@ func (_ Unimplemented) GetLists(w http.ResponseWriter, r *http.Request, params G
 
 // Create a new list
 // (POST /lists)
-func (_ Unimplemented) PostLists(w http.ResponseWriter, r *http.Request) {
+func (_ Unimplemented) CreateList(w http.ResponseWriter, r *http.Request) {
 	w.WriteHeader(http.StatusNotImplemented)
 }
 
 // Delete list by ID
 // (DELETE /lists/{listID})
-func (_ Unimplemented) DeleteListsListID(w http.ResponseWriter, r *http.Request, listID int64) {
+func (_ Unimplemented) DeleteList(w http.ResponseWriter, r *http.Request, listID int64) {
 	w.WriteHeader(http.StatusNotImplemented)
 }
 
 // Get list by ID
 // (GET /lists/{listID})
-func (_ Unimplemented) GetListsListID(w http.ResponseWriter, r *http.Request, listID int64) {
+func (_ Unimplemented) GetList(w http.ResponseWriter, r *http.Request, listID int64) {
 	w.WriteHeader(http.StatusNotImplemented)
 }
 
 // Update list by ID
 // (PUT /lists/{listID})
-func (_ Unimplemented) PutListsListID(w http.ResponseWriter, r *http.Request, listID int64) {
+func (_ Unimplemented) UpdateList(w http.ResponseWriter, r *http.Request, listID int64) {
+	w.WriteHeader(http.StatusNotImplemented)
+}
+
+// Get a list of items from listID
+// (GET /lists/{listID}/items)
+func (_ Unimplemented) GetItems(w http.ResponseWriter, r *http.Request, listID int64, params GetItemsParams) {
+	w.WriteHeader(http.StatusNotImplemented)
+}
+
+// Create a new item on the listID
+// (POST /lists/{listID}/items)
+func (_ Unimplemented) CreateItem(w http.ResponseWriter, r *http.Request, listID int64) {
+	w.WriteHeader(http.StatusNotImplemented)
+}
+
+// Delete item by listID and itemID
+// (DELETE /lists/{listID}/items/{itemID})
+func (_ Unimplemented) DeleteItem(w http.ResponseWriter, r *http.Request, listID int64, itemID int64) {
+	w.WriteHeader(http.StatusNotImplemented)
+}
+
+// Get item by listID and itemID
+// (GET /lists/{listID}/items/{itemID})
+func (_ Unimplemented) GetItem(w http.ResponseWriter, r *http.Request, listID int64, itemID int64) {
+	w.WriteHeader(http.StatusNotImplemented)
+}
+
+// Update item by listID and itemID
+// (PUT /lists/{listID}/items/{itemID})
+func (_ Unimplemented) UpdateItem(w http.ResponseWriter, r *http.Request, listID int64, itemID int64) {
 	w.WriteHeader(http.StatusNotImplemented)
 }
 
@@ -160,12 +228,12 @@ func (siw *ServerInterfaceWrapper) GetLists(w http.ResponseWriter, r *http.Reque
 	handler.ServeHTTP(w, r.WithContext(ctx))
 }
 
-// PostLists operation middleware
-func (siw *ServerInterfaceWrapper) PostLists(w http.ResponseWriter, r *http.Request) {
+// CreateList operation middleware
+func (siw *ServerInterfaceWrapper) CreateList(w http.ResponseWriter, r *http.Request) {
 	ctx := r.Context()
 
 	handler := http.Handler(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		siw.Handler.PostLists(w, r)
+		siw.Handler.CreateList(w, r)
 	}))
 
 	for _, middleware := range siw.HandlerMiddlewares {
@@ -175,8 +243,8 @@ func (siw *ServerInterfaceWrapper) PostLists(w http.ResponseWriter, r *http.Requ
 	handler.ServeHTTP(w, r.WithContext(ctx))
 }
 
-// DeleteListsListID operation middleware
-func (siw *ServerInterfaceWrapper) DeleteListsListID(w http.ResponseWriter, r *http.Request) {
+// DeleteList operation middleware
+func (siw *ServerInterfaceWrapper) DeleteList(w http.ResponseWriter, r *http.Request) {
 	ctx := r.Context()
 
 	var err error
@@ -191,7 +259,7 @@ func (siw *ServerInterfaceWrapper) DeleteListsListID(w http.ResponseWriter, r *h
 	}
 
 	handler := http.Handler(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		siw.Handler.DeleteListsListID(w, r, listID)
+		siw.Handler.DeleteList(w, r, listID)
 	}))
 
 	for _, middleware := range siw.HandlerMiddlewares {
@@ -201,8 +269,8 @@ func (siw *ServerInterfaceWrapper) DeleteListsListID(w http.ResponseWriter, r *h
 	handler.ServeHTTP(w, r.WithContext(ctx))
 }
 
-// GetListsListID operation middleware
-func (siw *ServerInterfaceWrapper) GetListsListID(w http.ResponseWriter, r *http.Request) {
+// GetList operation middleware
+func (siw *ServerInterfaceWrapper) GetList(w http.ResponseWriter, r *http.Request) {
 	ctx := r.Context()
 
 	var err error
@@ -217,7 +285,7 @@ func (siw *ServerInterfaceWrapper) GetListsListID(w http.ResponseWriter, r *http
 	}
 
 	handler := http.Handler(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		siw.Handler.GetListsListID(w, r, listID)
+		siw.Handler.GetList(w, r, listID)
 	}))
 
 	for _, middleware := range siw.HandlerMiddlewares {
@@ -227,8 +295,8 @@ func (siw *ServerInterfaceWrapper) GetListsListID(w http.ResponseWriter, r *http
 	handler.ServeHTTP(w, r.WithContext(ctx))
 }
 
-// PutListsListID operation middleware
-func (siw *ServerInterfaceWrapper) PutListsListID(w http.ResponseWriter, r *http.Request) {
+// UpdateList operation middleware
+func (siw *ServerInterfaceWrapper) UpdateList(w http.ResponseWriter, r *http.Request) {
 	ctx := r.Context()
 
 	var err error
@@ -243,7 +311,183 @@ func (siw *ServerInterfaceWrapper) PutListsListID(w http.ResponseWriter, r *http
 	}
 
 	handler := http.Handler(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		siw.Handler.PutListsListID(w, r, listID)
+		siw.Handler.UpdateList(w, r, listID)
+	}))
+
+	for _, middleware := range siw.HandlerMiddlewares {
+		handler = middleware(handler)
+	}
+
+	handler.ServeHTTP(w, r.WithContext(ctx))
+}
+
+// GetItems operation middleware
+func (siw *ServerInterfaceWrapper) GetItems(w http.ResponseWriter, r *http.Request) {
+	ctx := r.Context()
+
+	var err error
+
+	// ------------- Path parameter "listID" -------------
+	var listID int64
+
+	err = runtime.BindStyledParameterWithOptions("simple", "listID", chi.URLParam(r, "listID"), &listID, runtime.BindStyledParameterOptions{ParamLocation: runtime.ParamLocationPath, Explode: false, Required: true})
+	if err != nil {
+		siw.ErrorHandlerFunc(w, r, &InvalidParamFormatError{ParamName: "listID", Err: err})
+		return
+	}
+
+	// Parameter object where we will unmarshal all parameters from the context
+	var params GetItemsParams
+
+	// ------------- Optional query parameter "limit" -------------
+
+	err = runtime.BindQueryParameter("form", true, false, "limit", r.URL.Query(), &params.Limit)
+	if err != nil {
+		siw.ErrorHandlerFunc(w, r, &InvalidParamFormatError{ParamName: "limit", Err: err})
+		return
+	}
+
+	// ------------- Optional query parameter "offset" -------------
+
+	err = runtime.BindQueryParameter("form", true, false, "offset", r.URL.Query(), &params.Offset)
+	if err != nil {
+		siw.ErrorHandlerFunc(w, r, &InvalidParamFormatError{ParamName: "offset", Err: err})
+		return
+	}
+
+	handler := http.Handler(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		siw.Handler.GetItems(w, r, listID, params)
+	}))
+
+	for _, middleware := range siw.HandlerMiddlewares {
+		handler = middleware(handler)
+	}
+
+	handler.ServeHTTP(w, r.WithContext(ctx))
+}
+
+// CreateItem operation middleware
+func (siw *ServerInterfaceWrapper) CreateItem(w http.ResponseWriter, r *http.Request) {
+	ctx := r.Context()
+
+	var err error
+
+	// ------------- Path parameter "listID" -------------
+	var listID int64
+
+	err = runtime.BindStyledParameterWithOptions("simple", "listID", chi.URLParam(r, "listID"), &listID, runtime.BindStyledParameterOptions{ParamLocation: runtime.ParamLocationPath, Explode: false, Required: true})
+	if err != nil {
+		siw.ErrorHandlerFunc(w, r, &InvalidParamFormatError{ParamName: "listID", Err: err})
+		return
+	}
+
+	handler := http.Handler(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		siw.Handler.CreateItem(w, r, listID)
+	}))
+
+	for _, middleware := range siw.HandlerMiddlewares {
+		handler = middleware(handler)
+	}
+
+	handler.ServeHTTP(w, r.WithContext(ctx))
+}
+
+// DeleteItem operation middleware
+func (siw *ServerInterfaceWrapper) DeleteItem(w http.ResponseWriter, r *http.Request) {
+	ctx := r.Context()
+
+	var err error
+
+	// ------------- Path parameter "listID" -------------
+	var listID int64
+
+	err = runtime.BindStyledParameterWithOptions("simple", "listID", chi.URLParam(r, "listID"), &listID, runtime.BindStyledParameterOptions{ParamLocation: runtime.ParamLocationPath, Explode: false, Required: true})
+	if err != nil {
+		siw.ErrorHandlerFunc(w, r, &InvalidParamFormatError{ParamName: "listID", Err: err})
+		return
+	}
+
+	// ------------- Path parameter "itemID" -------------
+	var itemID int64
+
+	err = runtime.BindStyledParameterWithOptions("simple", "itemID", chi.URLParam(r, "itemID"), &itemID, runtime.BindStyledParameterOptions{ParamLocation: runtime.ParamLocationPath, Explode: false, Required: true})
+	if err != nil {
+		siw.ErrorHandlerFunc(w, r, &InvalidParamFormatError{ParamName: "itemID", Err: err})
+		return
+	}
+
+	handler := http.Handler(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		siw.Handler.DeleteItem(w, r, listID, itemID)
+	}))
+
+	for _, middleware := range siw.HandlerMiddlewares {
+		handler = middleware(handler)
+	}
+
+	handler.ServeHTTP(w, r.WithContext(ctx))
+}
+
+// GetItem operation middleware
+func (siw *ServerInterfaceWrapper) GetItem(w http.ResponseWriter, r *http.Request) {
+	ctx := r.Context()
+
+	var err error
+
+	// ------------- Path parameter "listID" -------------
+	var listID int64
+
+	err = runtime.BindStyledParameterWithOptions("simple", "listID", chi.URLParam(r, "listID"), &listID, runtime.BindStyledParameterOptions{ParamLocation: runtime.ParamLocationPath, Explode: false, Required: true})
+	if err != nil {
+		siw.ErrorHandlerFunc(w, r, &InvalidParamFormatError{ParamName: "listID", Err: err})
+		return
+	}
+
+	// ------------- Path parameter "itemID" -------------
+	var itemID int64
+
+	err = runtime.BindStyledParameterWithOptions("simple", "itemID", chi.URLParam(r, "itemID"), &itemID, runtime.BindStyledParameterOptions{ParamLocation: runtime.ParamLocationPath, Explode: false, Required: true})
+	if err != nil {
+		siw.ErrorHandlerFunc(w, r, &InvalidParamFormatError{ParamName: "itemID", Err: err})
+		return
+	}
+
+	handler := http.Handler(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		siw.Handler.GetItem(w, r, listID, itemID)
+	}))
+
+	for _, middleware := range siw.HandlerMiddlewares {
+		handler = middleware(handler)
+	}
+
+	handler.ServeHTTP(w, r.WithContext(ctx))
+}
+
+// UpdateItem operation middleware
+func (siw *ServerInterfaceWrapper) UpdateItem(w http.ResponseWriter, r *http.Request) {
+	ctx := r.Context()
+
+	var err error
+
+	// ------------- Path parameter "listID" -------------
+	var listID int64
+
+	err = runtime.BindStyledParameterWithOptions("simple", "listID", chi.URLParam(r, "listID"), &listID, runtime.BindStyledParameterOptions{ParamLocation: runtime.ParamLocationPath, Explode: false, Required: true})
+	if err != nil {
+		siw.ErrorHandlerFunc(w, r, &InvalidParamFormatError{ParamName: "listID", Err: err})
+		return
+	}
+
+	// ------------- Path parameter "itemID" -------------
+	var itemID int64
+
+	err = runtime.BindStyledParameterWithOptions("simple", "itemID", chi.URLParam(r, "itemID"), &itemID, runtime.BindStyledParameterOptions{ParamLocation: runtime.ParamLocationPath, Explode: false, Required: true})
+	if err != nil {
+		siw.ErrorHandlerFunc(w, r, &InvalidParamFormatError{ParamName: "itemID", Err: err})
+		return
+	}
+
+	handler := http.Handler(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		siw.Handler.UpdateItem(w, r, listID, itemID)
 	}))
 
 	for _, middleware := range siw.HandlerMiddlewares {
@@ -370,16 +614,31 @@ func HandlerWithOptions(si ServerInterface, options ChiServerOptions) http.Handl
 		r.Get(options.BaseURL+"/lists", wrapper.GetLists)
 	})
 	r.Group(func(r chi.Router) {
-		r.Post(options.BaseURL+"/lists", wrapper.PostLists)
+		r.Post(options.BaseURL+"/lists", wrapper.CreateList)
 	})
 	r.Group(func(r chi.Router) {
-		r.Delete(options.BaseURL+"/lists/{listID}", wrapper.DeleteListsListID)
+		r.Delete(options.BaseURL+"/lists/{listID}", wrapper.DeleteList)
 	})
 	r.Group(func(r chi.Router) {
-		r.Get(options.BaseURL+"/lists/{listID}", wrapper.GetListsListID)
+		r.Get(options.BaseURL+"/lists/{listID}", wrapper.GetList)
 	})
 	r.Group(func(r chi.Router) {
-		r.Put(options.BaseURL+"/lists/{listID}", wrapper.PutListsListID)
+		r.Put(options.BaseURL+"/lists/{listID}", wrapper.UpdateList)
+	})
+	r.Group(func(r chi.Router) {
+		r.Get(options.BaseURL+"/lists/{listID}/items", wrapper.GetItems)
+	})
+	r.Group(func(r chi.Router) {
+		r.Post(options.BaseURL+"/lists/{listID}/items", wrapper.CreateItem)
+	})
+	r.Group(func(r chi.Router) {
+		r.Delete(options.BaseURL+"/lists/{listID}/items/{itemID}", wrapper.DeleteItem)
+	})
+	r.Group(func(r chi.Router) {
+		r.Get(options.BaseURL+"/lists/{listID}/items/{itemID}", wrapper.GetItem)
+	})
+	r.Group(func(r chi.Router) {
+		r.Put(options.BaseURL+"/lists/{listID}/items/{itemID}", wrapper.UpdateItem)
 	})
 
 	return r
@@ -388,19 +647,22 @@ func HandlerWithOptions(si ServerInterface, options ChiServerOptions) http.Handl
 // Base64 encoded, gzipped, json marshaled Swagger object
 var swaggerSpec = []string{
 
-	"H4sIAAAAAAAC/8xWQW/bPAz9KwK/77ABRuWk6Q6+bSu2BeiGHrZT0YNiM4kKW1IlOlsQ+L8PkpykiZ10",
-	"GbKiN8em+B75HqmsINeV0QoVOchWYIQVFRLa8KuUlST/IBVk8FijXUICSlQIWfsxAZfPsRI+aqptJQgy",
-	"kIouh5AALQ3GnzhDC02TQCkdyWKT0wiaP03paHwNCVh8rKXFAjKyNR7CeDfqx9DTqcODvNuvpxFvIid0",
-	"9EEXEtvuuACSa0WowqMwppS5IKkVf3Ba+XdbGGO1QUvt8UhntcZyZKWawRopVn8Xo+43jPTkAXOKhAp0",
-	"uZXGg0EGN9IRm+hiyUizCbLcoiAsOs2MAM5o5SKPUZruVUH4i7gphdzjv8+0w2GsFqKUBbtdu+iNewtN",
-	"AqN0dC6Ib5rYJ12rwue9Oid1QqtEyRzaBVqG1uropphkR/FdIaOdnzVmckTxHnWlmuqImaNyuHUMfB1/",
-	"hwRqW0IGcyLjMs61QeV0bXO80HbG20OO+1ifX1Lpj37RFXqjQAILtC6WPvARPoEwEjK4vBhcpJCE0Qz1",
-	"cV92eJrFqfLFB4+PC8jgM9JNCEh2tsfdCv63OIUM/uPbHcO3ITwukCZ5NrCd2OZ+z7nDjvzH508SVu4l",
-	"9Nu8ENaKZZ/d3jPfVKanLDZ3OyR9vdhUzX3Qixm/riphl1FiJrqMjXY9frjVbmOI7c5cHq7tyVoNVoOm",
-	"o/PgJJ37YNopbgEOrM/1zgxqpH+iRvpEjeOxPmi3qx8DGhNM4U/W8kraaeOreBc2PnGBJRJ2O30d3ode",
-	"36xvzlNHMNzGPZM1isCdFkUuJ7foL8x9ajtjN6JLJ0s2vva5jm6sszct/ec29ZO4W+ErU6FL0NR9S6I+",
-	"nwTnWTHpy6yY2hTidc7Pj8BsR7wQEK6FqMr2P0fGealzUc61o2x4dTXkwki+GEBz3/wOAAD//ypEwdtU",
-	"DAAA",
+	"H4sIAAAAAAAC/9RYzW7jNhB+FWLaQwsIoZN1etCtbdDWwLbooT0tgoKWxjG3EsklqbSCoXcv+BMplizZ",
+	"3lW93lNsczh/33wzE+4gk6WSAoU1kO5AMc1KtKj9N26x5Ln/JCAFxewWEhCsREj94eoBEtD4oeIac0it",
+	"rjABk22xZO7WRuqSWScr7HdLSMDWCsNXfEINTZNAwUtuWxMfKtR1ZyMcjql8czem0thRt93hDG7Lzcbg",
+	"qN/x9DzHm+ATGvuDzDm2CLi/mRQWhbfHlCp4xiyXgr43UrjfOjNKS4XaxuuvrkVzxmounqBJwEhtT422",
+	"y9W7VmfU8NhekOv3mNkQSI4m01w5JyGFt9xYspZ5TawkaySZRmYxH4AQsfuEgEP+B9H2QvBSszruDRgl",
+	"hQl+LBeLfv7xX0tVwXjP/76nAx9W4pkVPCe/v1DzG/Otw2+5WM5l4jdpyU+yErnTez+n6xa1YAUxqJ9R",
+	"E9RahoIKSvZKvFe5W8z+xvyVmbWUBTLhXJwq60D8o0UdKu2vk6XPYUuvrLqi3g/xZNvjRX2ggLnYSCdc",
+	"8AyFwY4U8OvqD0ig0gWksLVWmZRSqVAYWekMb6R+ovGSoU7W6ee2cFd/kSU6LkACz6hNQPfWSTgFTHFI",
+	"4c3N7c0CEt9ufXzUhe0/PYVO6YL3NF7lkMLPaN96gWRv6rzbwdcaN5DCV7SbTbQToWEoNMlRwdiFm8ce",
+	"Oe8GFT7dYlyF+ouH7MVK9sFCBwnTmtWHOPE9cZJEbkhIT8fkQ9pbv6kTuhg7q7Jkug4gETb0WElzANEf",
+	"fXeMddKNsno8uFfTrk1gD6rbs6A6jtBIk3/p7B6OxSlwLF7BMS3rhPbTGjJFGBH4D4l+JZEwdBdWlMYp",
+	"zrFAi8NUP/jfY6rPpY/fjg6wYhksDnITnDg7Nx9R1ufmMaQh1Oe6JqsHp2uq28yYrcX/XpiOfPuhXVn6",
+	"hw6q6kDu/1Q5m6NY52koi8s0lMoHfY2kCXDsATdsPrQdemN0WnmBjwU0+ULHvN9WTxjzfp1uB2dQ/SWN",
+	"eu8x2WhZkvgf85Gx78rhovR+QeLi+4KL9HPuCy5wIgWxW2yxGSMw3YVnmhOWiU8C8DhL41vSaWuHT/HV",
+	"rx0eiHUdQSBM5CQ+ik1sIZ8tzfPNvcC8EWJsXt4RrnBXmQRsYnW5JGbXtuRMgn31S84E4l7ej8MAZ/cw",
+	"klJayIwVW2lsend/f0eZ4vT5FprH5r8AAAD//8QPFhkxFwAA",
 }
 
 // GetSwagger returns the content of the embedded swagger specification file

@@ -1,18 +1,19 @@
 get:
-  operationId: getLists
-  summary: Get a list of lists
+  operationId: getItems
+  summary: Get a list of items from listID
   parameters:
+    - $ref: "../parameters/path/listid.yaml"
     - $ref: "../parameters/query/limit.yaml"
     - $ref: "../parameters/query/offset.yaml"
   responses:
     "200":
-      description: A list of lists
+      description: Found list of items
       content:
         application/json:
           schema:
             type: array
             items:
-              $ref: ../schemas/list.yaml
+              $ref: "../schemas/item.yaml"
     "404":
       $ref: ../responses/404.yaml
     "500":
@@ -23,13 +24,15 @@ get:
             type: string
 
 post:
-  operationId: createList
-  summary: Create a new list
+  operationId: createItem
+  summary: Create a new item on the listID
+  parameters:
+    - $ref: ../parameters/path/listid.yaml
   requestBody:
-    $ref: "../schemas/body/list.yaml"
+    $ref: "../schemas/body/item.yaml"
   responses:
     "201":
-      description: List created
+      description: Item created
       content:
         application/json:
           schema:

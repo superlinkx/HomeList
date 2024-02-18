@@ -1,6 +1,0 @@
-LimitParam:
-  $ref: "./query/limit.yml"
-OffsetParam:
-  $ref: "./query/offset.yml"
-ListIDParam:
-  $ref: "./path/listid.yml"

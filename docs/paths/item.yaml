@@ -1,15 +1,16 @@
 get:
-  operationId: getList
-  summary: Get list by ID
+  operationId: getItem
+  summary: Get item by listID and itemID
   parameters:
     - $ref: "../parameters/path/listid.yaml"
+    - $ref: "../parameters/path/itemid.yaml"
   responses:
     "200":
-      description: Get list by ID
+      description: Item found
       content:
         application/json:
           schema:
-            $ref: "../schemas/list.yaml"
+            $ref: "../schemas/item.yaml"
     "400":
       $ref: "../responses/400.yaml"
     "404":
@@ -17,19 +18,20 @@ get:
     "500":
       $ref: "../responses/500.yaml"
 put:
-  operationId: updateList
-  summary: Update list by ID
+  operationId: updateItem
+  summary: Update item by listID and itemID
   parameters:
     - $ref: "../parameters/path/listid.yaml"
+    - $ref: "../parameters/path/itemid.yaml"
   requestBody:
     $ref: "../schemas/body/list.yaml"
   responses:
     "200":
-      description: List updated
+      description: Item updated
       content:
         application/json:
           schema:
-            $ref: "../schemas/list.yaml"
+            $ref: "../schemas/item.yaml"
     "400":
       $ref: "../responses/400.yaml"
     "404":
@@ -38,13 +40,14 @@ put:
       $ref: "../responses/500.yaml"
 
 delete:
-  operationId: deleteList
-  summary: Delete list by ID
+  operationId: deleteItem
+  summary: Delete item by listID and itemID
   parameters:
     - $ref: "../parameters/path/listid.yaml"
+    - $ref: "../parameters/path/itemid.yaml"
   responses:
     "204":
-      description: List deleted
+      description: Item deleted
     "400":
       $ref: "../responses/400.yaml"
     "404":

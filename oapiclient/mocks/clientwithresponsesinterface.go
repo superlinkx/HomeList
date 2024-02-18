@@ -24,36 +24,36 @@ func (_m *MockClientWithResponsesInterface) EXPECT() *MockClientWithResponsesInt
 	return &MockClientWithResponsesInterface_Expecter{mock: &_m.Mock}
 }
 
-// DeleteListsListIDWithResponse provides a mock function with given fields: ctx, listID, reqEditors
-func (_m *MockClientWithResponsesInterface) DeleteListsListIDWithResponse(ctx context.Context, listID int64, reqEditors ...oapiclient.RequestEditorFn) (*oapiclient.DeleteListsListIDResponse, error) {
+// CreateListWithBodyWithResponse provides a mock function with given fields: ctx, contentType, body, reqEditors
+func (_m *MockClientWithResponsesInterface) CreateListWithBodyWithResponse(ctx context.Context, contentType string, body io.Reader, reqEditors ...oapiclient.RequestEditorFn) (*oapiclient.CreateListResponse, error) {
 	_va := make([]interface{}, len(reqEditors))
 	for _i := range reqEditors {
 		_va[_i] = reqEditors[_i]
 	}
 	var _ca []interface{}
-	_ca = append(_ca, ctx, listID)
+	_ca = append(_ca, ctx, contentType, body)
 	_ca = append(_ca, _va...)
 	ret := _m.Called(_ca...)
 
 	if len(ret) == 0 {
-		panic("no return value specified for DeleteListsListIDWithResponse")
+		panic("no return value specified for CreateListWithBodyWithResponse")
 	}
 
-	var r0 *oapiclient.DeleteListsListIDResponse
+	var r0 *oapiclient.CreateListResponse
 	var r1 error
-	if rf, ok := ret.Get(0).(func(context.Context, int64, ...oapiclient.RequestEditorFn) (*oapiclient.DeleteListsListIDResponse, error)); ok {
-		return rf(ctx, listID, reqEditors...)
+	if rf, ok := ret.Get(0).(func(context.Context, string, io.Reader, ...oapiclient.RequestEditorFn) (*oapiclient.CreateListResponse, error)); ok {
+		return rf(ctx, contentType, body, reqEditors...)
 	}
-	if rf, ok := ret.Get(0).(func(context.Context, int64, ...oapiclient.RequestEditorFn) *oapiclient.DeleteListsListIDResponse); ok {
-		r0 = rf(ctx, listID, reqEditors...)
+	if rf, ok := ret.Get(0).(func(context.Context, string, io.Reader, ...oapiclient.RequestEditorFn) *oapiclient.CreateListResponse); ok {
+		r0 = rf(ctx, contentType, body, reqEditors...)
 	} else {
 		if ret.Get(0) != nil {
-			r0 = ret.Get(0).(*oapiclient.DeleteListsListIDResponse)
+			r0 = ret.Get(0).(*oapiclient.CreateListResponse)
 		}
 	}
 
-	if rf, ok := ret.Get(1).(func(context.Context, int64, ...oapiclient.RequestEditorFn) error); ok {
-		r1 = rf(ctx, listID, reqEditors...)
+	if rf, ok := ret.Get(1).(func(context.Context, string, io.Reader, ...oapiclient.RequestEditorFn) error); ok {
+		r1 = rf(ctx, contentType, body, reqEditors...)
 	} else {
 		r1 = ret.Error(1)
 	}
@@ -61,45 +61,120 @@ func (_m *MockClientWithResponsesInterface) DeleteListsListIDWithResponse(ctx co
 	return r0, r1
 }
 
-// MockClientWithResponsesInterface_DeleteListsListIDWithResponse_Call is a *mock.Call that shadows Run/Return methods with type explicit version for method 'DeleteListsListIDWithResponse'
-type MockClientWithResponsesInterface_DeleteListsListIDWithResponse_Call struct {
+// MockClientWithResponsesInterface_CreateListWithBodyWithResponse_Call is a *mock.Call that shadows Run/Return methods with type explicit version for method 'CreateListWithBodyWithResponse'
+type MockClientWithResponsesInterface_CreateListWithBodyWithResponse_Call struct {
 	*mock.Call
 }
 
-// DeleteListsListIDWithResponse is a helper method to define mock.On call
+// CreateListWithBodyWithResponse is a helper method to define mock.On call
 //   - ctx context.Context
-//   - listID int64
+//   - contentType string
+//   - body io.Reader
 //   - reqEditors ...oapiclient.RequestEditorFn
-func (_e *MockClientWithResponsesInterface_Expecter) DeleteListsListIDWithResponse(ctx interface{}, listID interface{}, reqEditors ...interface{}) *MockClientWithResponsesInterface_DeleteListsListIDWithResponse_Call {
-	return &MockClientWithResponsesInterface_DeleteListsListIDWithResponse_Call{Call: _e.mock.On("DeleteListsListIDWithResponse",
-		append([]interface{}{ctx, listID}, reqEditors...)...)}
+func (_e *MockClientWithResponsesInterface_Expecter) CreateListWithBodyWithResponse(ctx interface{}, contentType interface{}, body interface{}, reqEditors ...interface{}) *MockClientWithResponsesInterface_CreateListWithBodyWithResponse_Call {
+	return &MockClientWithResponsesInterface_CreateListWithBodyWithResponse_Call{Call: _e.mock.On("CreateListWithBodyWithResponse",
+		append([]interface{}{ctx, contentType, body}, reqEditors...)...)}
 }
 
-func (_c *MockClientWithResponsesInterface_DeleteListsListIDWithResponse_Call) Run(run func(ctx context.Context, listID int64, reqEditors ...oapiclient.RequestEditorFn)) *MockClientWithResponsesInterface_DeleteListsListIDWithResponse_Call {
+func (_c *MockClientWithResponsesInterface_CreateListWithBodyWithResponse_Call) Run(run func(ctx context.Context, contentType string, body io.Reader, reqEditors ...oapiclient.RequestEditorFn)) *MockClientWithResponsesInterface_CreateListWithBodyWithResponse_Call {
 	_c.Call.Run(func(args mock.Arguments) {
-		variadicArgs := make([]oapiclient.RequestEditorFn, len(args)-2)
-		for i, a := range args[2:] {
+		variadicArgs := make([]oapiclient.RequestEditorFn, len(args)-3)
+		for i, a := range args[3:] {
 			if a != nil {
 				variadicArgs[i] = a.(oapiclient.RequestEditorFn)
 			}
 		}
-		run(args[0].(context.Context), args[1].(int64), variadicArgs...)
+		run(args[0].(context.Context), args[1].(string), args[2].(io.Reader), variadicArgs...)
 	})
 	return _c
 }
 
-func (_c *MockClientWithResponsesInterface_DeleteListsListIDWithResponse_Call) Return(_a0 *oapiclient.DeleteListsListIDResponse, _a1 error) *MockClientWithResponsesInterface_DeleteListsListIDWithResponse_Call {
+func (_c *MockClientWithResponsesInterface_CreateListWithBodyWithResponse_Call) Return(_a0 *oapiclient.CreateListResponse, _a1 error) *MockClientWithResponsesInterface_CreateListWithBodyWithResponse_Call {
 	_c.Call.Return(_a0, _a1)
 	return _c
 }
 
-func (_c *MockClientWithResponsesInterface_DeleteListsListIDWithResponse_Call) RunAndReturn(run func(context.Context, int64, ...oapiclient.RequestEditorFn) (*oapiclient.DeleteListsListIDResponse, error)) *MockClientWithResponsesInterface_DeleteListsListIDWithResponse_Call {
+func (_c *MockClientWithResponsesInterface_CreateListWithBodyWithResponse_Call) RunAndReturn(run func(context.Context, string, io.Reader, ...oapiclient.RequestEditorFn) (*oapiclient.CreateListResponse, error)) *MockClientWithResponsesInterface_CreateListWithBodyWithResponse_Call {
 	_c.Call.Return(run)
 	return _c
 }
 
-// GetListsListIDWithResponse provides a mock function with given fields: ctx, listID, reqEditors
-func (_m *MockClientWithResponsesInterface) GetListsListIDWithResponse(ctx context.Context, listID int64, reqEditors ...oapiclient.RequestEditorFn) (*oapiclient.GetListsListIDResponse, error) {
+// CreateListWithResponse provides a mock function with given fields: ctx, body, reqEditors
+func (_m *MockClientWithResponsesInterface) CreateListWithResponse(ctx context.Context, body oapiclient.CreateListJSONRequestBody, reqEditors ...oapiclient.RequestEditorFn) (*oapiclient.CreateListResponse, error) {
+	_va := make([]interface{}, len(reqEditors))
+	for _i := range reqEditors {
+		_va[_i] = reqEditors[_i]
+	}
+	var _ca []interface{}
+	_ca = append(_ca, ctx, body)
+	_ca = append(_ca, _va...)
+	ret := _m.Called(_ca...)
+
+	if len(ret) == 0 {
+		panic("no return value specified for CreateListWithResponse")
+	}
+
+	var r0 *oapiclient.CreateListResponse
+	var r1 error
+	if rf, ok := ret.Get(0).(func(context.Context, oapiclient.CreateListJSONRequestBody, ...oapiclient.RequestEditorFn) (*oapiclient.CreateListResponse, error)); ok {
+		return rf(ctx, body, reqEditors...)
+	}
+	if rf, ok := ret.Get(0).(func(context.Context, oapiclient.CreateListJSONRequestBody, ...oapiclient.RequestEditorFn) *oapiclient.CreateListResponse); ok {
+		r0 = rf(ctx, body, reqEditors...)
+	} else {
+		if ret.Get(0) != nil {
+			r0 = ret.Get(0).(*oapiclient.CreateListResponse)
+		}
+	}
+
+	if rf, ok := ret.Get(1).(func(context.Context, oapiclient.CreateListJSONRequestBody, ...oapiclient.RequestEditorFn) error); ok {
+		r1 = rf(ctx, body, reqEditors...)
+	} else {
+		r1 = ret.Error(1)
+	}
+
+	return r0, r1
+}
+
+// MockClientWithResponsesInterface_CreateListWithResponse_Call is a *mock.Call that shadows Run/Return methods with type explicit version for method 'CreateListWithResponse'
+type MockClientWithResponsesInterface_CreateListWithResponse_Call struct {
+	*mock.Call
+}
+
+// CreateListWithResponse is a helper method to define mock.On call
+//   - ctx context.Context
+//   - body oapiclient.CreateListJSONRequestBody
+//   - reqEditors ...oapiclient.RequestEditorFn
+func (_e *MockClientWithResponsesInterface_Expecter) CreateListWithResponse(ctx interface{}, body interface{}, reqEditors ...interface{}) *MockClientWithResponsesInterface_CreateListWithResponse_Call {
+	return &MockClientWithResponsesInterface_CreateListWithResponse_Call{Call: _e.mock.On("CreateListWithResponse",
+		append([]interface{}{ctx, body}, reqEditors...)...)}
+}
+
+func (_c *MockClientWithResponsesInterface_CreateListWithResponse_Call) Run(run func(ctx context.Context, body oapiclient.CreateListJSONRequestBody, reqEditors ...oapiclient.RequestEditorFn)) *MockClientWithResponsesInterface_CreateListWithResponse_Call {
+	_c.Call.Run(func(args mock.Arguments) {
+		variadicArgs := make([]oapiclient.RequestEditorFn, len(args)-2)
+		for i, a := range args[2:] {
+			if a != nil {
+				variadicArgs[i] = a.(oapiclient.RequestEditorFn)
+			}
+		}
+		run(args[0].(context.Context), args[1].(oapiclient.CreateListJSONRequestBody), variadicArgs...)
+	})
+	return _c
+}
+
+func (_c *MockClientWithResponsesInterface_CreateListWithResponse_Call) Return(_a0 *oapiclient.CreateListResponse, _a1 error) *MockClientWithResponsesInterface_CreateListWithResponse_Call {
+	_c.Call.Return(_a0, _a1)
+	return _c
+}
+
+func (_c *MockClientWithResponsesInterface_CreateListWithResponse_Call) RunAndReturn(run func(context.Context, oapiclient.CreateListJSONRequestBody, ...oapiclient.RequestEditorFn) (*oapiclient.CreateListResponse, error)) *MockClientWithResponsesInterface_CreateListWithResponse_Call {
+	_c.Call.Return(run)
+	return _c
+}
+
+// DeleteListWithResponse provides a mock function with given fields: ctx, listID, reqEditors
+func (_m *MockClientWithResponsesInterface) DeleteListWithResponse(ctx context.Context, listID int64, reqEditors ...oapiclient.RequestEditorFn) (*oapiclient.DeleteListResponse, error) {
 	_va := make([]interface{}, len(reqEditors))
 	for _i := range reqEditors {
 		_va[_i] = reqEditors[_i]
@@ -110,19 +185,19 @@ func (_m *MockClientWithResponsesInterface) GetListsListIDWithResponse(ctx conte
 	ret := _m.Called(_ca...)
 
 	if len(ret) == 0 {
-		panic("no return value specified for GetListsListIDWithResponse")
+		panic("no return value specified for DeleteListWithResponse")
 	}
 
-	var r0 *oapiclient.GetListsListIDResponse
+	var r0 *oapiclient.DeleteListResponse
 	var r1 error
-	if rf, ok := ret.Get(0).(func(context.Context, int64, ...oapiclient.RequestEditorFn) (*oapiclient.GetListsListIDResponse, error)); ok {
+	if rf, ok := ret.Get(0).(func(context.Context, int64, ...oapiclient.RequestEditorFn) (*oapiclient.DeleteListResponse, error)); ok {
 		return rf(ctx, listID, reqEditors...)
 	}
-	if rf, ok := ret.Get(0).(func(context.Context, int64, ...oapiclient.RequestEditorFn) *oapiclient.GetListsListIDResponse); ok {
+	if rf, ok := ret.Get(0).(func(context.Context, int64, ...oapiclient.RequestEditorFn) *oapiclient.DeleteListResponse); ok {
 		r0 = rf(ctx, listID, reqEditors...)
 	} else {
 		if ret.Get(0) != nil {
-			r0 = ret.Get(0).(*oapiclient.GetListsListIDResponse)
+			r0 = ret.Get(0).(*oapiclient.DeleteListResponse)
 		}
 	}
 
@@ -135,21 +210,21 @@ func (_m *MockClientWithResponsesInterface) GetListsListIDWithResponse(ctx conte
 	return r0, r1
 }
 
-// MockClientWithResponsesInterface_GetListsListIDWithResponse_Call is a *mock.Call that shadows Run/Return methods with type explicit version for method 'GetListsListIDWithResponse'
-type MockClientWithResponsesInterface_GetListsListIDWithResponse_Call struct {
+// MockClientWithResponsesInterface_DeleteListWithResponse_Call is a *mock.Call that shadows Run/Return methods with type explicit version for method 'DeleteListWithResponse'
+type MockClientWithResponsesInterface_DeleteListWithResponse_Call struct {
 	*mock.Call
 }
 
-// GetListsListIDWithResponse is a helper method to define mock.On call
+// DeleteListWithResponse is a helper method to define mock.On call
 //   - ctx context.Context
 //   - listID int64
 //   - reqEditors ...oapiclient.RequestEditorFn
-func (_e *MockClientWithResponsesInterface_Expecter) GetListsListIDWithResponse(ctx interface{}, listID interface{}, reqEditors ...interface{}) *MockClientWithResponsesInterface_GetListsListIDWithResponse_Call {
-	return &MockClientWithResponsesInterface_GetListsListIDWithResponse_Call{Call: _e.mock.On("GetListsListIDWithResponse",
+func (_e *MockClientWithResponsesInterface_Expecter) DeleteListWithResponse(ctx interface{}, listID interface{}, reqEditors ...interface{}) *MockClientWithResponsesInterface_DeleteListWithResponse_Call {
+	return &MockClientWithResponsesInterface_DeleteListWithResponse_Call{Call: _e.mock.On("DeleteListWithResponse",
 		append([]interface{}{ctx, listID}, reqEditors...)...)}
 }
 
-func (_c *MockClientWithResponsesInterface_GetListsListIDWithResponse_Call) Run(run func(ctx context.Context, listID int64, reqEditors ...oapiclient.RequestEditorFn)) *MockClientWithResponsesInterface_GetListsListIDWithResponse_Call {
+func (_c *MockClientWithResponsesInterface_DeleteListWithResponse_Call) Run(run func(ctx context.Context, listID int64, reqEditors ...oapiclient.RequestEditorFn)) *MockClientWithResponsesInterface_DeleteListWithResponse_Call {
 	_c.Call.Run(func(args mock.Arguments) {
 		variadicArgs := make([]oapiclient.RequestEditorFn, len(args)-2)
 		for i, a := range args[2:] {
@@ -162,12 +237,86 @@ func (_c *MockClientWithResponsesInterface_GetListsListIDWithResponse_Call) Run(
 	return _c
 }
 
-func (_c *MockClientWithResponsesInterface_GetListsListIDWithResponse_Call) Return(_a0 *oapiclient.GetListsListIDResponse, _a1 error) *MockClientWithResponsesInterface_GetListsListIDWithResponse_Call {
+func (_c *MockClientWithResponsesInterface_DeleteListWithResponse_Call) Return(_a0 *oapiclient.DeleteListResponse, _a1 error) *MockClientWithResponsesInterface_DeleteListWithResponse_Call {
 	_c.Call.Return(_a0, _a1)
 	return _c
 }
 
-func (_c *MockClientWithResponsesInterface_GetListsListIDWithResponse_Call) RunAndReturn(run func(context.Context, int64, ...oapiclient.RequestEditorFn) (*oapiclient.GetListsListIDResponse, error)) *MockClientWithResponsesInterface_GetListsListIDWithResponse_Call {
+func (_c *MockClientWithResponsesInterface_DeleteListWithResponse_Call) RunAndReturn(run func(context.Context, int64, ...oapiclient.RequestEditorFn) (*oapiclient.DeleteListResponse, error)) *MockClientWithResponsesInterface_DeleteListWithResponse_Call {
+	_c.Call.Return(run)
+	return _c
+}
+
+// GetListWithResponse provides a mock function with given fields: ctx, listID, reqEditors
+func (_m *MockClientWithResponsesInterface) GetListWithResponse(ctx context.Context, listID int64, reqEditors ...oapiclient.RequestEditorFn) (*oapiclient.GetListResponse, error) {
+	_va := make([]interface{}, len(reqEditors))
+	for _i := range reqEditors {
+		_va[_i] = reqEditors[_i]
+	}
+	var _ca []interface{}
+	_ca = append(_ca, ctx, listID)
+	_ca = append(_ca, _va...)
+	ret := _m.Called(_ca...)
+
+	if len(ret) == 0 {
+		panic("no return value specified for GetListWithResponse")
+	}
+
+	var r0 *oapiclient.GetListResponse
+	var r1 error
+	if rf, ok := ret.Get(0).(func(context.Context, int64, ...oapiclient.RequestEditorFn) (*oapiclient.GetListResponse, error)); ok {
+		return rf(ctx, listID, reqEditors...)
+	}
+	if rf, ok := ret.Get(0).(func(context.Context, int64, ...oapiclient.RequestEditorFn) *oapiclient.GetListResponse); ok {
+		r0 = rf(ctx, listID, reqEditors...)
+	} else {
+		if ret.Get(0) != nil {
+			r0 = ret.Get(0).(*oapiclient.GetListResponse)
+		}
+	}
+
+	if rf, ok := ret.Get(1).(func(context.Context, int64, ...oapiclient.RequestEditorFn) error); ok {
+		r1 = rf(ctx, listID, reqEditors...)
+	} else {
+		r1 = ret.Error(1)
+	}
+
+	return r0, r1
+}
+
+// MockClientWithResponsesInterface_GetListWithResponse_Call is a *mock.Call that shadows Run/Return methods with type explicit version for method 'GetListWithResponse'
+type MockClientWithResponsesInterface_GetListWithResponse_Call struct {
+	*mock.Call
+}
+
+// GetListWithResponse is a helper method to define mock.On call
+//   - ctx context.Context
+//   - listID int64
+//   - reqEditors ...oapiclient.RequestEditorFn
+func (_e *MockClientWithResponsesInterface_Expecter) GetListWithResponse(ctx interface{}, listID interface{}, reqEditors ...interface{}) *MockClientWithResponsesInterface_GetListWithResponse_Call {
+	return &MockClientWithResponsesInterface_GetListWithResponse_Call{Call: _e.mock.On("GetListWithResponse",
+		append([]interface{}{ctx, listID}, reqEditors...)...)}
+}
+
+func (_c *MockClientWithResponsesInterface_GetListWithResponse_Call) Run(run func(ctx context.Context, listID int64, reqEditors ...oapiclient.RequestEditorFn)) *MockClientWithResponsesInterface_GetListWithResponse_Call {
+	_c.Call.Run(func(args mock.Arguments) {
+		variadicArgs := make([]oapiclient.RequestEditorFn, len(args)-2)
+		for i, a := range args[2:] {
+			if a != nil {
+				variadicArgs[i] = a.(oapiclient.RequestEditorFn)
+			}
+		}
+		run(args[0].(context.Context), args[1].(int64), variadicArgs...)
+	})
+	return _c
+}
+
+func (_c *MockClientWithResponsesInterface_GetListWithResponse_Call) Return(_a0 *oapiclient.GetListResponse, _a1 error) *MockClientWithResponsesInterface_GetListWithResponse_Call {
+	_c.Call.Return(_a0, _a1)
+	return _c
+}
+
+func (_c *MockClientWithResponsesInterface_GetListWithResponse_Call) RunAndReturn(run func(context.Context, int64, ...oapiclient.RequestEditorFn) (*oapiclient.GetListResponse, error)) *MockClientWithResponsesInterface_GetListWithResponse_Call {
 	_c.Call.Return(run)
 	return _c
 }
@@ -246,157 +395,8 @@ func (_c *MockClientWithResponsesInterface_GetListsWithResponse_Call) RunAndRetu
 	return _c
 }
 
-// PostListsWithBodyWithResponse provides a mock function with given fields: ctx, contentType, body, reqEditors
-func (_m *MockClientWithResponsesInterface) PostListsWithBodyWithResponse(ctx context.Context, contentType string, body io.Reader, reqEditors ...oapiclient.RequestEditorFn) (*oapiclient.PostListsResponse, error) {
-	_va := make([]interface{}, len(reqEditors))
-	for _i := range reqEditors {
-		_va[_i] = reqEditors[_i]
-	}
-	var _ca []interface{}
-	_ca = append(_ca, ctx, contentType, body)
-	_ca = append(_ca, _va...)
-	ret := _m.Called(_ca...)
-
-	if len(ret) == 0 {
-		panic("no return value specified for PostListsWithBodyWithResponse")
-	}
-
-	var r0 *oapiclient.PostListsResponse
-	var r1 error
-	if rf, ok := ret.Get(0).(func(context.Context, string, io.Reader, ...oapiclient.RequestEditorFn) (*oapiclient.PostListsResponse, error)); ok {
-		return rf(ctx, contentType, body, reqEditors...)
-	}
-	if rf, ok := ret.Get(0).(func(context.Context, string, io.Reader, ...oapiclient.RequestEditorFn) *oapiclient.PostListsResponse); ok {
-		r0 = rf(ctx, contentType, body, reqEditors...)
-	} else {
-		if ret.Get(0) != nil {
-			r0 = ret.Get(0).(*oapiclient.PostListsResponse)
-		}
-	}
-
-	if rf, ok := ret.Get(1).(func(context.Context, string, io.Reader, ...oapiclient.RequestEditorFn) error); ok {
-		r1 = rf(ctx, contentType, body, reqEditors...)
-	} else {
-		r1 = ret.Error(1)
-	}
-
-	return r0, r1
-}
-
-// MockClientWithResponsesInterface_PostListsWithBodyWithResponse_Call is a *mock.Call that shadows Run/Return methods with type explicit version for method 'PostListsWithBodyWithResponse'
-type MockClientWithResponsesInterface_PostListsWithBodyWithResponse_Call struct {
-	*mock.Call
-}
-
-// PostListsWithBodyWithResponse is a helper method to define mock.On call
-//   - ctx context.Context
-//   - contentType string
-//   - body io.Reader
-//   - reqEditors ...oapiclient.RequestEditorFn
-func (_e *MockClientWithResponsesInterface_Expecter) PostListsWithBodyWithResponse(ctx interface{}, contentType interface{}, body interface{}, reqEditors ...interface{}) *MockClientWithResponsesInterface_PostListsWithBodyWithResponse_Call {
-	return &MockClientWithResponsesInterface_PostListsWithBodyWithResponse_Call{Call: _e.mock.On("PostListsWithBodyWithResponse",
-		append([]interface{}{ctx, contentType, body}, reqEditors...)...)}
-}
-
-func (_c *MockClientWithResponsesInterface_PostListsWithBodyWithResponse_Call) Run(run func(ctx context.Context, contentType string, body io.Reader, reqEditors ...oapiclient.RequestEditorFn)) *MockClientWithResponsesInterface_PostListsWithBodyWithResponse_Call {
-	_c.Call.Run(func(args mock.Arguments) {
-		variadicArgs := make([]oapiclient.RequestEditorFn, len(args)-3)
-		for i, a := range args[3:] {
-			if a != nil {
-				variadicArgs[i] = a.(oapiclient.RequestEditorFn)
-			}
-		}
-		run(args[0].(context.Context), args[1].(string), args[2].(io.Reader), variadicArgs...)
-	})
-	return _c
-}
-
-func (_c *MockClientWithResponsesInterface_PostListsWithBodyWithResponse_Call) Return(_a0 *oapiclient.PostListsResponse, _a1 error) *MockClientWithResponsesInterface_PostListsWithBodyWithResponse_Call {
-	_c.Call.Return(_a0, _a1)
-	return _c
-}
-
-func (_c *MockClientWithResponsesInterface_PostListsWithBodyWithResponse_Call) RunAndReturn(run func(context.Context, string, io.Reader, ...oapiclient.RequestEditorFn) (*oapiclient.PostListsResponse, error)) *MockClientWithResponsesInterface_PostListsWithBodyWithResponse_Call {
-	_c.Call.Return(run)
-	return _c
-}
-
-// PostListsWithResponse provides a mock function with given fields: ctx, body, reqEditors
-func (_m *MockClientWithResponsesInterface) PostListsWithResponse(ctx context.Context, body oapiclient.PostListsJSONRequestBody, reqEditors ...oapiclient.RequestEditorFn) (*oapiclient.PostListsResponse, error) {
-	_va := make([]interface{}, len(reqEditors))
-	for _i := range reqEditors {
-		_va[_i] = reqEditors[_i]
-	}
-	var _ca []interface{}
-	_ca = append(_ca, ctx, body)
-	_ca = append(_ca, _va...)
-	ret := _m.Called(_ca...)
-
-	if len(ret) == 0 {
-		panic("no return value specified for PostListsWithResponse")
-	}
-
-	var r0 *oapiclient.PostListsResponse
-	var r1 error
-	if rf, ok := ret.Get(0).(func(context.Context, oapiclient.PostListsJSONRequestBody, ...oapiclient.RequestEditorFn) (*oapiclient.PostListsResponse, error)); ok {
-		return rf(ctx, body, reqEditors...)
-	}
-	if rf, ok := ret.Get(0).(func(context.Context, oapiclient.PostListsJSONRequestBody, ...oapiclient.RequestEditorFn) *oapiclient.PostListsResponse); ok {
-		r0 = rf(ctx, body, reqEditors...)
-	} else {
-		if ret.Get(0) != nil {
-			r0 = ret.Get(0).(*oapiclient.PostListsResponse)
-		}
-	}
-
-	if rf, ok := ret.Get(1).(func(context.Context, oapiclient.PostListsJSONRequestBody, ...oapiclient.RequestEditorFn) error); ok {
-		r1 = rf(ctx, body, reqEditors...)
-	} else {
-		r1 = ret.Error(1)
-	}
-
-	return r0, r1
-}
-
-// MockClientWithResponsesInterface_PostListsWithResponse_Call is a *mock.Call that shadows Run/Return methods with type explicit version for method 'PostListsWithResponse'
-type MockClientWithResponsesInterface_PostListsWithResponse_Call struct {
-	*mock.Call
-}
-
-// PostListsWithResponse is a helper method to define mock.On call
-//   - ctx context.Context
-//   - body oapiclient.PostListsJSONRequestBody
-//   - reqEditors ...oapiclient.RequestEditorFn
-func (_e *MockClientWithResponsesInterface_Expecter) PostListsWithResponse(ctx interface{}, body interface{}, reqEditors ...interface{}) *MockClientWithResponsesInterface_PostListsWithResponse_Call {
-	return &MockClientWithResponsesInterface_PostListsWithResponse_Call{Call: _e.mock.On("PostListsWithResponse",
-		append([]interface{}{ctx, body}, reqEditors...)...)}
-}
-
-func (_c *MockClientWithResponsesInterface_PostListsWithResponse_Call) Run(run func(ctx context.Context, body oapiclient.PostListsJSONRequestBody, reqEditors ...oapiclient.RequestEditorFn)) *MockClientWithResponsesInterface_PostListsWithResponse_Call {
-	_c.Call.Run(func(args mock.Arguments) {
-		variadicArgs := make([]oapiclient.RequestEditorFn, len(args)-2)
-		for i, a := range args[2:] {
-			if a != nil {
-				variadicArgs[i] = a.(oapiclient.RequestEditorFn)
-			}
-		}
-		run(args[0].(context.Context), args[1].(oapiclient.PostListsJSONRequestBody), variadicArgs...)
-	})
-	return _c
-}
-
-func (_c *MockClientWithResponsesInterface_PostListsWithResponse_Call) Return(_a0 *oapiclient.PostListsResponse, _a1 error) *MockClientWithResponsesInterface_PostListsWithResponse_Call {
-	_c.Call.Return(_a0, _a1)
-	return _c
-}
-
-func (_c *MockClientWithResponsesInterface_PostListsWithResponse_Call) RunAndReturn(run func(context.Context, oapiclient.PostListsJSONRequestBody, ...oapiclient.RequestEditorFn) (*oapiclient.PostListsResponse, error)) *MockClientWithResponsesInterface_PostListsWithResponse_Call {
-	_c.Call.Return(run)
-	return _c
-}
-
-// PutListsListIDWithBodyWithResponse provides a mock function with given fields: ctx, listID, contentType, body, reqEditors
-func (_m *MockClientWithResponsesInterface) PutListsListIDWithBodyWithResponse(ctx context.Context, listID int64, contentType string, body io.Reader, reqEditors ...oapiclient.RequestEditorFn) (*oapiclient.PutListsListIDResponse, error) {
+// UpdateListWithBodyWithResponse provides a mock function with given fields: ctx, listID, contentType, body, reqEditors
+func (_m *MockClientWithResponsesInterface) UpdateListWithBodyWithResponse(ctx context.Context, listID int64, contentType string, body io.Reader, reqEditors ...oapiclient.RequestEditorFn) (*oapiclient.UpdateListResponse, error) {
 	_va := make([]interface{}, len(reqEditors))
 	for _i := range reqEditors {
 		_va[_i] = reqEditors[_i]
@@ -407,19 +407,19 @@ func (_m *MockClientWithResponsesInterface) PutListsListIDWithBodyWithResponse(c
 	ret := _m.Called(_ca...)
 
 	if len(ret) == 0 {
-		panic("no return value specified for PutListsListIDWithBodyWithResponse")
+		panic("no return value specified for UpdateListWithBodyWithResponse")
 	}
 
-	var r0 *oapiclient.PutListsListIDResponse
+	var r0 *oapiclient.UpdateListResponse
 	var r1 error
-	if rf, ok := ret.Get(0).(func(context.Context, int64, string, io.Reader, ...oapiclient.RequestEditorFn) (*oapiclient.PutListsListIDResponse, error)); ok {
+	if rf, ok := ret.Get(0).(func(context.Context, int64, string, io.Reader, ...oapiclient.RequestEditorFn) (*oapiclient.UpdateListResponse, error)); ok {
 		return rf(ctx, listID, contentType, body, reqEditors...)
 	}
-	if rf, ok := ret.Get(0).(func(context.Context, int64, string, io.Reader, ...oapiclient.RequestEditorFn) *oapiclient.PutListsListIDResponse); ok {
+	if rf, ok := ret.Get(0).(func(context.Context, int64, string, io.Reader, ...oapiclient.RequestEditorFn) *oapiclient.UpdateListResponse); ok {
 		r0 = rf(ctx, listID, contentType, body, reqEditors...)
 	} else {
 		if ret.Get(0) != nil {
-			r0 = ret.Get(0).(*oapiclient.PutListsListIDResponse)
+			r0 = ret.Get(0).(*oapiclient.UpdateListResponse)
 		}
 	}
 
@@ -432,23 +432,23 @@ func (_m *MockClientWithResponsesInterface) PutListsListIDWithBodyWithResponse(c
 	return r0, r1
 }
 
-// MockClientWithResponsesInterface_PutListsListIDWithBodyWithResponse_Call is a *mock.Call that shadows Run/Return methods with type explicit version for method 'PutListsListIDWithBodyWithResponse'
-type MockClientWithResponsesInterface_PutListsListIDWithBodyWithResponse_Call struct {
+// MockClientWithResponsesInterface_UpdateListWithBodyWithResponse_Call is a *mock.Call that shadows Run/Return methods with type explicit version for method 'UpdateListWithBodyWithResponse'
+type MockClientWithResponsesInterface_UpdateListWithBodyWithResponse_Call struct {
 	*mock.Call
 }
 
-// PutListsListIDWithBodyWithResponse is a helper method to define mock.On call
+// UpdateListWithBodyWithResponse is a helper method to define mock.On call
 //   - ctx context.Context
 //   - listID int64
 //   - contentType string
 //   - body io.Reader
 //   - reqEditors ...oapiclient.RequestEditorFn
-func (_e *MockClientWithResponsesInterface_Expecter) PutListsListIDWithBodyWithResponse(ctx interface{}, listID interface{}, contentType interface{}, body interface{}, reqEditors ...interface{}) *MockClientWithResponsesInterface_PutListsListIDWithBodyWithResponse_Call {
-	return &MockClientWithResponsesInterface_PutListsListIDWithBodyWithResponse_Call{Call: _e.mock.On("PutListsListIDWithBodyWithResponse",
+func (_e *MockClientWithResponsesInterface_Expecter) UpdateListWithBodyWithResponse(ctx interface{}, listID interface{}, contentType interface{}, body interface{}, reqEditors ...interface{}) *MockClientWithResponsesInterface_UpdateListWithBodyWithResponse_Call {
+	return &MockClientWithResponsesInterface_UpdateListWithBodyWithResponse_Call{Call: _e.mock.On("UpdateListWithBodyWithResponse",
 		append([]interface{}{ctx, listID, contentType, body}, reqEditors...)...)}
 }
 
-func (_c *MockClientWithResponsesInterface_PutListsListIDWithBodyWithResponse_Call) Run(run func(ctx context.Context, listID int64, contentType string, body io.Reader, reqEditors ...oapiclient.RequestEditorFn)) *MockClientWithResponsesInterface_PutListsListIDWithBodyWithResponse_Call {
+func (_c *MockClientWithResponsesInterface_UpdateListWithBodyWithResponse_Call) Run(run func(ctx context.Context, listID int64, contentType string, body io.Reader, reqEditors ...oapiclient.RequestEditorFn)) *MockClientWithResponsesInterface_UpdateListWithBodyWithResponse_Call {
 	_c.Call.Run(func(args mock.Arguments) {
 		variadicArgs := make([]oapiclient.RequestEditorFn, len(args)-4)
 		for i, a := range args[4:] {
@@ -461,18 +461,18 @@ func (_c *MockClientWithResponsesInterface_PutListsListIDWithBodyWithResponse_Ca
 	return _c
 }
 
-func (_c *MockClientWithResponsesInterface_PutListsListIDWithBodyWithResponse_Call) Return(_a0 *oapiclient.PutListsListIDResponse, _a1 error) *MockClientWithResponsesInterface_PutListsListIDWithBodyWithResponse_Call {
+func (_c *MockClientWithResponsesInterface_UpdateListWithBodyWithResponse_Call) Return(_a0 *oapiclient.UpdateListResponse, _a1 error) *MockClientWithResponsesInterface_UpdateListWithBodyWithResponse_Call {
 	_c.Call.Return(_a0, _a1)
 	return _c
 }
 
-func (_c *MockClientWithResponsesInterface_PutListsListIDWithBodyWithResponse_Call) RunAndReturn(run func(context.Context, int64, string, io.Reader, ...oapiclient.RequestEditorFn) (*oapiclient.PutListsListIDResponse, error)) *MockClientWithResponsesInterface_PutListsListIDWithBodyWithResponse_Call {
+func (_c *MockClientWithResponsesInterface_UpdateListWithBodyWithResponse_Call) RunAndReturn(run func(context.Context, int64, string, io.Reader, ...oapiclient.RequestEditorFn) (*oapiclient.UpdateListResponse, error)) *MockClientWithResponsesInterface_UpdateListWithBodyWithResponse_Call {
 	_c.Call.Return(run)
 	return _c
 }
 
-// PutListsListIDWithResponse provides a mock function with given fields: ctx, listID, body, reqEditors
-func (_m *MockClientWithResponsesInterface) PutListsListIDWithResponse(ctx context.Context, listID int64, body oapiclient.PutListsListIDJSONRequestBody, reqEditors ...oapiclient.RequestEditorFn) (*oapiclient.PutListsListIDResponse, error) {
+// UpdateListWithResponse provides a mock function with given fields: ctx, listID, body, reqEditors
+func (_m *MockClientWithResponsesInterface) UpdateListWithResponse(ctx context.Context, listID int64, body oapiclient.UpdateListJSONRequestBody, reqEditors ...oapiclient.RequestEditorFn) (*oapiclient.UpdateListResponse, error) {
 	_va := make([]interface{}, len(reqEditors))
 	for _i := range reqEditors {
 		_va[_i] = reqEditors[_i]
@@ -483,23 +483,23 @@ func (_m *MockClientWithResponsesInterface) PutListsListIDWithResponse(ctx conte
 	ret := _m.Called(_ca...)
 
 	if len(ret) == 0 {
-		panic("no return value specified for PutListsListIDWithResponse")
+		panic("no return value specified for UpdateListWithResponse")
 	}
 
-	var r0 *oapiclient.PutListsListIDResponse
+	var r0 *oapiclient.UpdateListResponse
 	var r1 error
-	if rf, ok := ret.Get(0).(func(context.Context, int64, oapiclient.PutListsListIDJSONRequestBody, ...oapiclient.RequestEditorFn) (*oapiclient.PutListsListIDResponse, error)); ok {
+	if rf, ok := ret.Get(0).(func(context.Context, int64, oapiclient.UpdateListJSONRequestBody, ...oapiclient.RequestEditorFn) (*oapiclient.UpdateListResponse, error)); ok {
 		return rf(ctx, listID, body, reqEditors...)
 	}
-	if rf, ok := ret.Get(0).(func(context.Context, int64, oapiclient.PutListsListIDJSONRequestBody, ...oapiclient.RequestEditorFn) *oapiclient.PutListsListIDResponse); ok {
+	if rf, ok := ret.Get(0).(func(context.Context, int64, oapiclient.UpdateListJSONRequestBody, ...oapiclient.RequestEditorFn) *oapiclient.UpdateListResponse); ok {
 		r0 = rf(ctx, listID, body, reqEditors...)
 	} else {
 		if ret.Get(0) != nil {
-			r0 = ret.Get(0).(*oapiclient.PutListsListIDResponse)
+			r0 = ret.Get(0).(*oapiclient.UpdateListResponse)
 		}
 	}
 
-	if rf, ok := ret.Get(1).(func(context.Context, int64, oapiclient.PutListsListIDJSONRequestBody, ...oapiclient.RequestEditorFn) error); ok {
+	if rf, ok := ret.Get(1).(func(context.Context, int64, oapiclient.UpdateListJSONRequestBody, ...oapiclient.RequestEditorFn) error); ok {
 		r1 = rf(ctx, listID, body, reqEditors...)
 	} else {
 		r1 = ret.Error(1)
@@ -508,22 +508,22 @@ func (_m *MockClientWithResponsesInterface) PutListsListIDWithResponse(ctx conte
 	return r0, r1
 }
 
-// MockClientWithResponsesInterface_PutListsListIDWithResponse_Call is a *mock.Call that shadows Run/Return methods with type explicit version for method 'PutListsListIDWithResponse'
-type MockClientWithResponsesInterface_PutListsListIDWithResponse_Call struct {
+// MockClientWithResponsesInterface_UpdateListWithResponse_Call is a *mock.Call that shadows Run/Return methods with type explicit version for method 'UpdateListWithResponse'
+type MockClientWithResponsesInterface_UpdateListWithResponse_Call struct {
 	*mock.Call
 }
 
-// PutListsListIDWithResponse is a helper method to define mock.On call
+// UpdateListWithResponse is a helper method to define mock.On call
 //   - ctx context.Context
 //   - listID int64
-//   - body oapiclient.PutListsListIDJSONRequestBody
+//   - body oapiclient.UpdateListJSONRequestBody
 //   - reqEditors ...oapiclient.RequestEditorFn
-func (_e *MockClientWithResponsesInterface_Expecter) PutListsListIDWithResponse(ctx interface{}, listID interface{}, body interface{}, reqEditors ...interface{}) *MockClientWithResponsesInterface_PutListsListIDWithResponse_Call {
-	return &MockClientWithResponsesInterface_PutListsListIDWithResponse_Call{Call: _e.mock.On("PutListsListIDWithResponse",
+func (_e *MockClientWithResponsesInterface_Expecter) UpdateListWithResponse(ctx interface{}, listID interface{}, body interface{}, reqEditors ...interface{}) *MockClientWithResponsesInterface_UpdateListWithResponse_Call {
+	return &MockClientWithResponsesInterface_UpdateListWithResponse_Call{Call: _e.mock.On("UpdateListWithResponse",
 		append([]interface{}{ctx, listID, body}, reqEditors...)...)}
 }
 
-func (_c *MockClientWithResponsesInterface_PutListsListIDWithResponse_Call) Run(run func(ctx context.Context, listID int64, body oapiclient.PutListsListIDJSONRequestBody, reqEditors ...oapiclient.RequestEditorFn)) *MockClientWithResponsesInterface_PutListsListIDWithResponse_Call {
+func (_c *MockClientWithResponsesInterface_UpdateListWithResponse_Call) Run(run func(ctx context.Context, listID int64, body oapiclient.UpdateListJSONRequestBody, reqEditors ...oapiclient.RequestEditorFn)) *MockClientWithResponsesInterface_UpdateListWithResponse_Call {
 	_c.Call.Run(func(args mock.Arguments) {
 		variadicArgs := make([]oapiclient.RequestEditorFn, len(args)-3)
 		for i, a := range args[3:] {
@@ -531,17 +531,17 @@ func (_c *MockClientWithResponsesInterface_PutListsListIDWithResponse_Call) Run(
 				variadicArgs[i] = a.(oapiclient.RequestEditorFn)
 			}
 		}
-		run(args[0].(context.Context), args[1].(int64), args[2].(oapiclient.PutListsListIDJSONRequestBody), variadicArgs...)
+		run(args[0].(context.Context), args[1].(int64), args[2].(oapiclient.UpdateListJSONRequestBody), variadicArgs...)
 	})
 	return _c
 }
 
-func (_c *MockClientWithResponsesInterface_PutListsListIDWithResponse_Call) Return(_a0 *oapiclient.PutListsListIDResponse, _a1 error) *MockClientWithResponsesInterface_PutListsListIDWithResponse_Call {
+func (_c *MockClientWithResponsesInterface_UpdateListWithResponse_Call) Return(_a0 *oapiclient.UpdateListResponse, _a1 error) *MockClientWithResponsesInterface_UpdateListWithResponse_Call {
 	_c.Call.Return(_a0, _a1)
 	return _c
 }
 
-func (_c *MockClientWithResponsesInterface_PutListsListIDWithResponse_Call) RunAndReturn(run func(context.Context, int64, oapiclient.PutListsListIDJSONRequestBody, ...oapiclient.RequestEditorFn) (*oapiclient.PutListsListIDResponse, error)) *MockClientWithResponsesInterface_PutListsListIDWithResponse_Call {
+func (_c *MockClientWithResponsesInterface_UpdateListWithResponse_Call) RunAndReturn(run func(context.Context, int64, oapiclient.UpdateListJSONRequestBody, ...oapiclient.RequestEditorFn) (*oapiclient.UpdateListResponse, error)) *MockClientWithResponsesInterface_UpdateListWithResponse_Call {
 	_c.Call.Return(run)
 	return _c
 }

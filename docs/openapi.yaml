@@ -6,21 +6,22 @@ info:
     name: MIT
     url: https://opensource.org/licenses/MIT
 servers:
-  - url: http://localhost:2552/api/v1
+  - url: "http://localhost:2552/api/v1"
 paths:
   /lists:
     $ref: "./paths/lists.yaml"
   /lists/{listID}:
     $ref: "./paths/list.yaml"
+  /lists/{listID}/items:
+    $ref: "./paths/items.yaml"
+  /lists/{listID}/items/{itemID}:
+    $ref: "./paths/item.yaml"
 # security:
 #   - BearerAuth: []
-components:
-  schemas:
-    List:
-      $ref: "./schemas/list.yaml"
-  # securitySchemes:
-  #   BearerAuth:
-  #     type: http
-  #     scheme: bearer
-  #     bearerFormat: JWT
-  #     description: JWT token
+# components:
+#   securitySchemes:
+#     BearerAuth:
+#       type: http
+#       scheme: bearer
+#       bearerFormat: JWT
+#       description: JWT token

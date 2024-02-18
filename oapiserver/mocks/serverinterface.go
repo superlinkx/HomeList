@@ -22,37 +22,106 @@ func (_m *MockServerInterface) EXPECT() *MockServerInterface_Expecter {
 	return &MockServerInterface_Expecter{mock: &_m.Mock}
 }
 
-// DeleteListsListID provides a mock function with given fields: w, r, listID
-func (_m *MockServerInterface) DeleteListsListID(w http.ResponseWriter, r *http.Request, listID int64) {
-	_m.Called(w, r, listID)
+// CreateList provides a mock function with given fields: w, r
+func (_m *MockServerInterface) CreateList(w http.ResponseWriter, r *http.Request) {
+	_m.Called(w, r)
 }
 
-// MockServerInterface_DeleteListsListID_Call is a *mock.Call that shadows Run/Return methods with type explicit version for method 'DeleteListsListID'
-type MockServerInterface_DeleteListsListID_Call struct {
+// MockServerInterface_CreateList_Call is a *mock.Call that shadows Run/Return methods with type explicit version for method 'CreateList'
+type MockServerInterface_CreateList_Call struct {
 	*mock.Call
 }
 
-// DeleteListsListID is a helper method to define mock.On call
+// CreateList is a helper method to define mock.On call
+//   - w http.ResponseWriter
+//   - r *http.Request
+func (_e *MockServerInterface_Expecter) CreateList(w interface{}, r interface{}) *MockServerInterface_CreateList_Call {
+	return &MockServerInterface_CreateList_Call{Call: _e.mock.On("CreateList", w, r)}
+}
+
+func (_c *MockServerInterface_CreateList_Call) Run(run func(w http.ResponseWriter, r *http.Request)) *MockServerInterface_CreateList_Call {
+	_c.Call.Run(func(args mock.Arguments) {
+		run(args[0].(http.ResponseWriter), args[1].(*http.Request))
+	})
+	return _c
+}
+
+func (_c *MockServerInterface_CreateList_Call) Return() *MockServerInterface_CreateList_Call {
+	_c.Call.Return()
+	return _c
+}
+
+func (_c *MockServerInterface_CreateList_Call) RunAndReturn(run func(http.ResponseWriter, *http.Request)) *MockServerInterface_CreateList_Call {
+	_c.Call.Return(run)
+	return _c
+}
+
+// DeleteList provides a mock function with given fields: w, r, listID
+func (_m *MockServerInterface) DeleteList(w http.ResponseWriter, r *http.Request, listID int64) {
+	_m.Called(w, r, listID)
+}
+
+// MockServerInterface_DeleteList_Call is a *mock.Call that shadows Run/Return methods with type explicit version for method 'DeleteList'
+type MockServerInterface_DeleteList_Call struct {
+	*mock.Call
+}
+
+// DeleteList is a helper method to define mock.On call
 //   - w http.ResponseWriter
 //   - r *http.Request
 //   - listID int64
-func (_e *MockServerInterface_Expecter) DeleteListsListID(w interface{}, r interface{}, listID interface{}) *MockServerInterface_DeleteListsListID_Call {
-	return &MockServerInterface_DeleteListsListID_Call{Call: _e.mock.On("DeleteListsListID", w, r, listID)}
+func (_e *MockServerInterface_Expecter) DeleteList(w interface{}, r interface{}, listID interface{}) *MockServerInterface_DeleteList_Call {
+	return &MockServerInterface_DeleteList_Call{Call: _e.mock.On("DeleteList", w, r, listID)}
 }
 
-func (_c *MockServerInterface_DeleteListsListID_Call) Run(run func(w http.ResponseWriter, r *http.Request, listID int64)) *MockServerInterface_DeleteListsListID_Call {
+func (_c *MockServerInterface_DeleteList_Call) Run(run func(w http.ResponseWriter, r *http.Request, listID int64)) *MockServerInterface_DeleteList_Call {
 	_c.Call.Run(func(args mock.Arguments) {
 		run(args[0].(http.ResponseWriter), args[1].(*http.Request), args[2].(int64))
 	})
 	return _c
 }
 
-func (_c *MockServerInterface_DeleteListsListID_Call) Return() *MockServerInterface_DeleteListsListID_Call {
+func (_c *MockServerInterface_DeleteList_Call) Return() *MockServerInterface_DeleteList_Call {
 	_c.Call.Return()
 	return _c
 }
 
-func (_c *MockServerInterface_DeleteListsListID_Call) RunAndReturn(run func(http.ResponseWriter, *http.Request, int64)) *MockServerInterface_DeleteListsListID_Call {
+func (_c *MockServerInterface_DeleteList_Call) RunAndReturn(run func(http.ResponseWriter, *http.Request, int64)) *MockServerInterface_DeleteList_Call {
+	_c.Call.Return(run)
+	return _c
+}
+
+// GetList provides a mock function with given fields: w, r, listID
+func (_m *MockServerInterface) GetList(w http.ResponseWriter, r *http.Request, listID int64) {
+	_m.Called(w, r, listID)
+}
+
+// MockServerInterface_GetList_Call is a *mock.Call that shadows Run/Return methods with type explicit version for method 'GetList'
+type MockServerInterface_GetList_Call struct {
+	*mock.Call
+}
+
+// GetList is a helper method to define mock.On call
+//   - w http.ResponseWriter
+//   - r *http.Request
+//   - listID int64
+func (_e *MockServerInterface_Expecter) GetList(w interface{}, r interface{}, listID interface{}) *MockServerInterface_GetList_Call {
+	return &MockServerInterface_GetList_Call{Call: _e.mock.On("GetList", w, r, listID)}
+}
+
+func (_c *MockServerInterface_GetList_Call) Run(run func(w http.ResponseWriter, r *http.Request, listID int64)) *MockServerInterface_GetList_Call {
+	_c.Call.Run(func(args mock.Arguments) {
+		run(args[0].(http.ResponseWriter), args[1].(*http.Request), args[2].(int64))
+	})
+	return _c
+}
+
+func (_c *MockServerInterface_GetList_Call) Return() *MockServerInterface_GetList_Call {
+	_c.Call.Return()
+	return _c
+}
+
+func (_c *MockServerInterface_GetList_Call) RunAndReturn(run func(http.ResponseWriter, *http.Request, int64)) *MockServerInterface_GetList_Call {
 	_c.Call.Return(run)
 	return _c
 }
@@ -92,106 +161,37 @@ func (_c *MockServerInterface_GetLists_Call) RunAndReturn(run func(http.Response
 	return _c
 }
 
-// GetListsListID provides a mock function with given fields: w, r, listID
-func (_m *MockServerInterface) GetListsListID(w http.ResponseWriter, r *http.Request, listID int64) {
+// UpdateList provides a mock function with given fields: w, r, listID
+func (_m *MockServerInterface) UpdateList(w http.ResponseWriter, r *http.Request, listID int64) {
 	_m.Called(w, r, listID)
 }
 
-// MockServerInterface_GetListsListID_Call is a *mock.Call that shadows Run/Return methods with type explicit version for method 'GetListsListID'
-type MockServerInterface_GetListsListID_Call struct {
+// MockServerInterface_UpdateList_Call is a *mock.Call that shadows Run/Return methods with type explicit version for method 'UpdateList'
+type MockServerInterface_UpdateList_Call struct {
 	*mock.Call
 }
 
-// GetListsListID is a helper method to define mock.On call
+// UpdateList is a helper method to define mock.On call
 //   - w http.ResponseWriter
 //   - r *http.Request
 //   - listID int64
-func (_e *MockServerInterface_Expecter) GetListsListID(w interface{}, r interface{}, listID interface{}) *MockServerInterface_GetListsListID_Call {
-	return &MockServerInterface_GetListsListID_Call{Call: _e.mock.On("GetListsListID", w, r, listID)}
+func (_e *MockServerInterface_Expecter) UpdateList(w interface{}, r interface{}, listID interface{}) *MockServerInterface_UpdateList_Call {
+	return &MockServerInterface_UpdateList_Call{Call: _e.mock.On("UpdateList", w, r, listID)}
 }
 
-func (_c *MockServerInterface_GetListsListID_Call) Run(run func(w http.ResponseWriter, r *http.Request, listID int64)) *MockServerInterface_GetListsListID_Call {
+func (_c *MockServerInterface_UpdateList_Call) Run(run func(w http.ResponseWriter, r *http.Request, listID int64)) *MockServerInterface_UpdateList_Call {
 	_c.Call.Run(func(args mock.Arguments) {
 		run(args[0].(http.ResponseWriter), args[1].(*http.Request), args[2].(int64))
 	})
 	return _c
 }
 
-func (_c *MockServerInterface_GetListsListID_Call) Return() *MockServerInterface_GetListsListID_Call {
+func (_c *MockServerInterface_UpdateList_Call) Return() *MockServerInterface_UpdateList_Call {
 	_c.Call.Return()
 	return _c
 }
 
-func (_c *MockServerInterface_GetListsListID_Call) RunAndReturn(run func(http.ResponseWriter, *http.Request, int64)) *MockServerInterface_GetListsListID_Call {
-	_c.Call.Return(run)
-	return _c
-}
-
-// PostLists provides a mock function with given fields: w, r
-func (_m *MockServerInterface) PostLists(w http.ResponseWriter, r *http.Request) {
-	_m.Called(w, r)
-}
-
-// MockServerInterface_PostLists_Call is a *mock.Call that shadows Run/Return methods with type explicit version for method 'PostLists'
-type MockServerInterface_PostLists_Call struct {
-	*mock.Call
-}
-
-// PostLists is a helper method to define mock.On call
-//   - w http.ResponseWriter
-//   - r *http.Request
-func (_e *MockServerInterface_Expecter) PostLists(w interface{}, r interface{}) *MockServerInterface_PostLists_Call {
-	return &MockServerInterface_PostLists_Call{Call: _e.mock.On("PostLists", w, r)}
-}
-
-func (_c *MockServerInterface_PostLists_Call) Run(run func(w http.ResponseWriter, r *http.Request)) *MockServerInterface_PostLists_Call {
-	_c.Call.Run(func(args mock.Arguments) {
-		run(args[0].(http.ResponseWriter), args[1].(*http.Request))
-	})
-	return _c
-}
-
-func (_c *MockServerInterface_PostLists_Call) Return() *MockServerInterface_PostLists_Call {
-	_c.Call.Return()
-	return _c
-}
-
-func (_c *MockServerInterface_PostLists_Call) RunAndReturn(run func(http.ResponseWriter, *http.Request)) *MockServerInterface_PostLists_Call {
-	_c.Call.Return(run)
-	return _c
-}
-
-// PutListsListID provides a mock function with given fields: w, r, listID
-func (_m *MockServerInterface) PutListsListID(w http.ResponseWriter, r *http.Request, listID int64) {
-	_m.Called(w, r, listID)
-}
-
-// MockServerInterface_PutListsListID_Call is a *mock.Call that shadows Run/Return methods with type explicit version for method 'PutListsListID'
-type MockServerInterface_PutListsListID_Call struct {
-	*mock.Call
-}
-
-// PutListsListID is a helper method to define mock.On call
-//   - w http.ResponseWriter
-//   - r *http.Request
-//   - listID int64
-func (_e *MockServerInterface_Expecter) PutListsListID(w interface{}, r interface{}, listID interface{}) *MockServerInterface_PutListsListID_Call {
-	return &MockServerInterface_PutListsListID_Call{Call: _e.mock.On("PutListsListID", w, r, listID)}
-}
-
-func (_c *MockServerInterface_PutListsListID_Call) Run(run func(w http.ResponseWriter, r *http.Request, listID int64)) *MockServerInterface_PutListsListID_Call {
-	_c.Call.Run(func(args mock.Arguments) {
-		run(args[0].(http.ResponseWriter), args[1].(*http.Request), args[2].(int64))
-	})
-	return _c
-}
-
-func (_c *MockServerInterface_PutListsListID_Call) Return() *MockServerInterface_PutListsListID_Call {
-	_c.Call.Return()
-	return _c
-}
-
-func (_c *MockServerInterface_PutListsListID_Call) RunAndReturn(run func(http.ResponseWriter, *http.Request, int64)) *MockServerInterface_PutListsListID_Call {
+func (_c *MockServerInterface_UpdateList_Call) RunAndReturn(run func(http.ResponseWriter, *http.Request, int64)) *MockServerInterface_UpdateList_Call {
 	_c.Call.Return(run)
 	return _c
 }

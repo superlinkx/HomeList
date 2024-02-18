@@ -36,7 +36,6 @@ type List struct {
 	Name string `json:"name"`
 }
 
-// (GET /lists)
 func (h Handlers) GetLists(w http.ResponseWriter, r *http.Request, params oapiserver.GetListsParams) {
 	var (
 		limit  int32 = 10
@@ -66,22 +65,18 @@ func (h Handlers) GetLists(w http.ResponseWriter, r *http.Request, params oapise
 	}
 }
 
-// (POST /lists)
-func (h Handlers) PostLists(w http.ResponseWriter, r *http.Request) {
+func (h Handlers) CreateList(w http.ResponseWriter, r *http.Request) {
 	w.WriteHeader(http.StatusNotImplemented)
 }
 
-// (DELETE /lists/{listID})
-func (h Handlers) DeleteListsListID(w http.ResponseWriter, r *http.Request, listID int64) {
+func (h Handlers) DeleteList(w http.ResponseWriter, r *http.Request, listID int64) {
 	w.WriteHeader(http.StatusNotImplemented)
 }
 
-// (GET /lists/{listID})
-func (h Handlers) GetListsListID(w http.ResponseWriter, r *http.Request, listID int64) {
+func (h Handlers) GetList(w http.ResponseWriter, r *http.Request, listID int64) {
 	w.WriteHeader(http.StatusNotImplemented)
 }
 
-// (PUT /lists/{listID})
-func (h Handlers) PutListsListID(w http.ResponseWriter, r *http.Request, listID int64) {
+func (h Handlers) UpdateList(w http.ResponseWriter, r *http.Request, listID int64) {
 	w.WriteHeader(http.StatusNotImplemented)
 }

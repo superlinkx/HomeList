@@ -23,11 +23,9 @@
 package app
 
 import (
-	"context"
 	"errors"
 
 	"github.com/superlinkx/HomeList/data/adapter"
-	"github.com/superlinkx/HomeList/model"
 )
 
 var ErrNotFound = errors.New("not found")
@@ -40,15 +38,5 @@ type App struct {
 func NewApp(adapter adapter.Adapter) App {
 	return App{
 		adapter: adapter,
-	}
-}
-
-func (a App) AllLists(ctx context.Context, limit int32, offset int32) ([]model.List, error) {
-	if ls, err := a.adapter.AllLists(ctx, limit, offset); errors.Is(err, adapter.ErrNotFound) {
-		return nil, ErrNotFound
-	} else if err != nil {
-		return nil, ErrInternal
-	} else {
-		return ls, nil
 	}
 }

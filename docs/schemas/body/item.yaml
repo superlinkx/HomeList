@@ -1,0 +1,15 @@
+description: List body to be created
+required: true
+content:
+  application/json:
+    schema:
+      type: object
+      properties:
+        content:
+          type: string
+        sort:
+          type: integer
+          format: int64
+      required:
+        - content
+        - sort
