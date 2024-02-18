@@ -67,8 +67,9 @@ func TestApp_AllItems(t *testing.T) {
 		appInst     = app.NewApp(mockAdapter)
 	)
 
+	t.Parallel()
+
 	t.Run("No items found", func(t *testing.T) {
-		t.Parallel()
 		mockAdapter.EXPECT().AllItemsFromList(context.TODO(), int64(0), int32(10), int32(0)).Return([]model.Item{}, adapter.ErrNotFound).Times(1)
 		lists, err := appInst.AllItemsFromList(context.TODO(), 0, 10, 0)
 		assert.ErrorIs(t, err, app.ErrNotFound)
@@ -76,7 +77,6 @@ func TestApp_AllItems(t *testing.T) {
 	})
 
 	t.Run("Generic error", func(t *testing.T) {
-		t.Parallel()
 		mockAdapter.EXPECT().AllItemsFromList(context.TODO(), int64(0), int32(10), int32(0)).Return([]model.Item{}, errGeneric).Times(1)
 		lists, err := appInst.AllItemsFromList(context.TODO(), 0, 10, 0)
 		assert.ErrorIs(t, err, app.ErrInternal)
@@ -84,7 +84,6 @@ func TestApp_AllItems(t *testing.T) {
 	})
 
 	t.Run("Generic error with nil slice", func(t *testing.T) {
-		t.Parallel()
 		mockAdapter.EXPECT().AllItemsFromList(context.TODO(), int64(0), int32(10), int32(0)).Return(nil, errGeneric).Times(1)
 		lists, err := appInst.AllItemsFromList(context.TODO(), 0, 10, 0)
 		assert.ErrorIs(t, err, app.ErrInternal)
@@ -92,14 +91,13 @@ func TestApp_AllItems(t *testing.T) {
 	})
 
 	t.Run("Success with no offset but nil slice returned", func(t *testing.T) {
-		t.Parallel()
 		mockAdapter.EXPECT().AllItemsFromList(context.TODO(), int64(0), int32(10), int32(0)).Return(nil, nil).Times(1)
 		lists, err := appInst.AllItemsFromList(context.TODO(), 0, 10, 0)
 		assert.NoError(t, err)
 		assert.Empty(t, lists)
 	})
+
 	t.Run("Success with no offset", func(t *testing.T) {
-		t.Parallel()
 		mockAdapter.EXPECT().AllItemsFromList(context.TODO(), int64(0), int32(10), int32(0)).Return(successNoOffsetItems, nil).Times(1)
 		lists, err := appInst.AllItemsFromList(context.TODO(), 0, 10, 0)
 		assert.NoError(t, err)
@@ -110,7 +108,6 @@ func TestApp_AllItems(t *testing.T) {
 	})
 
 	t.Run("Success with offset 5", func(t *testing.T) {
-		t.Parallel()
 		mockAdapter.EXPECT().AllItemsFromList(context.TODO(), int64(0), int32(10), int32(5)).Return(successOffset5Items, nil).Times(1)
 		lists, err := appInst.AllItemsFromList(context.TODO(), 0, 10, 5)
 		assert.NoError(t, err)
@@ -121,10 +118,113 @@ func TestApp_AllItems(t *testing.T) {
 	})
 }
 
-func TestApp_GetItem(t *testing.T) {}
+func TestApp_GetItem(t *testing.T) {
+	var (
+		mockAdapter = mocks.NewMockAdapter(t)
+		appInst     = app.NewApp(mockAdapter)
+	)
 
-func TestApp_CreateItem(t *testing.T) {}
+	t.Parallel()
 
-func TestApp_UpdateItem(t *testing.T) {}
+	t.Run("Item not found", func(t *testing.T) {
+		mockAdapter.EXPECT().GetItemFromList(context.TODO(), int64(0), int64(0)).Return(model.Item{}, adapter.ErrNotFound).Times(1)
+		list, err := appInst.GetItemFromList(context.TODO(), 0, 0)
+		assert.ErrorIs(t, err, app.ErrNotFound)
+		assert.Empty(t, list)
+	})
 
-func TestApp_DeleteItem(t *testing.T) {}
+	t.Run("Generic error", func(t *testing.T) {
+		mockAdapter.EXPECT().GetItemFromList(context.TODO(), int64(0), int64(0)).Return(model.Item{}, errGeneric).Times(1)
+		list, err := appInst.GetItemFromList(context.TODO(), 0, 0)
+		assert.ErrorIs(t, err, app.ErrInternal)
+		assert.Empty(t, list)
+	})
+
+	t.Run("Success", func(t *testing.T) {
+		mockAdapter.EXPECT().GetItemFromList(context.TODO(), int64(0), int64(0)).Return(model.Item{ID: 0, ListID: 0, Content: "Item 0", Checked: false, Sort: 1024}, nil).Times(1)
+		list, err := appInst.GetItemFromList(context.TODO(), 0, 0)
+		assert.NoError(t, err)
+		assert.Equal(t, int64(0), list.ID)
+	})
+}
+
+func TestApp_CreateItem(t *testing.T) {
+	var (
+		mockAdapter = mocks.NewMockAdapter(t)
+		appInst     = app.NewApp(mockAdapter)
+	)
+
+	t.Parallel()
+
+	t.Run("Generic error", func(t *testing.T) {
+		mockAdapter.EXPECT().CreateItemOnList(context.TODO(), int64(0), "Item 0", int64(1024)).Return(model.Item{}, errGeneric).Times(1)
+		item, err := appInst.CreateItemOnList(context.TODO(), 0, "Item 0", 1024)
+		assert.ErrorIs(t, err, app.ErrInternal)
+		assert.Empty(t, item)
+	})
+
+	t.Run("Success", func(t *testing.T) {
+		mockAdapter.EXPECT().CreateItemOnList(context.TODO(), int64(0), "Item 0", int64(1024)).Return(model.Item{ID: 0, ListID: 0, Content: "Item 0", Checked: false, Sort: 1024}, nil).Times(1)
+		item, err := appInst.CreateItemOnList(context.TODO(), 0, "Item 0", 1024)
+		assert.NoError(t, err)
+		assert.Equal(t, int64(0), item.ID)
+	})
+}
+
+func TestApp_UpdateItem(t *testing.T) {
+	var (
+		mockAdapter = mocks.NewMockAdapter(t)
+		appInst     = app.NewApp(mockAdapter)
+	)
+
+	t.Parallel()
+
+	t.Run("Item not found", func(t *testing.T) {
+		mockAdapter.EXPECT().UpdateItemFromList(context.TODO(), int64(0), int64(0), "Item 0", false, int64(1024)).Return(model.Item{}, adapter.ErrNotFound).Times(1)
+		item, err := appInst.UpdateItemFromList(context.TODO(), 0, 0, "Item 0", false, 1024)
+		assert.ErrorIs(t, err, app.ErrNotFound)
+		assert.Empty(t, item)
+	})
+
+	t.Run("Generic error", func(t *testing.T) {
+		mockAdapter.EXPECT().UpdateItemFromList(context.TODO(), int64(0), int64(0), "Item 0", false, int64(1024)).Return(model.Item{}, errGeneric).Times(1)
+		item, err := appInst.UpdateItemFromList(context.TODO(), 0, 0, "Item 0", false, 1024)
+		assert.ErrorIs(t, err, app.ErrInternal)
+		assert.Empty(t, item)
+	})
+
+	t.Run("Success", func(t *testing.T) {
+		var result = model.Item{ID: 0, ListID: 0, Content: "Item 20", Checked: true, Sort: 512}
+		mockAdapter.EXPECT().UpdateItemFromList(context.TODO(), int64(0), int64(0), "Item 20", true, int64(512)).Return(result, nil).Times(1)
+		item, err := appInst.UpdateItemFromList(context.TODO(), 0, 0, "Item 20", true, 512)
+		assert.NoError(t, err)
+		assert.Equal(t, result, item)
+	})
+}
+
+func TestApp_DeleteItem(t *testing.T) {
+	var (
+		mockAdapter = mocks.NewMockAdapter(t)
+		appInst     = app.NewApp(mockAdapter)
+	)
+
+	t.Parallel()
+
+	t.Run("Item not found", func(t *testing.T) {
+		mockAdapter.EXPECT().DeleteItemFromList(context.TODO(), int64(0), int64(0)).Return(adapter.ErrNotFound).Times(1)
+		err := appInst.DeleteItemFromList(context.TODO(), 0, 0)
+		assert.ErrorIs(t, err, app.ErrNotFound)
+	})
+
+	t.Run("Generic error", func(t *testing.T) {
+		mockAdapter.EXPECT().DeleteItemFromList(context.TODO(), int64(0), int64(0)).Return(errGeneric).Times(1)
+		err := appInst.DeleteItemFromList(context.TODO(), 0, 0)
+		assert.ErrorIs(t, err, app.ErrInternal)
+	})
+
+	t.Run("Success", func(t *testing.T) {
+		mockAdapter.EXPECT().DeleteItemFromList(context.TODO(), int64(0), int64(0)).Return(nil).Times(1)
+		err := appInst.DeleteItemFromList(context.TODO(), 0, 0)
+		assert.NoError(t, err)
+	})
+}

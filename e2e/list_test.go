@@ -20,39 +20,48 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-package integration
+package e2e_test
 
 import (
-	"database/sql"
-	"embed"
-	"fmt"
+	"context"
+	"testing"
 
-	_ "github.com/glebarez/go-sqlite"
-	migrate "github.com/rubenv/sql-migrate"
+	"github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/require"
+	"github.com/superlinkx/HomeList/oapiclient"
 )
 
-//go:embed migrations
-var migrationFS embed.FS
+func TestGetLists(t *testing.T) {
+	var (
+		limit  int32 = 10
+		offset int32 = 0
+		params       = oapiclient.GetListsParams{
+			Limit:  &limit,
+			Offset: &offset,
+		}
+	)
 
-func ConnectDatabase() (*sql.DB, error) {
-	if db, err := sql.Open("sqlite", ":memory:?_pragma=foreign_keys(1)"); err != nil {
-		return nil, err
-	} else {
-		return db, nil
-	}
-}
+	client, err := oapiclient.NewClientWithResponses("http://localhost:2552/api/v1")
+	require.NoError(t, err)
+	require.NotNil(t, client)
 
-func ResetDatabase(db *sql.DB) error {
-	migrations := migrate.EmbedFileSystemMigrationSource{
-		FileSystem: migrationFS,
-		Root:       "migrations",
-	}
+	resp, err := client.GetListsWithResponse(context.Background(), &params)
+	require.NoError(t, err)
+	require.NotNil(t, resp.JSON200)
 
-	if _, err := migrate.Exec(db, "sqlite3", migrations, migrate.Down); err != nil {
-		return fmt.Errorf("failed to migrate down: %w", err)
-	} else if _, err := migrate.Exec(db, "sqlite3", migrations, migrate.Up); err != nil {
-		return fmt.Errorf("failed to migrate up: %w", err)
-	} else {
-		return nil
-	}
+	rawbody := *resp.JSON200
+	require.NotNil(t, rawbody)
+
+	assert.Len(t, rawbody, 10)
+
+	limit = 1
+
+	resp, err = client.GetListsWithResponse(context.Background(), &params)
+	require.NoError(t, err)
+	require.NotNil(t, resp.JSON200)
+
+	rawbody = *resp.JSON200
+	require.NotNil(t, rawbody)
+
+	assert.Len(t, rawbody, 1)
 }

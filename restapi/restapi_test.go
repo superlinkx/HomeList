@@ -48,6 +48,6 @@ func TestNewServer(t *testing.T) {
 	t.Run("empty config", func(t *testing.T) {
 		s, err := restapi.NewServer(emptyConfig, handler.Handlers{})
 		require.Nil(t, err)
-		assert.Equal(t, ":80", s.Addr)
+		assert.Equal(t, ":8080", s.Addr)
 	})
 }

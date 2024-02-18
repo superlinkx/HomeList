@@ -23,25 +23,16 @@
 package main
 
 import (
-	"context"
 	"database/sql"
-	"fmt"
 	"log"
-	"net/http"
-	"os"
-	"os/signal"
-	"syscall"
-	"time"
 
 	_ "github.com/glebarez/go-sqlite"
-	migrate "github.com/rubenv/sql-migrate"
-	"github.com/superlinkx/HomeList/app"
-	"github.com/superlinkx/HomeList/data/sqlite/adapter"
+	"github.com/superlinkx/HomeList/bootstrap"
 	"github.com/superlinkx/HomeList/environment"
-	"github.com/superlinkx/HomeList/handler"
-	"github.com/superlinkx/HomeList/restapi"
 )
 
+//go:generate go run github.com/deepmap/oapi-codegen/v2/cmd/oapi-codegen@v2.1.0 -config oapiclient/.oapi-codegen.yaml -o oapiclient/oapiclient.gen.go ./docs/openapi.yaml
+//go:generate go run github.com/deepmap/oapi-codegen/v2/cmd/oapi-codegen@v2.1.0 -config oapiserver/.oapi-codegen.yaml -o oapiserver/oapiserver.gen.go ./docs/openapi.yaml
 //go:generate go run github.com/vektra/mockery/v2@v2.41.0
 
 func main() {
@@ -49,59 +40,11 @@ func main() {
 		log.Fatalf("Failed to load config: %s\n", err)
 	} else if db, err := sql.Open("sqlite", ":memory:?_pragma=foreign_keys(1)"); err != nil {
 		log.Fatalf("Failed to open connection to database: %s\n", err)
-	} else if err := migrateDB(db); err != nil {
+	} else if err := bootstrap.MigrateDB(db); err != nil {
 		db.Close()
 		log.Fatalf("Failed to migrate database: %s\n", err)
 	} else {
 		defer db.Close()
-		startApp(db, config)
+		bootstrap.StartApp(db, config)
 	}
-}
-
-func migrateDB(db *sql.DB) error {
-	migrations := &migrate.FileMigrationSource{
-		Dir: "sql/sqlite/migrations",
-	}
-
-	if _, err := migrate.Exec(db, "sqlite3", migrations, migrate.Up); err != nil {
-		return fmt.Errorf("migrate up failed: %w", err)
-	}
-
-	return nil
-}
-
-func startApp(db *sql.DB, config environment.Config) {
-	done := make(chan os.Signal, 1)
-	signal.Notify(done, os.Interrupt, syscall.SIGINT, syscall.SIGTERM)
-
-	dataAdapter := adapter.NewSqliteAdapter(db)
-	app := app.NewApp(dataAdapter)
-	handlers := handler.NewHandlers(app)
-	srv, err := restapi.NewServer(restapi.Config{HostURL: config.HostURL}, handlers)
-	if err != nil {
-		log.Fatalf("Failed to create server: %s\n", err)
-	}
-
-	go func() {
-		err := srv.ListenAndServe()
-		if err != nil && err != http.ErrServerClosed {
-			log.Fatalf("Server failure: %s\n", err)
-		}
-	}()
-
-	log.Printf("Server is running on %s", srv.Addr)
-
-	<-done
-	log.Println("Application stopping...")
-
-	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
-	defer func() {
-		cancel()
-	}()
-
-	if err := srv.Shutdown(ctx); err != nil {
-		log.Fatalf("Server shutdown failed: %s\n", err)
-	}
-
-	log.Println("Server exited cleanly")
 }

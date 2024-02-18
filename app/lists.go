@@ -31,27 +31,51 @@ import (
 )
 
 func (s App) AllLists(ctx context.Context, limit int32, offset int32) ([]model.List, error) {
-	if ls, err := s.adapter.AllLists(ctx, limit, offset); errors.Is(err, adapter.ErrNotFound) {
+	if lists, err := s.adapter.AllLists(ctx, limit, offset); errors.Is(err, adapter.ErrNotFound) {
 		return nil, ErrNotFound
 	} else if err != nil {
 		return nil, ErrInternal
 	} else {
-		return ls, nil
+		return lists, nil
 	}
 }
 
 func (s App) GetList(ctx context.Context, id int64) (model.List, error) {
-	return model.List{}, errors.New("not implemented")
+	if list, err := s.adapter.GetList(ctx, id); errors.Is(err, adapter.ErrNotFound) {
+		return model.List{}, ErrNotFound
+	} else if err != nil {
+		return model.List{}, ErrInternal
+	} else {
+		return list, nil
+	}
 }
 
 func (s App) CreateList(ctx context.Context, name string) (model.List, error) {
-	return model.List{}, errors.New("not implemented")
+	if list, err := s.adapter.CreateList(ctx, name); errors.Is(err, adapter.ErrNotFound) {
+		return model.List{}, ErrNotFound
+	} else if err != nil {
+		return model.List{}, ErrInternal
+	} else {
+		return list, nil
+	}
 }
 
 func (s App) UpdateList(ctx context.Context, id int64, name string) (model.List, error) {
-	return model.List{}, errors.New("not implemented")
+	if list, err := s.adapter.RenameList(ctx, id, name); errors.Is(err, adapter.ErrNotFound) {
+		return model.List{}, ErrNotFound
+	} else if err != nil {
+		return model.List{}, ErrInternal
+	} else {
+		return list, nil
+	}
 }
 
 func (s App) DeleteList(ctx context.Context, id int64) error {
-	return errors.New("not implemented")
+	if err := s.adapter.DeleteList(ctx, id); errors.Is(err, adapter.ErrNotFound) {
+		return ErrNotFound
+	} else if err != nil {
+		return ErrInternal
+	} else {
+		return nil
+	}
 }

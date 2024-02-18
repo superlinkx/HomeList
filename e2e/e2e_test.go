@@ -20,6 +20,11 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-package oapiclient
+package e2e_test
 
-//go:generate go run github.com/deepmap/oapi-codegen/v2/cmd/oapi-codegen@v2.1.0 -config .oapi-codegen.yaml -o oapiclient.gen.go ../docs/openapi.yaml
+import (
+	_ "github.com/glebarez/go-sqlite"
+)
+
+// TODO: define a way to scaffold the server in a controllable way with a ready channel and shutdown procedure
+// TODO: scaffolding should include running the migrations defined in this package

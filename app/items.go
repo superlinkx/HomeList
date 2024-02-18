@@ -27,24 +27,55 @@ import (
 	"errors"
 
 	"github.com/superlinkx/HomeList/app/model"
+	"github.com/superlinkx/HomeList/data/adapter"
 )
 
 func (s App) AllItemsFromList(ctx context.Context, listID int64, limit int32, offset int32) ([]model.Item, error) {
-	return []model.Item{}, errors.New("not implemented")
+	if items, err := s.adapter.AllItemsFromList(ctx, listID, limit, offset); errors.Is(err, adapter.ErrNotFound) {
+		return nil, ErrNotFound
+	} else if err != nil {
+		return nil, ErrInternal
+	} else {
+		return items, nil
+	}
 }
 
 func (s App) GetItemFromList(ctx context.Context, listID int64, itemID int64) (model.Item, error) {
-	return model.Item{}, errors.New("not implemented")
+	if item, err := s.adapter.GetItemFromList(ctx, listID, itemID); errors.Is(err, adapter.ErrNotFound) {
+		return model.Item{}, ErrNotFound
+	} else if err != nil {
+		return model.Item{}, ErrInternal
+	} else {
+		return item, nil
+	}
 }
 
-func (s App) CreateItem(ctx context.Context, listID int64, content string) (model.Item, error) {
-	return model.Item{}, errors.New("not implemented")
+func (s App) CreateItemOnList(ctx context.Context, listID int64, content string, sort int64) (model.Item, error) {
+	if item, err := s.adapter.CreateItemOnList(ctx, listID, content, sort); errors.Is(err, adapter.ErrNotFound) {
+		return model.Item{}, ErrNotFound
+	} else if err != nil {
+		return model.Item{}, ErrInternal
+	} else {
+		return item, nil
+	}
 }
 
-func (s App) UpdateItem(ctx context.Context, listID int64, itemID int64, content string, checked bool, sort int64) (model.Item, error) {
-	return model.Item{}, errors.New("not implemented")
+func (s App) UpdateItemFromList(ctx context.Context, listID int64, itemID int64, content string, checked bool, sort int64) (model.Item, error) {
+	if item, err := s.adapter.UpdateItemFromList(ctx, listID, itemID, content, checked, sort); errors.Is(err, adapter.ErrNotFound) {
+		return model.Item{}, ErrNotFound
+	} else if err != nil {
+		return model.Item{}, ErrInternal
+	} else {
+		return item, nil
+	}
 }
 
-func (s App) DeleteItem(ctx context.Context, listID int64, itemID int64) error {
-	return errors.New("not implemented")
+func (s App) DeleteItemFromList(ctx context.Context, listID int64, itemID int64) error {
+	if err := s.adapter.DeleteItemFromList(ctx, listID, itemID); errors.Is(err, adapter.ErrNotFound) {
+		return ErrNotFound
+	} else if err != nil {
+		return ErrInternal
+	} else {
+		return nil
+	}
 }

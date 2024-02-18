@@ -39,7 +39,7 @@ type Config struct {
 
 func NewServer(config Config, hdls handler.Handlers) (*http.Server, error) {
 	if config.HostURL == "" {
-		config.HostURL = ":80"
+		config.HostURL = ":8080"
 	}
 
 	r := chi.NewRouter()
