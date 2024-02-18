@@ -28,9 +28,9 @@ import (
 	"errors"
 	"fmt"
 
+	"github.com/superlinkx/HomeList/app/model"
 	"github.com/superlinkx/HomeList/data/adapter"
 	"github.com/superlinkx/HomeList/data/postgresql/sqlc"
-	"github.com/superlinkx/HomeList/model"
 )
 
 func (s PostgresAdapter) AllLists(ctx context.Context, limit int32, offset int32) ([]model.List, error) {

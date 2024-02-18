@@ -26,7 +26,7 @@ import (
 	"context"
 	"errors"
 
-	"github.com/superlinkx/HomeList/model"
+	"github.com/superlinkx/HomeList/app/model"
 )
 
 func (s SqliteAdapter) AllItemsFromList(ctx context.Context, listID int64, limit int32, offset int32) ([]model.Item, error) {

@@ -20,31 +20,24 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-package adapter
+package e2e
 
 import (
-	"context"
-	"errors"
-
-	"github.com/superlinkx/HomeList/app/model"
+	"testing"
 )
 
-func (s PostgresAdapter) AllItemsFromList(ctx context.Context, listID int64, limit int32, offset int32) ([]model.Item, error) {
-	return []model.Item{}, errors.New("not implemented")
-}
+func TestGetLists(t *testing.T) {
+	_, err := NewClient()
+	if err != nil {
+		t.Fatal(err)
+	}
 
-func (s PostgresAdapter) GetItemFromList(ctx context.Context, listID int64, id int64) (model.Item, error) {
-	return model.Item{}, errors.New("not implemented")
-}
+	// lists, err := client.GetLists(context.Background())
+	// if err != nil {
+	// 	t.Fatal(err)
+	// }
 
-func (s PostgresAdapter) UpdateItemFromList(ctx context.Context, listID int64, id int64, content string, checked bool, sort int64) (model.Item, error) {
-	return model.Item{}, errors.New("not implemented")
-}
-
-func (s PostgresAdapter) CreateItemOnList(ctx context.Context, listID int64, content string, sort int64) (model.Item, error) {
-	return model.Item{}, errors.New("not implemented")
-}
-
-func (s PostgresAdapter) DeleteItemFromList(ctx context.Context, listID int64, id int64) error {
-	return errors.New("not implemented")
+	// if len(lists) == 0 {
+	// 	t.Fatal("expected at least one list")
+	// }
 }

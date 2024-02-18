@@ -26,7 +26,7 @@ import (
 	"context"
 	"errors"
 
-	"github.com/superlinkx/HomeList/model"
+	"github.com/superlinkx/HomeList/app/model"
 )
 
 type Adapter interface {

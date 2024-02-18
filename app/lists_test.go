@@ -28,9 +28,9 @@ import (
 
 	"github.com/stretchr/testify/assert"
 	"github.com/superlinkx/HomeList/app"
+	"github.com/superlinkx/HomeList/app/model"
 	"github.com/superlinkx/HomeList/data/adapter"
 	"github.com/superlinkx/HomeList/data/adapter/mocks"
-	"github.com/superlinkx/HomeList/model"
 )
 
 var (
@@ -68,6 +68,7 @@ func TestApp_AllLists(t *testing.T) {
 	)
 
 	t.Run("No lists found", func(t *testing.T) {
+		t.Parallel()
 		mockAdapter.EXPECT().AllLists(context.TODO(), int32(10), int32(0)).Return([]model.List{}, adapter.ErrNotFound).Times(1)
 		lists, err := appInst.AllLists(context.TODO(), 10, 0)
 		assert.ErrorIs(t, err, app.ErrNotFound)
@@ -75,6 +76,7 @@ func TestApp_AllLists(t *testing.T) {
 	})
 
 	t.Run("Generic error", func(t *testing.T) {
+		t.Parallel()
 		mockAdapter.EXPECT().AllLists(context.TODO(), int32(10), int32(0)).Return([]model.List{}, errGeneric).Times(1)
 		lists, err := appInst.AllLists(context.TODO(), 10, 0)
 		assert.ErrorIs(t, err, app.ErrInternal)
@@ -82,6 +84,7 @@ func TestApp_AllLists(t *testing.T) {
 	})
 
 	t.Run("Generic error with nil slice", func(t *testing.T) {
+		t.Parallel()
 		mockAdapter.EXPECT().AllLists(context.TODO(), int32(10), int32(0)).Return(nil, errGeneric).Times(1)
 		lists, err := appInst.AllLists(context.TODO(), 10, 0)
 		assert.ErrorIs(t, err, app.ErrInternal)
@@ -89,12 +92,15 @@ func TestApp_AllLists(t *testing.T) {
 	})
 
 	t.Run("Success with no offset but nil slice returned", func(t *testing.T) {
+		t.Parallel()
 		mockAdapter.EXPECT().AllLists(context.TODO(), int32(10), int32(0)).Return(nil, nil).Times(1)
 		lists, err := appInst.AllLists(context.TODO(), 10, 0)
 		assert.NoError(t, err)
 		assert.Empty(t, lists)
 	})
+
 	t.Run("Success with no offset", func(t *testing.T) {
+		t.Parallel()
 		mockAdapter.EXPECT().AllLists(context.TODO(), int32(10), int32(0)).Return(successNoOffsetLists, nil).Times(1)
 		lists, err := appInst.AllLists(context.TODO(), 10, 0)
 		assert.NoError(t, err)
@@ -105,6 +111,7 @@ func TestApp_AllLists(t *testing.T) {
 	})
 
 	t.Run("Success with offset 5", func(t *testing.T) {
+		t.Parallel()
 		mockAdapter.EXPECT().AllLists(context.TODO(), int32(10), int32(5)).Return(successOffset5Lists, nil).Times(1)
 		lists, err := appInst.AllLists(context.TODO(), 10, 5)
 		assert.NoError(t, err)
@@ -122,6 +129,7 @@ func TestApp_GetList(t *testing.T) {
 	)
 
 	t.Run("List not found", func(t *testing.T) {
+		t.Parallel()
 		mockAdapter.EXPECT().GetList(context.TODO(), int32(1)).Return(model.List{}, adapter.ErrNotFound).Times(1)
 		list, err := appInst.GetList(context.TODO(), 1)
 		assert.ErrorIs(t, err, app.ErrNotFound)
@@ -129,6 +137,7 @@ func TestApp_GetList(t *testing.T) {
 	})
 
 	t.Run("Generic error", func(t *testing.T) {
+		t.Parallel()
 		mockAdapter.EXPECT().GetList(context.TODO(), int32(1)).Return(model.List{}, errGeneric).Times(1)
 		list, err := appInst.GetList(context.TODO(), 1)
 		assert.ErrorIs(t, err, app.ErrInternal)
@@ -136,6 +145,7 @@ func TestApp_GetList(t *testing.T) {
 	})
 
 	t.Run("Success", func(t *testing.T) {
+		t.Parallel()
 		mockAdapter.EXPECT().GetList(context.TODO(), int32(1)).Return(successNoOffsetLists[1], nil).Times(1)
 		list, err := appInst.GetList(context.TODO(), 1)
 		assert.NoError(t, err)
@@ -150,6 +160,7 @@ func TestApp_CreateList(t *testing.T) {
 	)
 
 	t.Run("Generic error", func(t *testing.T) {
+		t.Parallel()
 		mockAdapter.EXPECT().CreateList(context.TODO(), "List 1").Return(model.List{}, errGeneric).Times(1)
 		list, err := appInst.CreateList(context.TODO(), "List 1")
 		assert.ErrorIs(t, err, app.ErrInternal)
@@ -157,6 +168,7 @@ func TestApp_CreateList(t *testing.T) {
 	})
 
 	t.Run("Success", func(t *testing.T) {
+		t.Parallel()
 		mockAdapter.EXPECT().CreateList(context.TODO(), "List 1").Return(successNoOffsetLists[1], nil).Times(1)
 		list, err := appInst.CreateList(context.TODO(), "List 1")
 		assert.NoError(t, err)
@@ -171,6 +183,7 @@ func TestApp_UpdateList(t *testing.T) {
 	)
 
 	t.Run("Generic error", func(t *testing.T) {
+		t.Parallel()
 		mockAdapter.EXPECT().RenameList(context.TODO(), int32(1), "List 1").Return(model.List{}, errGeneric).Times(1)
 		list, err := appInst.UpdateList(context.TODO(), 1, "List 1")
 		assert.ErrorIs(t, err, app.ErrInternal)
@@ -178,6 +191,7 @@ func TestApp_UpdateList(t *testing.T) {
 	})
 
 	t.Run("Success", func(t *testing.T) {
+		t.Parallel()
 		mockAdapter.EXPECT().RenameList(context.TODO(), int32(1), "List 1").Return(successNoOffsetLists[1], nil).Times(1)
 		list, err := appInst.UpdateList(context.TODO(), 1, "List 1")
 		assert.NoError(t, err)
@@ -192,12 +206,14 @@ func TestApp_DeleteList(t *testing.T) {
 	)
 
 	t.Run("Generic error", func(t *testing.T) {
+		t.Parallel()
 		mockAdapter.EXPECT().DeleteList(context.TODO(), int32(1)).Return(errGeneric).Times(1)
 		err := appInst.DeleteList(context.TODO(), 1)
 		assert.ErrorIs(t, err, app.ErrInternal)
 	})
 
 	t.Run("Success", func(t *testing.T) {
+		t.Parallel()
 		mockAdapter.EXPECT().DeleteList(context.TODO(), int32(1)).Return(nil).Times(1)
 		err := appInst.DeleteList(context.TODO(), 1)
 		assert.NoError(t, err)

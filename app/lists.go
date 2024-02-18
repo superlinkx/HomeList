@@ -26,8 +26,8 @@ import (
 	"context"
 	"errors"
 
+	"github.com/superlinkx/HomeList/app/model"
 	"github.com/superlinkx/HomeList/data/adapter"
-	"github.com/superlinkx/HomeList/model"
 )
 
 func (s App) AllLists(ctx context.Context, limit int32, offset int32) ([]model.List, error) {
@@ -41,17 +41,17 @@ func (s App) AllLists(ctx context.Context, limit int32, offset int32) ([]model.L
 }
 
 func (s App) GetList(ctx context.Context, id int64) (model.List, error) {
-	return model.List{}, ErrInternal
+	return model.List{}, errors.New("not implemented")
 }
 
 func (s App) CreateList(ctx context.Context, name string) (model.List, error) {
-	return model.List{}, ErrInternal
+	return model.List{}, errors.New("not implemented")
 }
 
 func (s App) UpdateList(ctx context.Context, id int64, name string) (model.List, error) {
-	return model.List{}, ErrInternal
+	return model.List{}, errors.New("not implemented")
 }
 
 func (s App) DeleteList(ctx context.Context, id int64) error {
-	return ErrInternal
+	return errors.New("not implemented")
 }

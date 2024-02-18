@@ -24,26 +24,27 @@ package app
 
 import (
 	"context"
+	"errors"
 
-	"github.com/superlinkx/HomeList/model"
+	"github.com/superlinkx/HomeList/app/model"
 )
 
 func (s App) AllItemsFromList(ctx context.Context, listID int64, limit int32, offset int32) ([]model.Item, error) {
-	return []model.Item{}, ErrInternal
+	return []model.Item{}, errors.New("not implemented")
 }
 
 func (s App) GetItemFromList(ctx context.Context, listID int64, itemID int64) (model.Item, error) {
-	return model.Item{}, ErrInternal
+	return model.Item{}, errors.New("not implemented")
 }
 
 func (s App) CreateItem(ctx context.Context, listID int64, content string) (model.Item, error) {
-	return model.Item{}, ErrInternal
+	return model.Item{}, errors.New("not implemented")
 }
 
 func (s App) UpdateItem(ctx context.Context, listID int64, itemID int64, content string, checked bool, sort int64) (model.Item, error) {
-	return model.Item{}, ErrInternal
+	return model.Item{}, errors.New("not implemented")
 }
 
 func (s App) DeleteItem(ctx context.Context, listID int64, itemID int64) error {
-	return ErrInternal
+	return errors.New("not implemented")
 }

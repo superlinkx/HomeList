@@ -4,7 +4,7 @@ CREATE TABLE lists (
   name TEXT NOT NULL
 );
 
-CREATE TABLE list_items (
+CREATE TABLE items (
   id INTEGER PRIMARY KEY AUTOINCREMENT,
   list_id INTEGER NOT NULL,
   content TEXT NOT NULL,
@@ -17,8 +17,8 @@ CREATE TABLE list_items (
 );
 
 INSERT INTO lists (name) VALUES ('Main List');
-INSERT INTO list_items (list_id, content, sort) VALUES (1, 'Hello world!', 1024);
+INSERT INTO items (list_id, content, sort) VALUES (1, 'Hello world!', 1024);
 
 -- +migrate Down
-DROP TABLE list_items;
+DROP TABLE items;
 DROP TABLE lists;
