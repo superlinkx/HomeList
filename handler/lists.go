@@ -36,7 +36,7 @@ type List struct {
 	Name string `json:"name"`
 }
 
-func (h Handlers) GetLists(w http.ResponseWriter, r *http.Request, params oapiserver.GetListsParams) {
+func (s Handlers) GetLists(w http.ResponseWriter, r *http.Request, params oapiserver.GetListsParams) {
 	var (
 		limit  int32 = 10
 		offset int32 = 0
@@ -50,7 +50,7 @@ func (h Handlers) GetLists(w http.ResponseWriter, r *http.Request, params oapise
 		offset = *params.Offset
 	}
 
-	if ls, err := h.app.AllLists(r.Context(), limit, offset); errors.Is(err, app.ErrNotFound) {
+	if ls, err := s.app.AllLists(r.Context(), limit, offset); errors.Is(err, app.ErrNotFound) {
 		http.Error(w, "No lists found", http.StatusNotFound)
 	} else if err != nil {
 		http.Error(w, "Internal Server Error", http.StatusInternalServerError)
@@ -65,18 +65,18 @@ func (h Handlers) GetLists(w http.ResponseWriter, r *http.Request, params oapise
 	}
 }
 
-func (h Handlers) CreateList(w http.ResponseWriter, r *http.Request) {
+func (s Handlers) CreateList(w http.ResponseWriter, r *http.Request) {
 	w.WriteHeader(http.StatusNotImplemented)
 }
 
-func (h Handlers) DeleteList(w http.ResponseWriter, r *http.Request, listID int64) {
+func (s Handlers) DeleteList(w http.ResponseWriter, r *http.Request, listID int64) {
 	w.WriteHeader(http.StatusNotImplemented)
 }
 
-func (h Handlers) GetList(w http.ResponseWriter, r *http.Request, listID int64) {
+func (s Handlers) GetList(w http.ResponseWriter, r *http.Request, listID int64) {
 	w.WriteHeader(http.StatusNotImplemented)
 }
 
-func (h Handlers) UpdateList(w http.ResponseWriter, r *http.Request, listID int64) {
+func (s Handlers) UpdateList(w http.ResponseWriter, r *http.Request, listID int64) {
 	w.WriteHeader(http.StatusNotImplemented)
 }

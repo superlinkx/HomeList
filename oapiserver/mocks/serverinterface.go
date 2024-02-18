@@ -22,6 +22,41 @@ func (_m *MockServerInterface) EXPECT() *MockServerInterface_Expecter {
 	return &MockServerInterface_Expecter{mock: &_m.Mock}
 }
 
+// CreateItem provides a mock function with given fields: w, r, listID
+func (_m *MockServerInterface) CreateItem(w http.ResponseWriter, r *http.Request, listID int64) {
+	_m.Called(w, r, listID)
+}
+
+// MockServerInterface_CreateItem_Call is a *mock.Call that shadows Run/Return methods with type explicit version for method 'CreateItem'
+type MockServerInterface_CreateItem_Call struct {
+	*mock.Call
+}
+
+// CreateItem is a helper method to define mock.On call
+//   - w http.ResponseWriter
+//   - r *http.Request
+//   - listID int64
+func (_e *MockServerInterface_Expecter) CreateItem(w interface{}, r interface{}, listID interface{}) *MockServerInterface_CreateItem_Call {
+	return &MockServerInterface_CreateItem_Call{Call: _e.mock.On("CreateItem", w, r, listID)}
+}
+
+func (_c *MockServerInterface_CreateItem_Call) Run(run func(w http.ResponseWriter, r *http.Request, listID int64)) *MockServerInterface_CreateItem_Call {
+	_c.Call.Run(func(args mock.Arguments) {
+		run(args[0].(http.ResponseWriter), args[1].(*http.Request), args[2].(int64))
+	})
+	return _c
+}
+
+func (_c *MockServerInterface_CreateItem_Call) Return() *MockServerInterface_CreateItem_Call {
+	_c.Call.Return()
+	return _c
+}
+
+func (_c *MockServerInterface_CreateItem_Call) RunAndReturn(run func(http.ResponseWriter, *http.Request, int64)) *MockServerInterface_CreateItem_Call {
+	_c.Call.Return(run)
+	return _c
+}
+
 // CreateList provides a mock function with given fields: w, r
 func (_m *MockServerInterface) CreateList(w http.ResponseWriter, r *http.Request) {
 	_m.Called(w, r)
@@ -52,6 +87,42 @@ func (_c *MockServerInterface_CreateList_Call) Return() *MockServerInterface_Cre
 }
 
 func (_c *MockServerInterface_CreateList_Call) RunAndReturn(run func(http.ResponseWriter, *http.Request)) *MockServerInterface_CreateList_Call {
+	_c.Call.Return(run)
+	return _c
+}
+
+// DeleteItem provides a mock function with given fields: w, r, listID, itemID
+func (_m *MockServerInterface) DeleteItem(w http.ResponseWriter, r *http.Request, listID int64, itemID int64) {
+	_m.Called(w, r, listID, itemID)
+}
+
+// MockServerInterface_DeleteItem_Call is a *mock.Call that shadows Run/Return methods with type explicit version for method 'DeleteItem'
+type MockServerInterface_DeleteItem_Call struct {
+	*mock.Call
+}
+
+// DeleteItem is a helper method to define mock.On call
+//   - w http.ResponseWriter
+//   - r *http.Request
+//   - listID int64
+//   - itemID int64
+func (_e *MockServerInterface_Expecter) DeleteItem(w interface{}, r interface{}, listID interface{}, itemID interface{}) *MockServerInterface_DeleteItem_Call {
+	return &MockServerInterface_DeleteItem_Call{Call: _e.mock.On("DeleteItem", w, r, listID, itemID)}
+}
+
+func (_c *MockServerInterface_DeleteItem_Call) Run(run func(w http.ResponseWriter, r *http.Request, listID int64, itemID int64)) *MockServerInterface_DeleteItem_Call {
+	_c.Call.Run(func(args mock.Arguments) {
+		run(args[0].(http.ResponseWriter), args[1].(*http.Request), args[2].(int64), args[3].(int64))
+	})
+	return _c
+}
+
+func (_c *MockServerInterface_DeleteItem_Call) Return() *MockServerInterface_DeleteItem_Call {
+	_c.Call.Return()
+	return _c
+}
+
+func (_c *MockServerInterface_DeleteItem_Call) RunAndReturn(run func(http.ResponseWriter, *http.Request, int64, int64)) *MockServerInterface_DeleteItem_Call {
 	_c.Call.Return(run)
 	return _c
 }
@@ -87,6 +158,78 @@ func (_c *MockServerInterface_DeleteList_Call) Return() *MockServerInterface_Del
 }
 
 func (_c *MockServerInterface_DeleteList_Call) RunAndReturn(run func(http.ResponseWriter, *http.Request, int64)) *MockServerInterface_DeleteList_Call {
+	_c.Call.Return(run)
+	return _c
+}
+
+// GetItem provides a mock function with given fields: w, r, listID, itemID
+func (_m *MockServerInterface) GetItem(w http.ResponseWriter, r *http.Request, listID int64, itemID int64) {
+	_m.Called(w, r, listID, itemID)
+}
+
+// MockServerInterface_GetItem_Call is a *mock.Call that shadows Run/Return methods with type explicit version for method 'GetItem'
+type MockServerInterface_GetItem_Call struct {
+	*mock.Call
+}
+
+// GetItem is a helper method to define mock.On call
+//   - w http.ResponseWriter
+//   - r *http.Request
+//   - listID int64
+//   - itemID int64
+func (_e *MockServerInterface_Expecter) GetItem(w interface{}, r interface{}, listID interface{}, itemID interface{}) *MockServerInterface_GetItem_Call {
+	return &MockServerInterface_GetItem_Call{Call: _e.mock.On("GetItem", w, r, listID, itemID)}
+}
+
+func (_c *MockServerInterface_GetItem_Call) Run(run func(w http.ResponseWriter, r *http.Request, listID int64, itemID int64)) *MockServerInterface_GetItem_Call {
+	_c.Call.Run(func(args mock.Arguments) {
+		run(args[0].(http.ResponseWriter), args[1].(*http.Request), args[2].(int64), args[3].(int64))
+	})
+	return _c
+}
+
+func (_c *MockServerInterface_GetItem_Call) Return() *MockServerInterface_GetItem_Call {
+	_c.Call.Return()
+	return _c
+}
+
+func (_c *MockServerInterface_GetItem_Call) RunAndReturn(run func(http.ResponseWriter, *http.Request, int64, int64)) *MockServerInterface_GetItem_Call {
+	_c.Call.Return(run)
+	return _c
+}
+
+// GetItems provides a mock function with given fields: w, r, listID, params
+func (_m *MockServerInterface) GetItems(w http.ResponseWriter, r *http.Request, listID int64, params oapiserver.GetItemsParams) {
+	_m.Called(w, r, listID, params)
+}
+
+// MockServerInterface_GetItems_Call is a *mock.Call that shadows Run/Return methods with type explicit version for method 'GetItems'
+type MockServerInterface_GetItems_Call struct {
+	*mock.Call
+}
+
+// GetItems is a helper method to define mock.On call
+//   - w http.ResponseWriter
+//   - r *http.Request
+//   - listID int64
+//   - params oapiserver.GetItemsParams
+func (_e *MockServerInterface_Expecter) GetItems(w interface{}, r interface{}, listID interface{}, params interface{}) *MockServerInterface_GetItems_Call {
+	return &MockServerInterface_GetItems_Call{Call: _e.mock.On("GetItems", w, r, listID, params)}
+}
+
+func (_c *MockServerInterface_GetItems_Call) Run(run func(w http.ResponseWriter, r *http.Request, listID int64, params oapiserver.GetItemsParams)) *MockServerInterface_GetItems_Call {
+	_c.Call.Run(func(args mock.Arguments) {
+		run(args[0].(http.ResponseWriter), args[1].(*http.Request), args[2].(int64), args[3].(oapiserver.GetItemsParams))
+	})
+	return _c
+}
+
+func (_c *MockServerInterface_GetItems_Call) Return() *MockServerInterface_GetItems_Call {
+	_c.Call.Return()
+	return _c
+}
+
+func (_c *MockServerInterface_GetItems_Call) RunAndReturn(run func(http.ResponseWriter, *http.Request, int64, oapiserver.GetItemsParams)) *MockServerInterface_GetItems_Call {
 	_c.Call.Return(run)
 	return _c
 }
@@ -157,6 +300,42 @@ func (_c *MockServerInterface_GetLists_Call) Return() *MockServerInterface_GetLi
 }
 
 func (_c *MockServerInterface_GetLists_Call) RunAndReturn(run func(http.ResponseWriter, *http.Request, oapiserver.GetListsParams)) *MockServerInterface_GetLists_Call {
+	_c.Call.Return(run)
+	return _c
+}
+
+// UpdateItem provides a mock function with given fields: w, r, listID, itemID
+func (_m *MockServerInterface) UpdateItem(w http.ResponseWriter, r *http.Request, listID int64, itemID int64) {
+	_m.Called(w, r, listID, itemID)
+}
+
+// MockServerInterface_UpdateItem_Call is a *mock.Call that shadows Run/Return methods with type explicit version for method 'UpdateItem'
+type MockServerInterface_UpdateItem_Call struct {
+	*mock.Call
+}
+
+// UpdateItem is a helper method to define mock.On call
+//   - w http.ResponseWriter
+//   - r *http.Request
+//   - listID int64
+//   - itemID int64
+func (_e *MockServerInterface_Expecter) UpdateItem(w interface{}, r interface{}, listID interface{}, itemID interface{}) *MockServerInterface_UpdateItem_Call {
+	return &MockServerInterface_UpdateItem_Call{Call: _e.mock.On("UpdateItem", w, r, listID, itemID)}
+}
+
+func (_c *MockServerInterface_UpdateItem_Call) Run(run func(w http.ResponseWriter, r *http.Request, listID int64, itemID int64)) *MockServerInterface_UpdateItem_Call {
+	_c.Call.Run(func(args mock.Arguments) {
+		run(args[0].(http.ResponseWriter), args[1].(*http.Request), args[2].(int64), args[3].(int64))
+	})
+	return _c
+}
+
+func (_c *MockServerInterface_UpdateItem_Call) Return() *MockServerInterface_UpdateItem_Call {
+	_c.Call.Return()
+	return _c
+}
+
+func (_c *MockServerInterface_UpdateItem_Call) RunAndReturn(run func(http.ResponseWriter, *http.Request, int64, int64)) *MockServerInterface_UpdateItem_Call {
 	_c.Call.Return(run)
 	return _c
 }

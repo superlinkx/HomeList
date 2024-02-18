@@ -1,36 +1,36 @@
 -- name: GetListItem :one
-SELECT * FROM list_items
+SELECT * FROM items
 WHERE id = ? LIMIT 1;
 
 -- name: AllItemsFromList :many
-SELECT * FROM list_items
+SELECT * FROM items
 WHERE list_id = ?
 ORDER BY sort ASC
 LIMIT ?;
 
 -- name: CreateListItem :one
-INSERT INTO list_items (list_id, content, sort)
+INSERT INTO items (list_id, content, sort)
 VALUES (?, ?, ?)
 RETURNING *;
 
 -- name: UpdateListItemText :one
-UPDATE list_items
+UPDATE items
 SET content = ?
 WHERE id = ?
 RETURNING *;
 
 -- name: UpdateListItemSort :one
-UPDATE list_items
+UPDATE items
 SET sort = ?
 WHERE id = ?
 RETURNING *;
 
 -- name: UpdateListItemChecked :one
-UPDATE list_items
+UPDATE items
 SET checked =?
 WHERE id =?
 RETURNING *;
 
 -- name: DeleteListItem :exec
-DELETE FROM list_items
+DELETE FROM items
 WHERE id = ?;

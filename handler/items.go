@@ -1,3 +1,25 @@
+// MIT License
+//
+// Copyright (c) 2023 Alyx Holms
+//
+// Permission is hereby granted, free of charge, to any person obtaining a copy
+// of this software and associated documentation files (the "Software"), to deal
+// in the Software without restriction, including without limitation the rights
+// to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+// copies of the Software, and to permit persons to whom the Software is
+// furnished to do so, subject to the following conditions:
+//
+// The above copyright notice and this permission notice shall be included in all
+// copies or substantial portions of the Software.
+//
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+// AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+// LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+// SOFTWARE.
+
 package handler
 
 import (
@@ -14,22 +36,22 @@ type Item struct {
 	Sort    int64  `json:"sort"`
 }
 
-func (h Handlers) GetItems(w http.ResponseWriter, r *http.Request, listID int64, params oapiserver.GetItemsParams) {
+func (s Handlers) GetItems(w http.ResponseWriter, r *http.Request, listID int64, params oapiserver.GetItemsParams) {
 	w.WriteHeader(http.StatusNotImplemented)
 }
 
-func (h Handlers) CreateItem(w http.ResponseWriter, r *http.Request, listID int64) {
+func (s Handlers) CreateItem(w http.ResponseWriter, r *http.Request, listID int64) {
 	w.WriteHeader(http.StatusNotImplemented)
 }
 
-func (h Handlers) DeleteItem(w http.ResponseWriter, r *http.Request, listID int64, itemID int64) {
+func (s Handlers) DeleteItem(w http.ResponseWriter, r *http.Request, listID int64, itemID int64) {
 	w.WriteHeader(http.StatusNotImplemented)
 }
 
-func (h Handlers) GetItem(w http.ResponseWriter, r *http.Request, listID int64, itemID int64) {
+func (s Handlers) GetItem(w http.ResponseWriter, r *http.Request, listID int64, itemID int64) {
 	w.WriteHeader(http.StatusNotImplemented)
 }
 
-func (h Handlers) UpdateItem(w http.ResponseWriter, r *http.Request, listID int64, itemID int64) {
+func (s Handlers) UpdateItem(w http.ResponseWriter, r *http.Request, listID int64, itemID int64) {
 	w.WriteHeader(http.StatusNotImplemented)
 }

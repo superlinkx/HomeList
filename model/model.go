@@ -30,7 +30,7 @@ type List struct {
 type Item struct {
 	ID      int64
 	ListID  int64
-	Name    string
+	Content string
 	Checked bool
 	Sort    int64
 }

@@ -29,27 +29,22 @@ import (
 	"github.com/superlinkx/HomeList/model"
 )
 
-type Adapter interface {
-	ListAdapter
-	ItemAdapter
+func (s SqliteAdapter) AllItemsFromList(ctx context.Context, listID int64, limit int32, offset int32) ([]model.Item, error) {
+	return []model.Item{}, errors.New("not implemented")
 }
 
-type ListAdapter interface {
-	AllLists(ctx context.Context, limit int32, offset int32) ([]model.List, error)
-	GetList(ctx context.Context, id int64) (model.List, error)
-	RenameList(ctx context.Context, id int64, name string) (model.List, error)
-	CreateList(ctx context.Context, name string) (model.List, error)
-	DeleteList(ctx context.Context, id int64) error
+func (s SqliteAdapter) GetItemFromList(ctx context.Context, listID int64, id int64) (model.Item, error) {
+	return model.Item{}, errors.New("not implemented")
 }
 
-type ItemAdapter interface {
-	AllItemsFromList(ctx context.Context, listID int64, limit int32, offset int32) ([]model.Item, error)
-	GetItemFromList(ctx context.Context, listID int64, itemID int64) (model.Item, error)
-	CreateItemOnList(ctx context.Context, listID int64, content string, sort int64) (model.Item, error)
-	UpdateItemFromList(ctx context.Context, listID int64, itemID int64, content string, checked bool, sort int64) (model.Item, error)
-	DeleteItemFromList(ctx context.Context, listID int64, itemID int64) error
+func (s SqliteAdapter) UpdateItemFromList(ctx context.Context, listID int64, id int64, content string, checked bool, sort int64) (model.Item, error) {
+	return model.Item{}, errors.New("not implemented")
 }
 
-var (
-	ErrNotFound = errors.New("not found")
-)
+func (s SqliteAdapter) CreateItemOnList(ctx context.Context, listID int64, content string, sort int64) (model.Item, error) {
+	return model.Item{}, errors.New("not implemented")
+}
+
+func (s SqliteAdapter) DeleteItemFromList(ctx context.Context, listID int64, id int64) error {
+	return errors.New("not implemented")
+}
