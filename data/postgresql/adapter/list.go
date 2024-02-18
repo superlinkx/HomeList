@@ -24,64 +24,27 @@ package adapter
 
 import (
 	"context"
-	"database/sql"
 	"errors"
-	"fmt"
 
 	"github.com/superlinkx/HomeList/app/model"
-	"github.com/superlinkx/HomeList/data/adapter"
-	"github.com/superlinkx/HomeList/data/postgresql/sqlc"
 )
 
 func (s PostgresAdapter) AllLists(ctx context.Context, limit int32, offset int32) ([]model.List, error) {
-	var params = sqlc.AllListsParams{
-		Limit:  limit,
-		Offset: offset,
-	}
-
-	if lists, err := s.queries.AllLists(ctx, params); errors.Is(err, sql.ErrNoRows) {
-		return nil, fmt.Errorf("no lists found: %w", adapter.ErrNotFound)
-	} else if err != nil {
-		return nil, fmt.Errorf("failed to get lists: %w", err)
-	} else {
-		var adaptedLists = make([]model.List, 0, len(lists))
-		for _, list := range lists {
-			adaptedLists = append(adaptedLists, model.List(list))
-		}
-		return adaptedLists, nil
-	}
+	return []model.List{}, errors.New("not implemented")
 }
 
 func (s PostgresAdapter) GetList(ctx context.Context, id int64) (model.List, error) {
-	if list, err := s.queries.GetList(ctx, id); errors.Is(err, sql.ErrNoRows) {
-		return model.List{}, fmt.Errorf("no lists found: %w", adapter.ErrNotFound)
-	} else if err != nil {
-		return model.List{}, fmt.Errorf("failed to get list: %w", err)
-	} else {
-		return model.List(list), nil
-	}
+	return model.List{}, errors.New("not implemented")
 }
 
 func (s PostgresAdapter) RenameList(ctx context.Context, id int64, name string) (model.List, error) {
-	if list, err := s.queries.RenameList(ctx, sqlc.RenameListParams{ID: id, Name: name}); errors.Is(err, sql.ErrNoRows) {
-		return model.List{}, fmt.Errorf("no lists found: %w", adapter.ErrNotFound)
-	} else if err != nil {
-		return model.List{}, fmt.Errorf("failed to rename list: %w", err)
-	} else {
-		return model.List(list), nil
-	}
+	return model.List{}, errors.New("not implemented")
 }
 
 func (s PostgresAdapter) CreateList(ctx context.Context, name string) (model.List, error) {
-	if list, err := s.queries.CreateList(ctx, name); errors.Is(err, sql.ErrNoRows) {
-		return model.List{}, fmt.Errorf("no lists found: %w", adapter.ErrNotFound)
-	} else if err != nil {
-		return model.List{}, fmt.Errorf("failed to create list: %w", err)
-	} else {
-		return model.List(list), nil
-	}
+	return model.List{}, errors.New("not implemented")
 }
 
 func (s PostgresAdapter) DeleteList(ctx context.Context, id int64) error {
-	return s.queries.DeleteList(ctx, id)
+	return errors.New("not implemented")
 }
