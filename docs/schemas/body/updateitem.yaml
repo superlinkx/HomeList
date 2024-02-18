@@ -1,4 +1,4 @@
-description: List body to be created
+description: Item body to be updated
 required: true
 content:
   application/json:
@@ -10,6 +10,5 @@ content:
         sort:
           type: integer
           format: int64
-      required:
-        - content
-        - sort
+        checked:
+          type: boolean

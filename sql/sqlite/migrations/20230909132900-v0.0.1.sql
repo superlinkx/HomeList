@@ -36,21 +36,21 @@ VALUES
 
 INSERT INTO items (list_id, content, sort)
 VALUES
-(1, 'Hello world!', 1024),
-(2, 'Hello world!', 2048),
-(3, 'Hello world!', 3072),
-(4, 'Hello world!', 4096),
-(5, 'Hello world!', 5120),
-(6, 'Hello world!', 6144),
-(7, 'Hello world!', 7168),
-(8, 'Hello world!', 8192),
-(9, 'Hello world!', 9216),
-(10, 'Hello world!', 10240),
-(11, 'Hello world!', 11264),
-(12, 'Hello world!', 12288),
-(13, 'Hello world!', 13312),
-(14, 'Hello world!', 14336),
-(15, 'Hello world!', 15360);
+(1, 'Hello world 1!', 1024),
+(1, 'Hello world 2!', 2048),
+(1, 'Hello world 3!', 3072),
+(1, 'Hello world 4!', 4096),
+(1, 'Hello world 5!', 5120),
+(1, 'Hello world 6!', 6144),
+(1, 'Hello world 7!', 7168),
+(1, 'Hello world 8!', 8192),
+(1, 'Hello world 9!', 9216),
+(1, 'Hello world 10!', 10240),
+(1, 'Hello world 11!', 11264),
+(1, 'Hello world 12!', 12288),
+(1, 'Hello world 13!', 13312),
+(1, 'Hello world 14!', 14336),
+(1, 'Hello world 15!', 15360);
 
 -- +migrate Down
 DROP TABLE items;

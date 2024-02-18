@@ -23,8 +23,11 @@
 package handler
 
 import (
+	"encoding/json"
+	"errors"
 	"net/http"
 
+	"github.com/superlinkx/HomeList/app"
 	"github.com/superlinkx/HomeList/oapiserver"
 )
 
@@ -37,21 +40,82 @@ type Item struct {
 }
 
 func (s Handlers) GetItems(w http.ResponseWriter, r *http.Request, listID int64, params oapiserver.GetItemsParams) {
-	w.WriteHeader(http.StatusNotImplemented)
+	var (
+		limit  int32 = 10
+		offset int32 = 0
+	)
+
+	if params.Limit != nil {
+		limit = *params.Limit
+	}
+
+	if params.Offset != nil {
+		offset = *params.Offset
+	}
+
+	if is, err := s.app.AllItemsFromList(r.Context(), listID, limit, offset); errors.Is(err, app.ErrNotFound) {
+		errorResponse(w, http.StatusNotFound, "list items not found")
+	} else if err != nil {
+		errorResponse(w, http.StatusInternalServerError)
+	} else {
+		var items = make([]Item, 0, len(is))
+		for _, i := range is {
+			items = append(items, Item(i))
+		}
+		w.Header().Add("Content-Type", "application/json")
+		w.WriteHeader(http.StatusOK)
+		err := json.NewEncoder(w).Encode(items)
+		if err != nil {
+			errorResponse(w, http.StatusInternalServerError)
+		}
+	}
 }
 
 func (s Handlers) CreateItem(w http.ResponseWriter, r *http.Request, listID int64) {
-	w.WriteHeader(http.StatusNotImplemented)
-}
-
-func (s Handlers) DeleteItem(w http.ResponseWriter, r *http.Request, listID int64, itemID int64) {
-	w.WriteHeader(http.StatusNotImplemented)
+	var item oapiserver.CreateItemJSONBody
+	if err := json.NewDecoder(r.Body).Decode(&item); err != nil {
+		errorResponse(w, http.StatusBadRequest, "invalid body")
+	} else if item.Content == "" {
+		errorResponse(w, http.StatusBadRequest, "content cannot be empty")
+	} else if i, err := s.app.CreateItemOnList(r.Context(), listID, item.Content, item.Sort); errors.Is(err, app.ErrNotFound) {
+		errorResponse(w, http.StatusNotFound, "list not found")
+	} else if err != nil {
+		errorResponse(w, http.StatusInternalServerError)
+	} else {
+		w.Header().Add("Content-Type", "application/json")
+		w.WriteHeader(http.StatusCreated)
+		err := json.NewEncoder(w).Encode(i)
+		if err != nil {
+			errorResponse(w, http.StatusInternalServerError)
+		}
+	}
 }
 
 func (s Handlers) GetItem(w http.ResponseWriter, r *http.Request, listID int64, itemID int64) {
-	w.WriteHeader(http.StatusNotImplemented)
+	if i, err := s.app.GetItemFromList(r.Context(), listID, itemID); errors.Is(err, app.ErrNotFound) {
+		errorResponse(w, http.StatusNotFound, "item not found")
+	} else if err != nil {
+		errorResponse(w, http.StatusInternalServerError)
+	} else {
+		w.Header().Add("Content-Type", "application/json")
+		w.WriteHeader(http.StatusOK)
+		err := json.NewEncoder(w).Encode(i)
+		if err != nil {
+			errorResponse(w, http.StatusInternalServerError)
+		}
+	}
 }
 
 func (s Handlers) UpdateItem(w http.ResponseWriter, r *http.Request, listID int64, itemID int64) {
 	w.WriteHeader(http.StatusNotImplemented)
+}
+
+func (s Handlers) DeleteItem(w http.ResponseWriter, r *http.Request, listID int64, itemID int64) {
+	if err := s.app.DeleteItemFromList(r.Context(), listID, itemID); errors.Is(err, app.ErrNotFound) {
+		errorResponse(w, http.StatusNotFound, "item not found")
+	} else if err != nil {
+		errorResponse(w, http.StatusInternalServerError)
+	} else {
+		w.WriteHeader(http.StatusNoContent)
+	}
 }

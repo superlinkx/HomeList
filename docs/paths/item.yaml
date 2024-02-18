@@ -24,7 +24,7 @@ put:
     - $ref: "../parameters/path/listid.yaml"
     - $ref: "../parameters/path/itemid.yaml"
   requestBody:
-    $ref: "../schemas/body/list.yaml"
+    $ref: "../schemas/body/updateitem.yaml"
   responses:
     "200":
       description: Item updated
