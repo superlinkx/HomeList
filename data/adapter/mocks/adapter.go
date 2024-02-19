@@ -6,6 +6,8 @@ import (
 	context "context"
 
 	mock "github.com/stretchr/testify/mock"
+	mapper "github.com/superlinkx/HomeList/data/mapper"
+
 	model "github.com/superlinkx/HomeList/app/model"
 )
 
@@ -22,12 +24,12 @@ func (_m *MockAdapter) EXPECT() *MockAdapter_Expecter {
 	return &MockAdapter_Expecter{mock: &_m.Mock}
 }
 
-// AllItemsFromList provides a mock function with given fields: ctx, listID, limit, offset
-func (_m *MockAdapter) AllItemsFromList(ctx context.Context, listID int64, limit int32, offset int32) ([]model.Item, error) {
+// AllItemsFromListPaginated provides a mock function with given fields: ctx, listID, limit, offset
+func (_m *MockAdapter) AllItemsFromListPaginated(ctx context.Context, listID int64, limit int32, offset int32) ([]model.Item, error) {
 	ret := _m.Called(ctx, listID, limit, offset)
 
 	if len(ret) == 0 {
-		panic("no return value specified for AllItemsFromList")
+		panic("no return value specified for AllItemsFromListPaginated")
 	}
 
 	var r0 []model.Item
@@ -52,33 +54,33 @@ func (_m *MockAdapter) AllItemsFromList(ctx context.Context, listID int64, limit
 	return r0, r1
 }
 
-// MockAdapter_AllItemsFromList_Call is a *mock.Call that shadows Run/Return methods with type explicit version for method 'AllItemsFromList'
-type MockAdapter_AllItemsFromList_Call struct {
+// MockAdapter_AllItemsFromListPaginated_Call is a *mock.Call that shadows Run/Return methods with type explicit version for method 'AllItemsFromListPaginated'
+type MockAdapter_AllItemsFromListPaginated_Call struct {
 	*mock.Call
 }
 
-// AllItemsFromList is a helper method to define mock.On call
+// AllItemsFromListPaginated is a helper method to define mock.On call
 //   - ctx context.Context
 //   - listID int64
 //   - limit int32
 //   - offset int32
-func (_e *MockAdapter_Expecter) AllItemsFromList(ctx interface{}, listID interface{}, limit interface{}, offset interface{}) *MockAdapter_AllItemsFromList_Call {
-	return &MockAdapter_AllItemsFromList_Call{Call: _e.mock.On("AllItemsFromList", ctx, listID, limit, offset)}
+func (_e *MockAdapter_Expecter) AllItemsFromListPaginated(ctx interface{}, listID interface{}, limit interface{}, offset interface{}) *MockAdapter_AllItemsFromListPaginated_Call {
+	return &MockAdapter_AllItemsFromListPaginated_Call{Call: _e.mock.On("AllItemsFromListPaginated", ctx, listID, limit, offset)}
 }
 
-func (_c *MockAdapter_AllItemsFromList_Call) Run(run func(ctx context.Context, listID int64, limit int32, offset int32)) *MockAdapter_AllItemsFromList_Call {
+func (_c *MockAdapter_AllItemsFromListPaginated_Call) Run(run func(ctx context.Context, listID int64, limit int32, offset int32)) *MockAdapter_AllItemsFromListPaginated_Call {
 	_c.Call.Run(func(args mock.Arguments) {
 		run(args[0].(context.Context), args[1].(int64), args[2].(int32), args[3].(int32))
 	})
 	return _c
 }
 
-func (_c *MockAdapter_AllItemsFromList_Call) Return(_a0 []model.Item, _a1 error) *MockAdapter_AllItemsFromList_Call {
+func (_c *MockAdapter_AllItemsFromListPaginated_Call) Return(_a0 []model.Item, _a1 error) *MockAdapter_AllItemsFromListPaginated_Call {
 	_c.Call.Return(_a0, _a1)
 	return _c
 }
 
-func (_c *MockAdapter_AllItemsFromList_Call) RunAndReturn(run func(context.Context, int64, int32, int32) ([]model.Item, error)) *MockAdapter_AllItemsFromList_Call {
+func (_c *MockAdapter_AllItemsFromListPaginated_Call) RunAndReturn(run func(context.Context, int64, int32, int32) ([]model.Item, error)) *MockAdapter_AllItemsFromListPaginated_Call {
 	_c.Call.Return(run)
 	return _c
 }
@@ -465,6 +467,54 @@ func (_c *MockAdapter_GetList_Call) Return(_a0 model.List, _a1 error) *MockAdapt
 }
 
 func (_c *MockAdapter_GetList_Call) RunAndReturn(run func(context.Context, int64) (model.List, error)) *MockAdapter_GetList_Call {
+	_c.Call.Return(run)
+	return _c
+}
+
+// ReflowList provides a mock function with given fields: ctx, id, reflowMapper
+func (_m *MockAdapter) ReflowList(ctx context.Context, id int64, reflowMapper mapper.Reflow) error {
+	ret := _m.Called(ctx, id, reflowMapper)
+
+	if len(ret) == 0 {
+		panic("no return value specified for ReflowList")
+	}
+
+	var r0 error
+	if rf, ok := ret.Get(0).(func(context.Context, int64, mapper.Reflow) error); ok {
+		r0 = rf(ctx, id, reflowMapper)
+	} else {
+		r0 = ret.Error(0)
+	}
+
+	return r0
+}
+
+// MockAdapter_ReflowList_Call is a *mock.Call that shadows Run/Return methods with type explicit version for method 'ReflowList'
+type MockAdapter_ReflowList_Call struct {
+	*mock.Call
+}
+
+// ReflowList is a helper method to define mock.On call
+//   - ctx context.Context
+//   - id int64
+//   - reflowMapper mapper.Reflow
+func (_e *MockAdapter_Expecter) ReflowList(ctx interface{}, id interface{}, reflowMapper interface{}) *MockAdapter_ReflowList_Call {
+	return &MockAdapter_ReflowList_Call{Call: _e.mock.On("ReflowList", ctx, id, reflowMapper)}
+}
+
+func (_c *MockAdapter_ReflowList_Call) Run(run func(ctx context.Context, id int64, reflowMapper mapper.Reflow)) *MockAdapter_ReflowList_Call {
+	_c.Call.Run(func(args mock.Arguments) {
+		run(args[0].(context.Context), args[1].(int64), args[2].(mapper.Reflow))
+	})
+	return _c
+}
+
+func (_c *MockAdapter_ReflowList_Call) Return(_a0 error) *MockAdapter_ReflowList_Call {
+	_c.Call.Return(_a0)
+	return _c
+}
+
+func (_c *MockAdapter_ReflowList_Call) RunAndReturn(run func(context.Context, int64, mapper.Reflow) error) *MockAdapter_ReflowList_Call {
 	_c.Call.Return(run)
 	return _c
 }

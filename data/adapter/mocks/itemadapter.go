@@ -22,12 +22,12 @@ func (_m *MockItemAdapter) EXPECT() *MockItemAdapter_Expecter {
 	return &MockItemAdapter_Expecter{mock: &_m.Mock}
 }
 
-// AllItemsFromList provides a mock function with given fields: ctx, listID, limit, offset
-func (_m *MockItemAdapter) AllItemsFromList(ctx context.Context, listID int64, limit int32, offset int32) ([]model.Item, error) {
+// AllItemsFromListPaginated provides a mock function with given fields: ctx, listID, limit, offset
+func (_m *MockItemAdapter) AllItemsFromListPaginated(ctx context.Context, listID int64, limit int32, offset int32) ([]model.Item, error) {
 	ret := _m.Called(ctx, listID, limit, offset)
 
 	if len(ret) == 0 {
-		panic("no return value specified for AllItemsFromList")
+		panic("no return value specified for AllItemsFromListPaginated")
 	}
 
 	var r0 []model.Item
@@ -52,33 +52,33 @@ func (_m *MockItemAdapter) AllItemsFromList(ctx context.Context, listID int64, l
 	return r0, r1
 }
 
-// MockItemAdapter_AllItemsFromList_Call is a *mock.Call that shadows Run/Return methods with type explicit version for method 'AllItemsFromList'
-type MockItemAdapter_AllItemsFromList_Call struct {
+// MockItemAdapter_AllItemsFromListPaginated_Call is a *mock.Call that shadows Run/Return methods with type explicit version for method 'AllItemsFromListPaginated'
+type MockItemAdapter_AllItemsFromListPaginated_Call struct {
 	*mock.Call
 }
 
-// AllItemsFromList is a helper method to define mock.On call
+// AllItemsFromListPaginated is a helper method to define mock.On call
 //   - ctx context.Context
 //   - listID int64
 //   - limit int32
 //   - offset int32
-func (_e *MockItemAdapter_Expecter) AllItemsFromList(ctx interface{}, listID interface{}, limit interface{}, offset interface{}) *MockItemAdapter_AllItemsFromList_Call {
-	return &MockItemAdapter_AllItemsFromList_Call{Call: _e.mock.On("AllItemsFromList", ctx, listID, limit, offset)}
+func (_e *MockItemAdapter_Expecter) AllItemsFromListPaginated(ctx interface{}, listID interface{}, limit interface{}, offset interface{}) *MockItemAdapter_AllItemsFromListPaginated_Call {
+	return &MockItemAdapter_AllItemsFromListPaginated_Call{Call: _e.mock.On("AllItemsFromListPaginated", ctx, listID, limit, offset)}
 }
 
-func (_c *MockItemAdapter_AllItemsFromList_Call) Run(run func(ctx context.Context, listID int64, limit int32, offset int32)) *MockItemAdapter_AllItemsFromList_Call {
+func (_c *MockItemAdapter_AllItemsFromListPaginated_Call) Run(run func(ctx context.Context, listID int64, limit int32, offset int32)) *MockItemAdapter_AllItemsFromListPaginated_Call {
 	_c.Call.Run(func(args mock.Arguments) {
 		run(args[0].(context.Context), args[1].(int64), args[2].(int32), args[3].(int32))
 	})
 	return _c
 }
 
-func (_c *MockItemAdapter_AllItemsFromList_Call) Return(_a0 []model.Item, _a1 error) *MockItemAdapter_AllItemsFromList_Call {
+func (_c *MockItemAdapter_AllItemsFromListPaginated_Call) Return(_a0 []model.Item, _a1 error) *MockItemAdapter_AllItemsFromListPaginated_Call {
 	_c.Call.Return(_a0, _a1)
 	return _c
 }
 
-func (_c *MockItemAdapter_AllItemsFromList_Call) RunAndReturn(run func(context.Context, int64, int32, int32) ([]model.Item, error)) *MockItemAdapter_AllItemsFromList_Call {
+func (_c *MockItemAdapter_AllItemsFromListPaginated_Call) RunAndReturn(run func(context.Context, int64, int32, int32) ([]model.Item, error)) *MockItemAdapter_AllItemsFromListPaginated_Call {
 	_c.Call.Return(run)
 	return _c
 }

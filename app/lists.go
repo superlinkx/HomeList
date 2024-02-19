@@ -29,6 +29,7 @@ import (
 
 	"github.com/superlinkx/HomeList/app/model"
 	"github.com/superlinkx/HomeList/data/adapter"
+	"github.com/superlinkx/HomeList/pkg/mapper"
 )
 
 func (s App) AllLists(ctx context.Context, limit int32, offset int32) ([]model.List, error) {
@@ -82,6 +83,15 @@ func (s App) DeleteList(ctx context.Context, id int64) error {
 		return ErrNotFound
 	} else if err != nil {
 		slog.Error("Unexpected error deleting list", "id", id, "error", err)
+		return ErrInternal
+	} else {
+		return nil
+	}
+}
+
+func (s App) ReflowList(ctx context.Context, id int64) error {
+	if err := s.adapter.ReflowList(ctx, id, mapper.ReflowListOfItemsWithSpacing(1024)); err != nil {
+		slog.Error("Unexpected error reflowing list", "id", id, "error", err)
 		return ErrInternal
 	} else {
 		return nil

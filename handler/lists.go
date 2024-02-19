@@ -132,3 +132,13 @@ func (s Handlers) DeleteList(w http.ResponseWriter, r *http.Request, listID int6
 		w.WriteHeader(http.StatusNoContent)
 	}
 }
+
+func (s Handlers) ReflowList(w http.ResponseWriter, r *http.Request, listID int64) {
+	if err := s.app.ReflowList(r.Context(), listID); errors.Is(err, app.ErrNotFound) {
+		errorResponse(w, http.StatusNotFound, "List not found")
+	} else if err != nil {
+		errorResponse(w, http.StatusInternalServerError)
+	} else {
+		w.WriteHeader(http.StatusNoContent)
+	}
+}

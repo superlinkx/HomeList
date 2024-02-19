@@ -27,6 +27,7 @@ import (
 	"errors"
 
 	"github.com/superlinkx/HomeList/app/model"
+	"github.com/superlinkx/HomeList/data/mapper"
 )
 
 func (s PostgresAdapter) AllLists(ctx context.Context, limit int32, offset int32) ([]model.List, error) {
@@ -46,5 +47,9 @@ func (s PostgresAdapter) CreateList(ctx context.Context, name string) (model.Lis
 }
 
 func (s PostgresAdapter) DeleteList(ctx context.Context, id int64) error {
+	return errors.New("not implemented")
+}
+
+func (s PostgresAdapter) ReflowList(ctx context.Context, id int64, reflowMapper mapper.Reflow) error {
 	return errors.New("not implemented")
 }

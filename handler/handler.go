@@ -23,17 +23,42 @@
 package handler
 
 import (
+	"context"
 	"net/http"
 	"strings"
 
-	"github.com/superlinkx/HomeList/app"
+	"github.com/superlinkx/HomeList/app/model"
 )
 
-type Handlers struct {
-	app app.App
+type App interface {
+	ListApp
+	ItemApp
 }
 
-func NewHandlers(app app.App) Handlers {
+type ListApp interface {
+	AllLists(ctx context.Context, limit int32, offset int32) ([]model.List, error)
+	GetList(ctx context.Context, listID int64) (model.List, error)
+	CreateList(ctx context.Context, name string) (model.List, error)
+	UpdateList(ctx context.Context, listID int64, name string) (model.List, error)
+	DeleteList(ctx context.Context, listID int64) error
+	ReflowList(ctx context.Context, listID int64) error
+}
+
+type ItemApp interface {
+	AllItemsFromList(ctx context.Context, listID int64, limit int32, offset int32) ([]model.Item, error)
+	GetItemFromList(ctx context.Context, listID int64, itemID int64) (model.Item, error)
+	CreateItemOnList(ctx context.Context, listID int64, content string, sort int64) (model.Item, error)
+	UpdateItemFromListContent(ctx context.Context, listID int64, itemID int64, content string) (model.Item, error)
+	UpdateItemFromListChecked(ctx context.Context, listID int64, itemID int64, checked bool) (model.Item, error)
+	UpdateItemFromListSort(ctx context.Context, listID int64, itemID int64, sort int64) (model.Item, error)
+	DeleteItemFromList(ctx context.Context, listID int64, itemID int64) error
+}
+
+type Handlers struct {
+	app App
+}
+
+func NewHandlers(app App) Handlers {
 	return Handlers{
 		app: app,
 	}

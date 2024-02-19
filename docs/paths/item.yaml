@@ -17,27 +17,6 @@ get:
       $ref: "../responses/404.yaml"
     "500":
       $ref: "../responses/500.yaml"
-put:
-  operationId: updateItem
-  summary: Update item by listID and itemID
-  parameters:
-    - $ref: "../parameters/path/listid.yaml"
-    - $ref: "../parameters/path/itemid.yaml"
-  requestBody:
-    $ref: "../schemas/body/updateitem.yaml"
-  responses:
-    "200":
-      description: Item updated
-      content:
-        application/json:
-          schema:
-            $ref: "../schemas/item.yaml"
-    "400":
-      $ref: "../responses/400.yaml"
-    "404":
-      $ref: "../responses/404.yaml"
-    "500":
-      $ref: "../responses/500.yaml"
 
 delete:
   operationId: deleteItem

@@ -70,10 +70,19 @@ type CreateItemJSONBody struct {
 	Sort    int64  `json:"sort"`
 }
 
-// UpdateItemJSONBody defines parameters for UpdateItem.
-type UpdateItemJSONBody struct {
+// UpdateItemFromListCheckedJSONBody defines parameters for UpdateItemFromListChecked.
+type UpdateItemFromListCheckedJSONBody struct {
+	Checked bool `json:"checked"`
+}
+
+// UpdateItemFromListContentJSONBody defines parameters for UpdateItemFromListContent.
+type UpdateItemFromListContentJSONBody struct {
 	Content string `json:"content"`
-	Sort    int64  `json:"sort"`
+}
+
+// UpdateItemFromListSortJSONBody defines parameters for UpdateItemFromListSort.
+type UpdateItemFromListSortJSONBody struct {
+	Sort int64 `json:"sort"`
 }
 
 // CreateListJSONRequestBody defines body for CreateList for application/json ContentType.
@@ -85,8 +94,14 @@ type UpdateListJSONRequestBody UpdateListJSONBody
 // CreateItemJSONRequestBody defines body for CreateItem for application/json ContentType.
 type CreateItemJSONRequestBody CreateItemJSONBody
 
-// UpdateItemJSONRequestBody defines body for UpdateItem for application/json ContentType.
-type UpdateItemJSONRequestBody UpdateItemJSONBody
+// UpdateItemFromListCheckedJSONRequestBody defines body for UpdateItemFromListChecked for application/json ContentType.
+type UpdateItemFromListCheckedJSONRequestBody UpdateItemFromListCheckedJSONBody
+
+// UpdateItemFromListContentJSONRequestBody defines body for UpdateItemFromListContent for application/json ContentType.
+type UpdateItemFromListContentJSONRequestBody UpdateItemFromListContentJSONBody
+
+// UpdateItemFromListSortJSONRequestBody defines body for UpdateItemFromListSort for application/json ContentType.
+type UpdateItemFromListSortJSONRequestBody UpdateItemFromListSortJSONBody
 
 // RequestEditorFn  is the function signature for the RequestEditor callback function
 type RequestEditorFn func(ctx context.Context, req *http.Request) error
@@ -194,10 +209,23 @@ type ClientInterface interface {
 	// GetItem request
 	GetItem(ctx context.Context, listID int64, itemID int64, reqEditors ...RequestEditorFn) (*http.Response, error)
 
-	// UpdateItemWithBody request with any body
-	UpdateItemWithBody(ctx context.Context, listID int64, itemID int64, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
+	// UpdateItemFromListCheckedWithBody request with any body
+	UpdateItemFromListCheckedWithBody(ctx context.Context, listID int64, itemID int64, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
 
-	UpdateItem(ctx context.Context, listID int64, itemID int64, body UpdateItemJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
+	UpdateItemFromListChecked(ctx context.Context, listID int64, itemID int64, body UpdateItemFromListCheckedJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// UpdateItemFromListContentWithBody request with any body
+	UpdateItemFromListContentWithBody(ctx context.Context, listID int64, itemID int64, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	UpdateItemFromListContent(ctx context.Context, listID int64, itemID int64, body UpdateItemFromListContentJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// UpdateItemFromListSortWithBody request with any body
+	UpdateItemFromListSortWithBody(ctx context.Context, listID int64, itemID int64, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	UpdateItemFromListSort(ctx context.Context, listID int64, itemID int64, body UpdateItemFromListSortJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// ReflowList request
+	ReflowList(ctx context.Context, listID int64, reqEditors ...RequestEditorFn) (*http.Response, error)
 }
 
 func (c *Client) GetLists(ctx context.Context, params *GetListsParams, reqEditors ...RequestEditorFn) (*http.Response, error) {
@@ -344,8 +372,8 @@ func (c *Client) GetItem(ctx context.Context, listID int64, itemID int64, reqEdi
 	return c.Client.Do(req)
 }
 
-func (c *Client) UpdateItemWithBody(ctx context.Context, listID int64, itemID int64, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error) {
-	req, err := NewUpdateItemRequestWithBody(c.Server, listID, itemID, contentType, body)
+func (c *Client) UpdateItemFromListCheckedWithBody(ctx context.Context, listID int64, itemID int64, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewUpdateItemFromListCheckedRequestWithBody(c.Server, listID, itemID, contentType, body)
 	if err != nil {
 		return nil, err
 	}
@@ -356,8 +384,68 @@ func (c *Client) UpdateItemWithBody(ctx context.Context, listID int64, itemID in
 	return c.Client.Do(req)
 }
 
-func (c *Client) UpdateItem(ctx context.Context, listID int64, itemID int64, body UpdateItemJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
-	req, err := NewUpdateItemRequest(c.Server, listID, itemID, body)
+func (c *Client) UpdateItemFromListChecked(ctx context.Context, listID int64, itemID int64, body UpdateItemFromListCheckedJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewUpdateItemFromListCheckedRequest(c.Server, listID, itemID, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) UpdateItemFromListContentWithBody(ctx context.Context, listID int64, itemID int64, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewUpdateItemFromListContentRequestWithBody(c.Server, listID, itemID, contentType, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) UpdateItemFromListContent(ctx context.Context, listID int64, itemID int64, body UpdateItemFromListContentJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewUpdateItemFromListContentRequest(c.Server, listID, itemID, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) UpdateItemFromListSortWithBody(ctx context.Context, listID int64, itemID int64, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewUpdateItemFromListSortRequestWithBody(c.Server, listID, itemID, contentType, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) UpdateItemFromListSort(ctx context.Context, listID int64, itemID int64, body UpdateItemFromListSortJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewUpdateItemFromListSortRequest(c.Server, listID, itemID, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) ReflowList(ctx context.Context, listID int64, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewReflowListRequest(c.Server, listID)
 	if err != nil {
 		return nil, err
 	}
@@ -789,19 +877,19 @@ func NewGetItemRequest(server string, listID int64, itemID int64) (*http.Request
 	return req, nil
 }
 
-// NewUpdateItemRequest calls the generic UpdateItem builder with application/json body
-func NewUpdateItemRequest(server string, listID int64, itemID int64, body UpdateItemJSONRequestBody) (*http.Request, error) {
+// NewUpdateItemFromListCheckedRequest calls the generic UpdateItemFromListChecked builder with application/json body
+func NewUpdateItemFromListCheckedRequest(server string, listID int64, itemID int64, body UpdateItemFromListCheckedJSONRequestBody) (*http.Request, error) {
 	var bodyReader io.Reader
 	buf, err := json.Marshal(body)
 	if err != nil {
 		return nil, err
 	}
 	bodyReader = bytes.NewReader(buf)
-	return NewUpdateItemRequestWithBody(server, listID, itemID, "application/json", bodyReader)
+	return NewUpdateItemFromListCheckedRequestWithBody(server, listID, itemID, "application/json", bodyReader)
 }
 
-// NewUpdateItemRequestWithBody generates requests for UpdateItem with any type of body
-func NewUpdateItemRequestWithBody(server string, listID int64, itemID int64, contentType string, body io.Reader) (*http.Request, error) {
+// NewUpdateItemFromListCheckedRequestWithBody generates requests for UpdateItemFromListChecked with any type of body
+func NewUpdateItemFromListCheckedRequestWithBody(server string, listID int64, itemID int64, contentType string, body io.Reader) (*http.Request, error) {
 	var err error
 
 	var pathParam0 string
@@ -823,7 +911,7 @@ func NewUpdateItemRequestWithBody(server string, listID int64, itemID int64, con
 		return nil, err
 	}
 
-	operationPath := fmt.Sprintf("/lists/%s/items/%s", pathParam0, pathParam1)
+	operationPath := fmt.Sprintf("/lists/%s/items/%s/checked", pathParam0, pathParam1)
 	if operationPath[0] == '/' {
 		operationPath = "." + operationPath
 	}
@@ -839,6 +927,148 @@ func NewUpdateItemRequestWithBody(server string, listID int64, itemID int64, con
 	}
 
 	req.Header.Add("Content-Type", contentType)
+
+	return req, nil
+}
+
+// NewUpdateItemFromListContentRequest calls the generic UpdateItemFromListContent builder with application/json body
+func NewUpdateItemFromListContentRequest(server string, listID int64, itemID int64, body UpdateItemFromListContentJSONRequestBody) (*http.Request, error) {
+	var bodyReader io.Reader
+	buf, err := json.Marshal(body)
+	if err != nil {
+		return nil, err
+	}
+	bodyReader = bytes.NewReader(buf)
+	return NewUpdateItemFromListContentRequestWithBody(server, listID, itemID, "application/json", bodyReader)
+}
+
+// NewUpdateItemFromListContentRequestWithBody generates requests for UpdateItemFromListContent with any type of body
+func NewUpdateItemFromListContentRequestWithBody(server string, listID int64, itemID int64, contentType string, body io.Reader) (*http.Request, error) {
+	var err error
+
+	var pathParam0 string
+
+	pathParam0, err = runtime.StyleParamWithLocation("simple", false, "listID", runtime.ParamLocationPath, listID)
+	if err != nil {
+		return nil, err
+	}
+
+	var pathParam1 string
+
+	pathParam1, err = runtime.StyleParamWithLocation("simple", false, "itemID", runtime.ParamLocationPath, itemID)
+	if err != nil {
+		return nil, err
+	}
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/lists/%s/items/%s/content", pathParam0, pathParam1)
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest("PUT", queryURL.String(), body)
+	if err != nil {
+		return nil, err
+	}
+
+	req.Header.Add("Content-Type", contentType)
+
+	return req, nil
+}
+
+// NewUpdateItemFromListSortRequest calls the generic UpdateItemFromListSort builder with application/json body
+func NewUpdateItemFromListSortRequest(server string, listID int64, itemID int64, body UpdateItemFromListSortJSONRequestBody) (*http.Request, error) {
+	var bodyReader io.Reader
+	buf, err := json.Marshal(body)
+	if err != nil {
+		return nil, err
+	}
+	bodyReader = bytes.NewReader(buf)
+	return NewUpdateItemFromListSortRequestWithBody(server, listID, itemID, "application/json", bodyReader)
+}
+
+// NewUpdateItemFromListSortRequestWithBody generates requests for UpdateItemFromListSort with any type of body
+func NewUpdateItemFromListSortRequestWithBody(server string, listID int64, itemID int64, contentType string, body io.Reader) (*http.Request, error) {
+	var err error
+
+	var pathParam0 string
+
+	pathParam0, err = runtime.StyleParamWithLocation("simple", false, "listID", runtime.ParamLocationPath, listID)
+	if err != nil {
+		return nil, err
+	}
+
+	var pathParam1 string
+
+	pathParam1, err = runtime.StyleParamWithLocation("simple", false, "itemID", runtime.ParamLocationPath, itemID)
+	if err != nil {
+		return nil, err
+	}
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/lists/%s/items/%s/sort", pathParam0, pathParam1)
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest("PUT", queryURL.String(), body)
+	if err != nil {
+		return nil, err
+	}
+
+	req.Header.Add("Content-Type", contentType)
+
+	return req, nil
+}
+
+// NewReflowListRequest generates requests for ReflowList
+func NewReflowListRequest(server string, listID int64) (*http.Request, error) {
+	var err error
+
+	var pathParam0 string
+
+	pathParam0, err = runtime.StyleParamWithLocation("simple", false, "listID", runtime.ParamLocationPath, listID)
+	if err != nil {
+		return nil, err
+	}
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/lists/%s/reflow", pathParam0)
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest("PUT", queryURL.String(), nil)
+	if err != nil {
+		return nil, err
+	}
 
 	return req, nil
 }
@@ -919,10 +1149,23 @@ type ClientWithResponsesInterface interface {
 	// GetItemWithResponse request
 	GetItemWithResponse(ctx context.Context, listID int64, itemID int64, reqEditors ...RequestEditorFn) (*GetItemResponse, error)
 
-	// UpdateItemWithBodyWithResponse request with any body
-	UpdateItemWithBodyWithResponse(ctx context.Context, listID int64, itemID int64, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*UpdateItemResponse, error)
+	// UpdateItemFromListCheckedWithBodyWithResponse request with any body
+	UpdateItemFromListCheckedWithBodyWithResponse(ctx context.Context, listID int64, itemID int64, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*UpdateItemFromListCheckedResponse, error)
 
-	UpdateItemWithResponse(ctx context.Context, listID int64, itemID int64, body UpdateItemJSONRequestBody, reqEditors ...RequestEditorFn) (*UpdateItemResponse, error)
+	UpdateItemFromListCheckedWithResponse(ctx context.Context, listID int64, itemID int64, body UpdateItemFromListCheckedJSONRequestBody, reqEditors ...RequestEditorFn) (*UpdateItemFromListCheckedResponse, error)
+
+	// UpdateItemFromListContentWithBodyWithResponse request with any body
+	UpdateItemFromListContentWithBodyWithResponse(ctx context.Context, listID int64, itemID int64, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*UpdateItemFromListContentResponse, error)
+
+	UpdateItemFromListContentWithResponse(ctx context.Context, listID int64, itemID int64, body UpdateItemFromListContentJSONRequestBody, reqEditors ...RequestEditorFn) (*UpdateItemFromListContentResponse, error)
+
+	// UpdateItemFromListSortWithBodyWithResponse request with any body
+	UpdateItemFromListSortWithBodyWithResponse(ctx context.Context, listID int64, itemID int64, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*UpdateItemFromListSortResponse, error)
+
+	UpdateItemFromListSortWithResponse(ctx context.Context, listID int64, itemID int64, body UpdateItemFromListSortJSONRequestBody, reqEditors ...RequestEditorFn) (*UpdateItemFromListSortResponse, error)
+
+	// ReflowListWithResponse request
+	ReflowListWithResponse(ctx context.Context, listID int64, reqEditors ...RequestEditorFn) (*ReflowListResponse, error)
 }
 
 type GetListsResponse struct {
@@ -1148,7 +1391,7 @@ func (r GetItemResponse) StatusCode() int {
 	return 0
 }
 
-type UpdateItemResponse struct {
+type UpdateItemFromListCheckedResponse struct {
 	Body         []byte
 	HTTPResponse *http.Response
 	JSON200      *struct {
@@ -1161,7 +1404,7 @@ type UpdateItemResponse struct {
 }
 
 // Status returns HTTPResponse.Status
-func (r UpdateItemResponse) Status() string {
+func (r UpdateItemFromListCheckedResponse) Status() string {
 	if r.HTTPResponse != nil {
 		return r.HTTPResponse.Status
 	}
@@ -1169,7 +1412,84 @@ func (r UpdateItemResponse) Status() string {
 }
 
 // StatusCode returns HTTPResponse.StatusCode
-func (r UpdateItemResponse) StatusCode() int {
+func (r UpdateItemFromListCheckedResponse) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+type UpdateItemFromListContentResponse struct {
+	Body         []byte
+	HTTPResponse *http.Response
+	JSON200      *struct {
+		Checked bool   `json:"checked"`
+		Content string `json:"content"`
+		Id      *int64 `json:"id,omitempty"`
+		ListId  *int64 `json:"list_id,omitempty"`
+		Sort    int64  `json:"sort"`
+	}
+}
+
+// Status returns HTTPResponse.Status
+func (r UpdateItemFromListContentResponse) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r UpdateItemFromListContentResponse) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+type UpdateItemFromListSortResponse struct {
+	Body         []byte
+	HTTPResponse *http.Response
+	JSON200      *struct {
+		Checked bool   `json:"checked"`
+		Content string `json:"content"`
+		Id      *int64 `json:"id,omitempty"`
+		ListId  *int64 `json:"list_id,omitempty"`
+		Sort    int64  `json:"sort"`
+	}
+}
+
+// Status returns HTTPResponse.Status
+func (r UpdateItemFromListSortResponse) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r UpdateItemFromListSortResponse) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+type ReflowListResponse struct {
+	Body         []byte
+	HTTPResponse *http.Response
+}
+
+// Status returns HTTPResponse.Status
+func (r ReflowListResponse) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r ReflowListResponse) StatusCode() int {
 	if r.HTTPResponse != nil {
 		return r.HTTPResponse.StatusCode
 	}
@@ -1281,21 +1601,64 @@ func (c *ClientWithResponses) GetItemWithResponse(ctx context.Context, listID in
 	return ParseGetItemResponse(rsp)
 }
 
-// UpdateItemWithBodyWithResponse request with arbitrary body returning *UpdateItemResponse
-func (c *ClientWithResponses) UpdateItemWithBodyWithResponse(ctx context.Context, listID int64, itemID int64, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*UpdateItemResponse, error) {
-	rsp, err := c.UpdateItemWithBody(ctx, listID, itemID, contentType, body, reqEditors...)
+// UpdateItemFromListCheckedWithBodyWithResponse request with arbitrary body returning *UpdateItemFromListCheckedResponse
+func (c *ClientWithResponses) UpdateItemFromListCheckedWithBodyWithResponse(ctx context.Context, listID int64, itemID int64, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*UpdateItemFromListCheckedResponse, error) {
+	rsp, err := c.UpdateItemFromListCheckedWithBody(ctx, listID, itemID, contentType, body, reqEditors...)
 	if err != nil {
 		return nil, err
 	}
-	return ParseUpdateItemResponse(rsp)
+	return ParseUpdateItemFromListCheckedResponse(rsp)
 }
 
-func (c *ClientWithResponses) UpdateItemWithResponse(ctx context.Context, listID int64, itemID int64, body UpdateItemJSONRequestBody, reqEditors ...RequestEditorFn) (*UpdateItemResponse, error) {
-	rsp, err := c.UpdateItem(ctx, listID, itemID, body, reqEditors...)
+func (c *ClientWithResponses) UpdateItemFromListCheckedWithResponse(ctx context.Context, listID int64, itemID int64, body UpdateItemFromListCheckedJSONRequestBody, reqEditors ...RequestEditorFn) (*UpdateItemFromListCheckedResponse, error) {
+	rsp, err := c.UpdateItemFromListChecked(ctx, listID, itemID, body, reqEditors...)
 	if err != nil {
 		return nil, err
 	}
-	return ParseUpdateItemResponse(rsp)
+	return ParseUpdateItemFromListCheckedResponse(rsp)
+}
+
+// UpdateItemFromListContentWithBodyWithResponse request with arbitrary body returning *UpdateItemFromListContentResponse
+func (c *ClientWithResponses) UpdateItemFromListContentWithBodyWithResponse(ctx context.Context, listID int64, itemID int64, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*UpdateItemFromListContentResponse, error) {
+	rsp, err := c.UpdateItemFromListContentWithBody(ctx, listID, itemID, contentType, body, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseUpdateItemFromListContentResponse(rsp)
+}
+
+func (c *ClientWithResponses) UpdateItemFromListContentWithResponse(ctx context.Context, listID int64, itemID int64, body UpdateItemFromListContentJSONRequestBody, reqEditors ...RequestEditorFn) (*UpdateItemFromListContentResponse, error) {
+	rsp, err := c.UpdateItemFromListContent(ctx, listID, itemID, body, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseUpdateItemFromListContentResponse(rsp)
+}
+
+// UpdateItemFromListSortWithBodyWithResponse request with arbitrary body returning *UpdateItemFromListSortResponse
+func (c *ClientWithResponses) UpdateItemFromListSortWithBodyWithResponse(ctx context.Context, listID int64, itemID int64, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*UpdateItemFromListSortResponse, error) {
+	rsp, err := c.UpdateItemFromListSortWithBody(ctx, listID, itemID, contentType, body, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseUpdateItemFromListSortResponse(rsp)
+}
+
+func (c *ClientWithResponses) UpdateItemFromListSortWithResponse(ctx context.Context, listID int64, itemID int64, body UpdateItemFromListSortJSONRequestBody, reqEditors ...RequestEditorFn) (*UpdateItemFromListSortResponse, error) {
+	rsp, err := c.UpdateItemFromListSort(ctx, listID, itemID, body, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseUpdateItemFromListSortResponse(rsp)
+}
+
+// ReflowListWithResponse request returning *ReflowListResponse
+func (c *ClientWithResponses) ReflowListWithResponse(ctx context.Context, listID int64, reqEditors ...RequestEditorFn) (*ReflowListResponse, error) {
+	rsp, err := c.ReflowList(ctx, listID, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseReflowListResponse(rsp)
 }
 
 // ParseGetListsResponse parses an HTTP response from a GetListsWithResponse call
@@ -1539,15 +1902,15 @@ func ParseGetItemResponse(rsp *http.Response) (*GetItemResponse, error) {
 	return response, nil
 }
 
-// ParseUpdateItemResponse parses an HTTP response from a UpdateItemWithResponse call
-func ParseUpdateItemResponse(rsp *http.Response) (*UpdateItemResponse, error) {
+// ParseUpdateItemFromListCheckedResponse parses an HTTP response from a UpdateItemFromListCheckedWithResponse call
+func ParseUpdateItemFromListCheckedResponse(rsp *http.Response) (*UpdateItemFromListCheckedResponse, error) {
 	bodyBytes, err := io.ReadAll(rsp.Body)
 	defer func() { _ = rsp.Body.Close() }()
 	if err != nil {
 		return nil, err
 	}
 
-	response := &UpdateItemResponse{
+	response := &UpdateItemFromListCheckedResponse{
 		Body:         bodyBytes,
 		HTTPResponse: rsp,
 	}
@@ -1571,25 +1934,108 @@ func ParseUpdateItemResponse(rsp *http.Response) (*UpdateItemResponse, error) {
 	return response, nil
 }
 
+// ParseUpdateItemFromListContentResponse parses an HTTP response from a UpdateItemFromListContentWithResponse call
+func ParseUpdateItemFromListContentResponse(rsp *http.Response) (*UpdateItemFromListContentResponse, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &UpdateItemFromListContentResponse{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
+		var dest struct {
+			Checked bool   `json:"checked"`
+			Content string `json:"content"`
+			Id      *int64 `json:"id,omitempty"`
+			ListId  *int64 `json:"list_id,omitempty"`
+			Sort    int64  `json:"sort"`
+		}
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON200 = &dest
+
+	}
+
+	return response, nil
+}
+
+// ParseUpdateItemFromListSortResponse parses an HTTP response from a UpdateItemFromListSortWithResponse call
+func ParseUpdateItemFromListSortResponse(rsp *http.Response) (*UpdateItemFromListSortResponse, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &UpdateItemFromListSortResponse{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
+		var dest struct {
+			Checked bool   `json:"checked"`
+			Content string `json:"content"`
+			Id      *int64 `json:"id,omitempty"`
+			ListId  *int64 `json:"list_id,omitempty"`
+			Sort    int64  `json:"sort"`
+		}
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON200 = &dest
+
+	}
+
+	return response, nil
+}
+
+// ParseReflowListResponse parses an HTTP response from a ReflowListWithResponse call
+func ParseReflowListResponse(rsp *http.Response) (*ReflowListResponse, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &ReflowListResponse{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	return response, nil
+}
+
 // Base64 encoded, gzipped, json marshaled Swagger object
 var swaggerSpec = []string{
 
-	"H4sIAAAAAAAC/9RYTY/jNgz9KwLbQwsYo2Q204NvbQdtA0yLHtrTYlAoNpNoa0taSU4bBP7vhT5iJ3Gc",
-	"jx03mz1NElMU+R4fyfEGMlkqKVBYA+kGFNOsRIvaf+MWS577TwJSUMwuIQHBSoTUP5w+QwIaP1ZcYw6p",
-	"1RUmYLIllsydmktdMutshf1uAgnYtcLwFReooa4TKHjJbXPFxwr1ur0jPOxz+e6xz6WxvWG7hwOELedz",
-	"g71xx6fXBV6HmNDYH2TOsWHA/c2ksCj8fUypgmfMcinoByOF+629RmmpUNt4fOdYvM5YzcUC6gSM1PbS",
-	"bFus3jc+o4fX5oCcfcDMhkRyNJnmygUJKbxwY8lM5mtiJZkhyTQyi3mHhMjdGxIO+HeyPUjBWw0auL/A",
-	"KClMiGMyGh3ij/9aqgrGD+I/jLQTw1SsWMFz8vtWmt+Ybx1/k9FkqCt+k5b8JCuRO79PQ4ZuUQtWEIN6",
-	"hZqg1jIUVHCyV+IHlbvE7G/Md66ZSVkgEy7EndhKLl5QLOwS0nHSLfLQBs6WeKi7vy62frt2tvn1qqiV",
-	"wj4wF8e4lcJJhC4XBhdz6dwVPENhsBUb/Dr9AxKodAEpLK1VJqVUKhRGVjrDB6kXNB4y1NnWCVhuC3f0",
-	"F1mi0xgksEJtQtWMnYVzwBSHFN49jB9GkPg27hGgDhj/aRE6sIPHt4dpDin8jPbFGyR70+z9Br7WOIcU",
-	"vqLtzKOtCQ3Dpk7OGsbuXr8eiP6xo5zTrctVvj947L6oEJ+shyxQwrRm62Na+544SyLnJMDTdohj3pu4",
-	"qTO6meqrsmR6HUgirBuxkuYIoz/6rhvrpB2R6/7kdqZoA+ABVeOrqDrPUM/w2E4MT8foEjpGO3SctnVG",
-	"+7AGpAgjAv8hMa4kCoZuwupTO8c5FmixC/Wz/z1Cfa18/NZ1RBWTcGMHmxDE1dh8Qllfi2OAIdTnbE2m",
-	"z87XqW4zIFqj/70wnfj2U7sz+LsBquoI9n+qnA1RrMM0lNFtGkrlk75H0QQ69ojrNh/aDL0+OU29wacS",
-	"mnyhY95vwReMeb+mN4MzuP6SRr2PmMy1LEn8T/zM2HflcFN5b5m4+b7gMv2c+4JLnEhB7BIbbvoETDfh",
-	"9c8Fy8SbCDyv0viO6rK1w0N892uHJ2K2jiQQJnISX7ad2EI+G8zDzb2gvB5hzLfvJ+5wVzlJ2InV5Zac",
-	"DdMFb0T23S85Jxj39n4cBjrbFyMppYXMWLGUxqaPT0+PlClOV2OoX+v/AgAA///+/aH8iRcAAA==",
+	"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",
+	"vgyhfC7/DwAA//+vHSNgJR8AAA==",
 }
 
 // GetSwagger returns the content of the embedded swagger specification file

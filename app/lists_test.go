@@ -27,6 +27,7 @@ import (
 	"testing"
 
 	"github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/mock"
 	"github.com/superlinkx/HomeList/app"
 	"github.com/superlinkx/HomeList/app/model"
 	"github.com/superlinkx/HomeList/data/adapter"
@@ -211,6 +212,27 @@ func TestApp_DeleteList(t *testing.T) {
 	t.Run("Success", func(t *testing.T) {
 		mockAdapter.EXPECT().DeleteList(context.TODO(), int64(1)).Return(nil).Times(1)
 		err := appInst.DeleteList(context.TODO(), 1)
+		assert.NoError(t, err)
+	})
+}
+
+func TestApp_ReflowList(t *testing.T) {
+	var (
+		mockAdapter = mocks.NewMockAdapter(t)
+		appInst     = app.NewApp(mockAdapter)
+	)
+
+	t.Parallel()
+
+	t.Run("Generic error", func(t *testing.T) {
+		mockAdapter.EXPECT().ReflowList(context.TODO(), int64(1), mock.AnythingOfType("mapper.Reflow")).Return(errGeneric).Times(1)
+		err := appInst.ReflowList(context.TODO(), 1)
+		assert.ErrorIs(t, err, app.ErrInternal)
+	})
+
+	t.Run("Success", func(t *testing.T) {
+		mockAdapter.EXPECT().ReflowList(context.TODO(), int64(1), mock.AnythingOfType("mapper.Reflow")).Return(nil).Times(1)
+		err := appInst.ReflowList(context.TODO(), 1)
 		assert.NoError(t, err)
 	})
 }

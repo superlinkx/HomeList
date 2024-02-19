@@ -30,9 +30,13 @@ import (
 )
 
 type PostgresAdapter struct {
+	db      *sql.DB
 	queries *sqlc.Queries
 }
 
 func NewPostgresAdapter(db *sql.DB) adapter.Adapter {
-	return PostgresAdapter{queries: sqlc.New(db)}
+	return PostgresAdapter{
+		db:      db,
+		queries: sqlc.New(db),
+	}
 }

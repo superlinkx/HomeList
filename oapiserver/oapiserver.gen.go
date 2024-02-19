@@ -68,10 +68,19 @@ type CreateItemJSONBody struct {
 	Sort    int64  `json:"sort"`
 }
 
-// UpdateItemJSONBody defines parameters for UpdateItem.
-type UpdateItemJSONBody struct {
+// UpdateItemFromListCheckedJSONBody defines parameters for UpdateItemFromListChecked.
+type UpdateItemFromListCheckedJSONBody struct {
+	Checked bool `json:"checked"`
+}
+
+// UpdateItemFromListContentJSONBody defines parameters for UpdateItemFromListContent.
+type UpdateItemFromListContentJSONBody struct {
 	Content string `json:"content"`
-	Sort    int64  `json:"sort"`
+}
+
+// UpdateItemFromListSortJSONBody defines parameters for UpdateItemFromListSort.
+type UpdateItemFromListSortJSONBody struct {
+	Sort int64 `json:"sort"`
 }
 
 // CreateListJSONRequestBody defines body for CreateList for application/json ContentType.
@@ -83,8 +92,14 @@ type UpdateListJSONRequestBody UpdateListJSONBody
 // CreateItemJSONRequestBody defines body for CreateItem for application/json ContentType.
 type CreateItemJSONRequestBody CreateItemJSONBody
 
-// UpdateItemJSONRequestBody defines body for UpdateItem for application/json ContentType.
-type UpdateItemJSONRequestBody UpdateItemJSONBody
+// UpdateItemFromListCheckedJSONRequestBody defines body for UpdateItemFromListChecked for application/json ContentType.
+type UpdateItemFromListCheckedJSONRequestBody UpdateItemFromListCheckedJSONBody
+
+// UpdateItemFromListContentJSONRequestBody defines body for UpdateItemFromListContent for application/json ContentType.
+type UpdateItemFromListContentJSONRequestBody UpdateItemFromListContentJSONBody
+
+// UpdateItemFromListSortJSONRequestBody defines body for UpdateItemFromListSort for application/json ContentType.
+type UpdateItemFromListSortJSONRequestBody UpdateItemFromListSortJSONBody
 
 // ServerInterface represents all server handlers.
 type ServerInterface interface {
@@ -115,9 +130,18 @@ type ServerInterface interface {
 	// Get item by listID and itemID
 	// (GET /lists/{listID}/items/{itemID})
 	GetItem(w http.ResponseWriter, r *http.Request, listID int64, itemID int64)
-	// Update item by listID and itemID
-	// (PUT /lists/{listID}/items/{itemID})
-	UpdateItem(w http.ResponseWriter, r *http.Request, listID int64, itemID int64)
+	// Update item checked by listID and itemID
+	// (PUT /lists/{listID}/items/{itemID}/checked)
+	UpdateItemFromListChecked(w http.ResponseWriter, r *http.Request, listID int64, itemID int64)
+	// Update item content by listID and itemID
+	// (PUT /lists/{listID}/items/{itemID}/content)
+	UpdateItemFromListContent(w http.ResponseWriter, r *http.Request, listID int64, itemID int64)
+	// Update item sort by listID and itemID
+	// (PUT /lists/{listID}/items/{itemID}/sort)
+	UpdateItemFromListSort(w http.ResponseWriter, r *http.Request, listID int64, itemID int64)
+	// Reflow list by ID
+	// (PUT /lists/{listID}/reflow)
+	ReflowList(w http.ResponseWriter, r *http.Request, listID int64)
 }
 
 // Unimplemented server implementation that returns http.StatusNotImplemented for each endpoint.
@@ -178,9 +202,27 @@ func (_ Unimplemented) GetItem(w http.ResponseWriter, r *http.Request, listID in
 	w.WriteHeader(http.StatusNotImplemented)
 }
 
-// Update item by listID and itemID
-// (PUT /lists/{listID}/items/{itemID})
-func (_ Unimplemented) UpdateItem(w http.ResponseWriter, r *http.Request, listID int64, itemID int64) {
+// Update item checked by listID and itemID
+// (PUT /lists/{listID}/items/{itemID}/checked)
+func (_ Unimplemented) UpdateItemFromListChecked(w http.ResponseWriter, r *http.Request, listID int64, itemID int64) {
+	w.WriteHeader(http.StatusNotImplemented)
+}
+
+// Update item content by listID and itemID
+// (PUT /lists/{listID}/items/{itemID}/content)
+func (_ Unimplemented) UpdateItemFromListContent(w http.ResponseWriter, r *http.Request, listID int64, itemID int64) {
+	w.WriteHeader(http.StatusNotImplemented)
+}
+
+// Update item sort by listID and itemID
+// (PUT /lists/{listID}/items/{itemID}/sort)
+func (_ Unimplemented) UpdateItemFromListSort(w http.ResponseWriter, r *http.Request, listID int64, itemID int64) {
+	w.WriteHeader(http.StatusNotImplemented)
+}
+
+// Reflow list by ID
+// (PUT /lists/{listID}/reflow)
+func (_ Unimplemented) ReflowList(w http.ResponseWriter, r *http.Request, listID int64) {
 	w.WriteHeader(http.StatusNotImplemented)
 }
 
@@ -463,8 +505,8 @@ func (siw *ServerInterfaceWrapper) GetItem(w http.ResponseWriter, r *http.Reques
 	handler.ServeHTTP(w, r.WithContext(ctx))
 }
 
-// UpdateItem operation middleware
-func (siw *ServerInterfaceWrapper) UpdateItem(w http.ResponseWriter, r *http.Request) {
+// UpdateItemFromListChecked operation middleware
+func (siw *ServerInterfaceWrapper) UpdateItemFromListChecked(w http.ResponseWriter, r *http.Request) {
 	ctx := r.Context()
 
 	var err error
@@ -488,7 +530,103 @@ func (siw *ServerInterfaceWrapper) UpdateItem(w http.ResponseWriter, r *http.Req
 	}
 
 	handler := http.Handler(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		siw.Handler.UpdateItem(w, r, listID, itemID)
+		siw.Handler.UpdateItemFromListChecked(w, r, listID, itemID)
+	}))
+
+	for _, middleware := range siw.HandlerMiddlewares {
+		handler = middleware(handler)
+	}
+
+	handler.ServeHTTP(w, r.WithContext(ctx))
+}
+
+// UpdateItemFromListContent operation middleware
+func (siw *ServerInterfaceWrapper) UpdateItemFromListContent(w http.ResponseWriter, r *http.Request) {
+	ctx := r.Context()
+
+	var err error
+
+	// ------------- Path parameter "listID" -------------
+	var listID int64
+
+	err = runtime.BindStyledParameterWithOptions("simple", "listID", chi.URLParam(r, "listID"), &listID, runtime.BindStyledParameterOptions{ParamLocation: runtime.ParamLocationPath, Explode: false, Required: true})
+	if err != nil {
+		siw.ErrorHandlerFunc(w, r, &InvalidParamFormatError{ParamName: "listID", Err: err})
+		return
+	}
+
+	// ------------- Path parameter "itemID" -------------
+	var itemID int64
+
+	err = runtime.BindStyledParameterWithOptions("simple", "itemID", chi.URLParam(r, "itemID"), &itemID, runtime.BindStyledParameterOptions{ParamLocation: runtime.ParamLocationPath, Explode: false, Required: true})
+	if err != nil {
+		siw.ErrorHandlerFunc(w, r, &InvalidParamFormatError{ParamName: "itemID", Err: err})
+		return
+	}
+
+	handler := http.Handler(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		siw.Handler.UpdateItemFromListContent(w, r, listID, itemID)
+	}))
+
+	for _, middleware := range siw.HandlerMiddlewares {
+		handler = middleware(handler)
+	}
+
+	handler.ServeHTTP(w, r.WithContext(ctx))
+}
+
+// UpdateItemFromListSort operation middleware
+func (siw *ServerInterfaceWrapper) UpdateItemFromListSort(w http.ResponseWriter, r *http.Request) {
+	ctx := r.Context()
+
+	var err error
+
+	// ------------- Path parameter "listID" -------------
+	var listID int64
+
+	err = runtime.BindStyledParameterWithOptions("simple", "listID", chi.URLParam(r, "listID"), &listID, runtime.BindStyledParameterOptions{ParamLocation: runtime.ParamLocationPath, Explode: false, Required: true})
+	if err != nil {
+		siw.ErrorHandlerFunc(w, r, &InvalidParamFormatError{ParamName: "listID", Err: err})
+		return
+	}
+
+	// ------------- Path parameter "itemID" -------------
+	var itemID int64
+
+	err = runtime.BindStyledParameterWithOptions("simple", "itemID", chi.URLParam(r, "itemID"), &itemID, runtime.BindStyledParameterOptions{ParamLocation: runtime.ParamLocationPath, Explode: false, Required: true})
+	if err != nil {
+		siw.ErrorHandlerFunc(w, r, &InvalidParamFormatError{ParamName: "itemID", Err: err})
+		return
+	}
+
+	handler := http.Handler(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		siw.Handler.UpdateItemFromListSort(w, r, listID, itemID)
+	}))
+
+	for _, middleware := range siw.HandlerMiddlewares {
+		handler = middleware(handler)
+	}
+
+	handler.ServeHTTP(w, r.WithContext(ctx))
+}
+
+// ReflowList operation middleware
+func (siw *ServerInterfaceWrapper) ReflowList(w http.ResponseWriter, r *http.Request) {
+	ctx := r.Context()
+
+	var err error
+
+	// ------------- Path parameter "listID" -------------
+	var listID int64
+
+	err = runtime.BindStyledParameterWithOptions("simple", "listID", chi.URLParam(r, "listID"), &listID, runtime.BindStyledParameterOptions{ParamLocation: runtime.ParamLocationPath, Explode: false, Required: true})
+	if err != nil {
+		siw.ErrorHandlerFunc(w, r, &InvalidParamFormatError{ParamName: "listID", Err: err})
+		return
+	}
+
+	handler := http.Handler(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		siw.Handler.ReflowList(w, r, listID)
 	}))
 
 	for _, middleware := range siw.HandlerMiddlewares {
@@ -639,7 +777,16 @@ func HandlerWithOptions(si ServerInterface, options ChiServerOptions) http.Handl
 		r.Get(options.BaseURL+"/lists/{listID}/items/{itemID}", wrapper.GetItem)
 	})
 	r.Group(func(r chi.Router) {
-		r.Put(options.BaseURL+"/lists/{listID}/items/{itemID}", wrapper.UpdateItem)
+		r.Put(options.BaseURL+"/lists/{listID}/items/{itemID}/checked", wrapper.UpdateItemFromListChecked)
+	})
+	r.Group(func(r chi.Router) {
+		r.Put(options.BaseURL+"/lists/{listID}/items/{itemID}/content", wrapper.UpdateItemFromListContent)
+	})
+	r.Group(func(r chi.Router) {
+		r.Put(options.BaseURL+"/lists/{listID}/items/{itemID}/sort", wrapper.UpdateItemFromListSort)
+	})
+	r.Group(func(r chi.Router) {
+		r.Put(options.BaseURL+"/lists/{listID}/reflow", wrapper.ReflowList)
 	})
 
 	return r
@@ -648,22 +795,25 @@ func HandlerWithOptions(si ServerInterface, options ChiServerOptions) http.Handl
 // Base64 encoded, gzipped, json marshaled Swagger object
 var swaggerSpec = []string{
 
-	"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",
+	"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",
+	"vgyhfC7/DwAA//+vHSNgJR8AAA==",
 }
 
 // GetSwagger returns the content of the embedded swagger specification file

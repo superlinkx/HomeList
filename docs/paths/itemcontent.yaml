@@ -1,0 +1,32 @@
+put:
+  operationId: updateItemFromListContent
+  summary: Update item content by listID and itemID
+  parameters:
+    - $ref: "../parameters/path/listid.yaml"
+    - $ref: "../parameters/path/itemid.yaml"
+  requestBody:
+    description: Item content to be updated
+    required: true
+    content:
+      application/json:
+        schema:
+          type: object
+          properties:
+            content:
+              type: string
+          required:
+            - content
+
+  responses:
+    "200":
+      description: Item content updated
+      content:
+        application/json:
+          schema:
+            $ref: "../schemas/item.yaml"
+    "400":
+      $ref: "../responses/400.yaml"
+    "404":
+      $ref: "../responses/404.yaml"
+    "500":
+      $ref: "../responses/500.yaml"

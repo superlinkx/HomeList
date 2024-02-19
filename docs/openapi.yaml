@@ -12,10 +12,18 @@ paths:
     $ref: "./paths/lists.yaml"
   /lists/{listID}:
     $ref: "./paths/list.yaml"
+  /lists/{listID}/reflow:
+    $ref: ./paths/listreflow.yaml
   /lists/{listID}/items:
     $ref: "./paths/items.yaml"
   /lists/{listID}/items/{itemID}:
     $ref: "./paths/item.yaml"
+  /lists/{listID}/items/{itemID}/content:
+    $ref: "./paths/itemcontent.yaml"
+  /lists/{listID}/items/{itemID}/checked:
+    $ref: "./paths/itemchecked.yaml"
+  /lists/{listID}/items/{itemID}/sort:
+    $ref: "./paths/itemsort.yaml"
 # security:
 #   - BearerAuth: []
 # components:

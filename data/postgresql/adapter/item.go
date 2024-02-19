@@ -29,7 +29,7 @@ import (
 	"github.com/superlinkx/HomeList/app/model"
 )
 
-func (s PostgresAdapter) AllItemsFromList(ctx context.Context, listID int64, limit int32, offset int32) ([]model.Item, error) {
+func (s PostgresAdapter) AllItemsFromListPaginated(ctx context.Context, listID int64, limit int32, offset int32) ([]model.Item, error) {
 	return []model.Item{}, errors.New("not implemented")
 }
 

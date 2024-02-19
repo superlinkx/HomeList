@@ -33,14 +33,14 @@ import (
 	"github.com/superlinkx/HomeList/data/sqlite/sqlc"
 )
 
-func (s SqliteAdapter) AllItemsFromList(ctx context.Context, listID int64, limit int32, offset int32) ([]model.Item, error) {
-	var params = sqlc.AllItemsFromListParams{
+func (s SqliteAdapter) AllItemsFromListPaginated(ctx context.Context, listID int64, limit int32, offset int32) ([]model.Item, error) {
+	var params = sqlc.AllItemsFromListPaginatedParams{
 		ListID: listID,
 		Limit:  int64(limit),
 		Offset: int64(offset),
 	}
 
-	if items, err := s.queries.AllItemsFromList(ctx, params); errors.Is(err, sql.ErrNoRows) {
+	if items, err := s.queries.AllItemsFromListPaginated(ctx, params); errors.Is(err, sql.ErrNoRows) {
 		return nil, fmt.Errorf("no items found: %w", adapter.ErrNotFound)
 	} else if err != nil {
 		return nil, fmt.Errorf("failed to get items: %w", err)

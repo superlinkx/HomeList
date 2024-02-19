@@ -27,6 +27,7 @@ import (
 	"errors"
 
 	"github.com/superlinkx/HomeList/app/model"
+	"github.com/superlinkx/HomeList/data/mapper"
 )
 
 type Adapter interface {
@@ -40,10 +41,11 @@ type ListAdapter interface {
 	RenameList(ctx context.Context, id int64, name string) (model.List, error)
 	CreateList(ctx context.Context, name string) (model.List, error)
 	DeleteList(ctx context.Context, id int64) error
+	ReflowList(ctx context.Context, id int64, reflowMapper mapper.Reflow) error
 }
 
 type ItemAdapter interface {
-	AllItemsFromList(ctx context.Context, listID int64, limit int32, offset int32) ([]model.Item, error)
+	AllItemsFromListPaginated(ctx context.Context, listID int64, limit int32, offset int32) ([]model.Item, error)
 	GetItemFromList(ctx context.Context, listID int64, itemID int64) (model.Item, error)
 	CreateItemOnList(ctx context.Context, listID int64, content string, sort int64) (model.Item, error)
 	UpdateItemFromListContent(ctx context.Context, listID int64, itemID int64, content string) (model.Item, error)

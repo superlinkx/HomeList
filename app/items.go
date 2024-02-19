@@ -31,7 +31,7 @@ import (
 )
 
 func (s App) AllItemsFromList(ctx context.Context, listID int64, limit int32, offset int32) ([]model.Item, error) {
-	if items, err := s.adapter.AllItemsFromList(ctx, listID, limit, offset); errors.Is(err, adapter.ErrNotFound) {
+	if items, err := s.adapter.AllItemsFromListPaginated(ctx, listID, limit, offset); errors.Is(err, adapter.ErrNotFound) {
 		return nil, ErrNotFound
 	} else if err != nil {
 		return nil, ErrInternal
@@ -60,8 +60,28 @@ func (s App) CreateItemOnList(ctx context.Context, listID int64, content string,
 	}
 }
 
-func (s App) UpdateItemFromList(ctx context.Context, listID int64, itemID int64, content string, checked bool, sort int64) (model.Item, error) {
+func (s App) UpdateItemFromListContent(ctx context.Context, listID int64, itemID int64, content string) (model.Item, error) {
 	if item, err := s.adapter.UpdateItemFromListContent(ctx, listID, itemID, content); errors.Is(err, adapter.ErrNotFound) {
+		return model.Item{}, ErrNotFound
+	} else if err != nil {
+		return model.Item{}, ErrInternal
+	} else {
+		return item, nil
+	}
+}
+
+func (s App) UpdateItemFromListChecked(ctx context.Context, listID int64, itemID int64, checked bool) (model.Item, error) {
+	if item, err := s.adapter.UpdateItemFromListChecked(ctx, listID, itemID, checked); errors.Is(err, adapter.ErrNotFound) {
+		return model.Item{}, ErrNotFound
+	} else if err != nil {
+		return model.Item{}, ErrInternal
+	} else {
+		return item, nil
+	}
+}
+
+func (s App) UpdateItemFromListSort(ctx context.Context, listID int64, itemID int64, sort int64) (model.Item, error) {
+	if item, err := s.adapter.UpdateItemFromListSort(ctx, listID, itemID, sort); errors.Is(err, adapter.ErrNotFound) {
 		return model.Item{}, ErrNotFound
 	} else if err != nil {
 		return model.Item{}, ErrInternal

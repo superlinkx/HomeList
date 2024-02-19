@@ -30,9 +30,13 @@ import (
 )
 
 type SqliteAdapter struct {
+	db      *sql.DB
 	queries *sqlc.Queries
 }
 
 func NewSqliteAdapter(db *sql.DB) adapter.Adapter {
-	return SqliteAdapter{queries: sqlc.New(db)}
+	return SqliteAdapter{
+		db:      db,
+		queries: sqlc.New(db),
+	}
 }

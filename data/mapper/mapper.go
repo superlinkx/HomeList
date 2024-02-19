@@ -20,22 +20,8 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-package model
+package mapper
 
-type List struct {
-	ID   int64
-	Name string
-}
+import "github.com/superlinkx/HomeList/app/model"
 
-type Item struct {
-	ID      int64
-	ListID  int64
-	Content string
-	Checked bool
-	Sort    int64
-}
-
-type ItemSort struct {
-	ID   int64
-	Sort int64
-}
+type Reflow func(items []model.Item)

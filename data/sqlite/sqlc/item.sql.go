@@ -13,18 +13,53 @@ const allItemsFromList = `-- name: AllItemsFromList :many
 SELECT id, list_id, content, checked, sort FROM items
 WHERE list_id = ?
 ORDER BY sort ASC
+`
+
+func (q *Queries) AllItemsFromList(ctx context.Context, listID int64) ([]Item, error) {
+	rows, err := q.db.QueryContext(ctx, allItemsFromList, listID)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+	var items []Item
+	for rows.Next() {
+		var i Item
+		if err := rows.Scan(
+			&i.ID,
+			&i.ListID,
+			&i.Content,
+			&i.Checked,
+			&i.Sort,
+		); err != nil {
+			return nil, err
+		}
+		items = append(items, i)
+	}
+	if err := rows.Close(); err != nil {
+		return nil, err
+	}
+	if err := rows.Err(); err != nil {
+		return nil, err
+	}
+	return items, nil
+}
+
+const allItemsFromListPaginated = `-- name: AllItemsFromListPaginated :many
+SELECT id, list_id, content, checked, sort FROM items
+WHERE list_id = ?
+ORDER BY sort ASC
 LIMIT ?
 OFFSET ?
 `
 
-type AllItemsFromListParams struct {
+type AllItemsFromListPaginatedParams struct {
 	ListID int64
 	Limit  int64
 	Offset int64
 }
 
-func (q *Queries) AllItemsFromList(ctx context.Context, arg AllItemsFromListParams) ([]Item, error) {
-	rows, err := q.db.QueryContext(ctx, allItemsFromList, arg.ListID, arg.Limit, arg.Offset)
+func (q *Queries) AllItemsFromListPaginated(ctx context.Context, arg AllItemsFromListPaginatedParams) ([]Item, error) {
+	rows, err := q.db.QueryContext(ctx, allItemsFromListPaginated, arg.ListID, arg.Limit, arg.Offset)
 	if err != nil {
 		return nil, err
 	}

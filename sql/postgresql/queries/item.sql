@@ -5,6 +5,11 @@ WHERE id = $1 LIMIT 1;
 -- name: AllItemsFromList :many
 SELECT * FROM items
 WHERE list_id = $1
+ORDER BY sort ASC;
+
+-- name: AllItemsFromListPaginated :many
+SELECT * FROM items
+WHERE list_id = $1
 ORDER BY sort ASC
 LIMIT $2
 OFFSET $3;

@@ -106,8 +106,60 @@ func (s Handlers) GetItem(w http.ResponseWriter, r *http.Request, listID int64, 
 	}
 }
 
-func (s Handlers) UpdateItem(w http.ResponseWriter, r *http.Request, listID int64, itemID int64) {
-	w.WriteHeader(http.StatusNotImplemented)
+func (s Handlers) UpdateItemFromListContent(w http.ResponseWriter, r *http.Request, listID int64, itemID int64) {
+	var item oapiserver.UpdateItemFromListContentJSONBody
+	if err := json.NewDecoder(r.Body).Decode(&item); err != nil {
+		errorResponse(w, http.StatusBadRequest, "invalid body")
+	} else if item.Content == "" {
+		errorResponse(w, http.StatusBadRequest, "content cannot be empty")
+	} else if i, err := s.app.UpdateItemFromListContent(r.Context(), listID, itemID, item.Content); errors.Is(err, app.ErrNotFound) {
+		errorResponse(w, http.StatusNotFound, "item not found")
+	} else if err != nil {
+		errorResponse(w, http.StatusInternalServerError)
+	} else {
+		w.Header().Add("Content-Type", "application/json")
+		w.WriteHeader(http.StatusOK)
+		err := json.NewEncoder(w).Encode(i)
+		if err != nil {
+			errorResponse(w, http.StatusInternalServerError)
+		}
+	}
+}
+
+func (s Handlers) UpdateItemFromListChecked(w http.ResponseWriter, r *http.Request, listID int64, itemID int64) {
+	var item oapiserver.UpdateItemFromListCheckedJSONBody
+	if err := json.NewDecoder(r.Body).Decode(&item); err != nil {
+		errorResponse(w, http.StatusBadRequest, "invalid body")
+	} else if i, err := s.app.UpdateItemFromListChecked(r.Context(), listID, itemID, item.Checked); errors.Is(err, app.ErrNotFound) {
+		errorResponse(w, http.StatusNotFound, "item not found")
+	} else if err != nil {
+		errorResponse(w, http.StatusInternalServerError)
+	} else {
+		w.Header().Add("Content-Type", "application/json")
+		w.WriteHeader(http.StatusOK)
+		err := json.NewEncoder(w).Encode(i)
+		if err != nil {
+			errorResponse(w, http.StatusInternalServerError)
+		}
+	}
+}
+
+func (s Handlers) UpdateItemFromListSort(w http.ResponseWriter, r *http.Request, listID int64, itemID int64) {
+	var item oapiserver.UpdateItemFromListSortJSONBody
+	if err := json.NewDecoder(r.Body).Decode(&item); err != nil {
+		errorResponse(w, http.StatusBadRequest, "invalid body")
+	} else if i, err := s.app.UpdateItemFromListSort(r.Context(), listID, itemID, item.Sort); errors.Is(err, app.ErrNotFound) {
+		errorResponse(w, http.StatusNotFound, "item not found")
+	} else if err != nil {
+		errorResponse(w, http.StatusInternalServerError)
+	} else {
+		w.Header().Add("Content-Type", "application/json")
+		w.WriteHeader(http.StatusOK)
+		err := json.NewEncoder(w).Encode(i)
+		if err != nil {
+			errorResponse(w, http.StatusInternalServerError)
+		}
+	}
 }
 
 func (s Handlers) DeleteItem(w http.ResponseWriter, r *http.Request, listID int64, itemID int64) {

@@ -20,22 +20,24 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-package model
+package mapper
 
-type List struct {
-	ID   int64
-	Name string
-}
+import (
+	"cmp"
+	"slices"
 
-type Item struct {
-	ID      int64
-	ListID  int64
-	Content string
-	Checked bool
-	Sort    int64
-}
+	"github.com/superlinkx/HomeList/app/model"
+	"github.com/superlinkx/HomeList/data/mapper"
+)
 
-type ItemSort struct {
-	ID   int64
-	Sort int64
+func ReflowListOfItemsWithSpacing(spacing int64) mapper.Reflow {
+	return func(items []model.Item) {
+		slices.SortStableFunc(items, func(a model.Item, b model.Item) int {
+			return cmp.Compare(a.Sort, b.Sort)
+		})
+
+		for idx := range items {
+			items[idx].Sort = (int64(idx) + 1) * spacing
+		}
+	}
 }
