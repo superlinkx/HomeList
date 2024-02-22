@@ -6,15 +6,15 @@ package sqlc
 
 import ()
 
-type List struct {
-	ID   int64
-	Name string
-}
-
-type ListItem struct {
+type Item struct {
 	ID      int64
 	ListID  int64
 	Content string
 	Checked bool
 	Sort    int64
+}
+
+type List struct {
+	ID   int64
+	Name string
 }

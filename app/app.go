@@ -23,23 +23,20 @@
 package app
 
 import (
-	"github.com/superlinkx/HomeList/app/list"
-	"github.com/superlinkx/HomeList/app/listitem"
+	"errors"
+
+	"github.com/superlinkx/HomeList/data/adapter"
 )
 
-type services interface {
-	list.ListService
-	listitem.ListItemService
+var ErrNotFound = errors.New("not found")
+var ErrInternal = errors.New("internal error")
+
+type App struct {
+	adapter adapter.Adapter
 }
 
-type Application struct {
-	list.ListApp
-	listitem.ListItemApp
-}
-
-func NewApplication(s services) Application {
-	return Application{
-		ListApp:     list.NewListApp(s),
-		ListItemApp: listitem.NewListItemApp(s),
+func NewApp(adapter adapter.Adapter) App {
+	return App{
+		adapter: adapter,
 	}
 }

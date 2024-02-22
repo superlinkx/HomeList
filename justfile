@@ -32,7 +32,9 @@ init:
   go install github.com/golangci/golangci-lint/cmd/golangci-lint@v1.52.2
   go install github.com/superlinkx/go-runner@latest
   go install github.com/vektra/mockery/v2@v2.38.0
+  go install github.com/deepmap/oapi-codegen/v2/cmd/oapi-codegen@latest
   just tidy
+  npm install -g @redocly/cli
 
 # Run application in development mode
 dev *ARGS='':
@@ -51,3 +53,4 @@ codegen:
   @sqlc generate
   @go generate ./...
   @go-runner license
+  @npx @redocly/cli bundle docs/openapi.yaml > tmp/doc.yaml

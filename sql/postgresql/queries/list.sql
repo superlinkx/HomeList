@@ -5,7 +5,8 @@ WHERE id = $1 LIMIT 1;
 -- name: AllLists :many
 SELECT * FROM lists
 ORDER BY id ASC
-LIMIT $1;
+LIMIT $1
+OFFSET $2;
 
 -- name: CreateList :one
 INSERT INTO lists (name)

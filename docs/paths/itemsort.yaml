@@ -1,0 +1,33 @@
+put:
+  operationId: updateItemFromListSort
+  summary: Update item sort by listID and itemID
+  parameters:
+    - $ref: "../parameters/path/listid.yaml"
+    - $ref: "../parameters/path/itemid.yaml"
+  requestBody:
+    description: Item sort to be updated
+    required: true
+    content:
+      application/json:
+        schema:
+          type: object
+          properties:
+            sort:
+              type: integer
+              format: int64
+          required:
+            - sort
+
+  responses:
+    "200":
+      description: Item sort updated
+      content:
+        application/json:
+          schema:
+            $ref: "../schemas/item.yaml"
+    "400":
+      $ref: "../responses/400.yaml"
+    "404":
+      $ref: "../responses/404.yaml"
+    "500":
+      $ref: "../responses/500.yaml"

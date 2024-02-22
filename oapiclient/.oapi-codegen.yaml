@@ -1,0 +1,7 @@
+package: oapiclient
+generate:
+  client: true
+  models: true
+  embedded-spec: true
+output-options:
+  nullable-type: true

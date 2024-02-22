@@ -1,0 +1,35 @@
+openapi: "3.1.0"
+info:
+  title: HomeList
+  version: "1"
+  license:
+    name: MIT
+    url: https://opensource.org/licenses/MIT
+servers:
+  - url: "http://localhost:2552/api/v1"
+paths:
+  /lists:
+    $ref: "./paths/lists.yaml"
+  /lists/{listID}:
+    $ref: "./paths/list.yaml"
+  /lists/{listID}/reflow:
+    $ref: ./paths/listreflow.yaml
+  /lists/{listID}/items:
+    $ref: "./paths/items.yaml"
+  /lists/{listID}/items/{itemID}:
+    $ref: "./paths/item.yaml"
+  /lists/{listID}/items/{itemID}/content:
+    $ref: "./paths/itemcontent.yaml"
+  /lists/{listID}/items/{itemID}/checked:
+    $ref: "./paths/itemchecked.yaml"
+  /lists/{listID}/items/{itemID}/sort:
+    $ref: "./paths/itemsort.yaml"
+# security:
+#   - BearerAuth: []
+# components:
+#   securitySchemes:
+#     BearerAuth:
+#       type: http
+#       scheme: bearer
+#       bearerFormat: JWT
+#       description: JWT token

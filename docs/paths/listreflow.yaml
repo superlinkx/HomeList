@@ -1,0 +1,12 @@
+put:
+  operationId: reflowList
+  summary: Reflow list by ID
+  parameters:
+    - $ref: "../parameters/path/listid.yaml"
+  responses:
+    "204":
+      description: List updated
+    "400":
+      $ref: "../responses/400.yaml"
+    "500":
+      $ref: "../responses/500.yaml"

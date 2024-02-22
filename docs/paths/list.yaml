@@ -1,0 +1,53 @@
+get:
+  operationId: getList
+  summary: Get list by ID
+  parameters:
+    - $ref: "../parameters/path/listid.yaml"
+  responses:
+    "200":
+      description: Get list by ID
+      content:
+        application/json:
+          schema:
+            $ref: "../schemas/list.yaml"
+    "400":
+      $ref: "../responses/400.yaml"
+    "404":
+      $ref: "../responses/404.yaml"
+    "500":
+      $ref: "../responses/500.yaml"
+put:
+  operationId: updateList
+  summary: Update list by ID
+  parameters:
+    - $ref: "../parameters/path/listid.yaml"
+  requestBody:
+    $ref: "../schemas/body/list.yaml"
+  responses:
+    "200":
+      description: List updated
+      content:
+        application/json:
+          schema:
+            $ref: "../schemas/list.yaml"
+    "400":
+      $ref: "../responses/400.yaml"
+    "404":
+      $ref: "../responses/404.yaml"
+    "500":
+      $ref: "../responses/500.yaml"
+
+delete:
+  operationId: deleteList
+  summary: Delete list by ID
+  parameters:
+    - $ref: "../parameters/path/listid.yaml"
+  responses:
+    "204":
+      description: List deleted
+    "400":
+      $ref: "../responses/400.yaml"
+    "404":
+      $ref: "../responses/404.yaml"
+    "500":
+      $ref: "../responses/500.yaml"

@@ -1,0 +1,35 @@
+get:
+  operationId: getItem
+  summary: Get item by listID and itemID
+  parameters:
+    - $ref: "../parameters/path/listid.yaml"
+    - $ref: "../parameters/path/itemid.yaml"
+  responses:
+    "200":
+      description: Item found
+      content:
+        application/json:
+          schema:
+            $ref: "../schemas/item.yaml"
+    "400":
+      $ref: "../responses/400.yaml"
+    "404":
+      $ref: "../responses/404.yaml"
+    "500":
+      $ref: "../responses/500.yaml"
+
+delete:
+  operationId: deleteItem
+  summary: Delete item by listID and itemID
+  parameters:
+    - $ref: "../parameters/path/listid.yaml"
+    - $ref: "../parameters/path/itemid.yaml"
+  responses:
+    "204":
+      description: Item deleted
+    "400":
+      $ref: "../responses/400.yaml"
+    "404":
+      $ref: "../responses/404.yaml"
+    "500":
+      $ref: "../responses/500.yaml"

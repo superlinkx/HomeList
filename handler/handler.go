@@ -23,23 +23,51 @@
 package handler
 
 import (
-	"github.com/superlinkx/HomeList/handler/list"
-	"github.com/superlinkx/HomeList/handler/listitem"
+	"context"
+	"net/http"
+	"strings"
+
+	"github.com/superlinkx/HomeList/app/model"
 )
 
-type application interface {
-	list.ListApp
-	listitem.ListItemApp
+type App interface {
+	ListApp
+	ItemApp
+}
+
+type ListApp interface {
+	AllLists(ctx context.Context, limit int32, offset int32) ([]model.List, error)
+	GetList(ctx context.Context, listID int64) (model.List, error)
+	CreateList(ctx context.Context, name string) (model.List, error)
+	UpdateList(ctx context.Context, listID int64, name string) (model.List, error)
+	DeleteList(ctx context.Context, listID int64) error
+	ReflowList(ctx context.Context, listID int64) error
+}
+
+type ItemApp interface {
+	AllItemsFromList(ctx context.Context, listID int64, limit int32, offset int32) ([]model.Item, error)
+	GetItemFromList(ctx context.Context, listID int64, itemID int64) (model.Item, error)
+	CreateItemOnList(ctx context.Context, listID int64, content string, sort int64) (model.Item, error)
+	UpdateItemFromListContent(ctx context.Context, listID int64, itemID int64, content string) (model.Item, error)
+	UpdateItemFromListChecked(ctx context.Context, listID int64, itemID int64, checked bool) (model.Item, error)
+	UpdateItemFromListSort(ctx context.Context, listID int64, itemID int64, sort int64) (model.Item, error)
+	DeleteItemFromList(ctx context.Context, listID int64, itemID int64) error
 }
 
 type Handlers struct {
-	list.ListHandlers
-	listitem.ListItemHandlers
+	app App
 }
 
-func NewHandlers(a application) Handlers {
+func NewHandlers(app App) Handlers {
 	return Handlers{
-		ListHandlers:     list.NewHandlers(a),
-		ListItemHandlers: listitem.NewHandlers(a),
+		app: app,
+	}
+}
+
+func errorResponse(w http.ResponseWriter, errCode int, errMsgs ...string) {
+	if len(errMsgs) == 0 {
+		http.Error(w, http.StatusText(errCode), errCode)
+	} else {
+		http.Error(w, strings.Join(errMsgs, ","), errCode)
 	}
 }

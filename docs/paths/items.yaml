@@ -1,0 +1,43 @@
+get:
+  operationId: getItems
+  summary: Get a list of items from listID
+  parameters:
+    - $ref: "../parameters/path/listid.yaml"
+    - $ref: "../parameters/query/limit.yaml"
+    - $ref: "../parameters/query/offset.yaml"
+  responses:
+    "200":
+      description: Found list of items
+      content:
+        application/json:
+          schema:
+            type: array
+            items:
+              $ref: "../schemas/item.yaml"
+    "404":
+      $ref: ../responses/404.yaml
+    "500":
+      description: Internal server error
+      content:
+        text/plain:
+          schema:
+            type: string
+
+post:
+  operationId: createItem
+  summary: Create a new item on the listID
+  parameters:
+    - $ref: ../parameters/path/listid.yaml
+  requestBody:
+    $ref: "../schemas/body/createitem.yaml"
+  responses:
+    "201":
+      description: Item created
+      content:
+        application/json:
+          schema:
+            $ref: "../schemas/list.yaml"
+    "400":
+      $ref: "../responses/400.yaml"
+    "500":
+      $ref: "../responses/500.yaml"

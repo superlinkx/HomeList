@@ -13,10 +13,16 @@ const allLists = `-- name: AllLists :many
 SELECT id, name FROM lists
 ORDER BY id ASC
 LIMIT $1
+OFFSET $2
 `
 
-func (q *Queries) AllLists(ctx context.Context, limit int32) ([]List, error) {
-	rows, err := q.db.QueryContext(ctx, allLists, limit)
+type AllListsParams struct {
+	Limit  int32
+	Offset int32
+}
+
+func (q *Queries) AllLists(ctx context.Context, arg AllListsParams) ([]List, error) {
+	rows, err := q.db.QueryContext(ctx, allLists, arg.Limit, arg.Offset)
 	if err != nil {
 		return nil, err
 	}
