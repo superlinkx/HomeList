@@ -6,7 +6,7 @@ info:
     name: MIT
     url: https://opensource.org/licenses/MIT
 servers:
-  - url: "http://localhost:2552/api/v1"
+  - url: "/api/v1"
 paths:
   /lists:
     $ref: "./paths/lists.yaml"
